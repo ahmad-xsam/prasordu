@@ -19,7 +19,8 @@ export async function GET(request: Request) {
 
     const kehadiran = await Kehadiran.find(query)
       .populate('anggotaId', 'nama kelas')
-      .sort({ tanggal: -1, createdAt: -1 });
+      .sort({ tanggal: -1, createdAt: -1 })
+      .lean();
       
     return NextResponse.json({ success: true, data: kehadiran });
   } catch (error) {
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
     const kehadiran = await Kehadiran.create(body);
     
     // Populate the newly created document before returning
-    const populatedKehadiran = await Kehadiran.findById(kehadiran._id).populate('anggotaId', 'nama kelas');
+    const populatedKehadiran = await Kehadiran.findById(kehadiran._id).populate('anggotaId', 'nama kelas').lean();
     
     return NextResponse.json({ success: true, data: populatedKehadiran }, { status: 201 });
   } catch (error) {

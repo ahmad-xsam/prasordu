@@ -6,7 +6,7 @@ import Anggota from '@/models/Anggota';
 export async function GET() {
   try {
     await dbConnect();
-    const anggota = await Anggota.find({}).sort({ createdAt: -1 });
+    const anggota = await Anggota.find({}).sort({ createdAt: -1 }).lean();
     return NextResponse.json({ success: true, data: anggota });
   } catch (error) {
     console.error("API GET Error:", error);

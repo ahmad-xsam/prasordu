@@ -6,7 +6,7 @@ import Inventaris from '@/models/Inventaris';
 export async function GET() {
   try {
     await dbConnect();
-    const data = await Inventaris.find({}).sort({ createdAt: -1 });
+    const data = await Inventaris.find({}).sort({ createdAt: -1 }).lean();
     return NextResponse.json({ success: true, data });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to fetch data' }, { status: 400 });
