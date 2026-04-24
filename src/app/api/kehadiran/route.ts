@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 import dbConnect from '@/lib/mongodb';
 import Kehadiran from '@/models/Kehadiran';
 // Ensure Anggota model is loaded for populate
