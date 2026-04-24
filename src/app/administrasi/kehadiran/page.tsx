@@ -349,11 +349,15 @@ export default function DaftarHadir() {
             </thead>
             <tbody>
               {isLoading ? (
-                <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
-                    Memuat data kehadiran...
-                  </td>
-                </tr>
+                Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse border-b">
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-48"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-40"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-16"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-20"></div></td>
+                    <td className="px-6 py-4"><div className="h-8 bg-gray-100 rounded w-16 mx-auto"></div></td>
+                  </tr>
+                ))
               ) : dataKehadiran.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-8 text-center text-gray-500">

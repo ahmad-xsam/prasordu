@@ -297,11 +297,19 @@ export default function DaftarInventaris() {
             </thead>
             <tbody>
               {isLoading ? (
-                <tr>
-                  <td colSpan={9} className="px-6 py-8 text-center text-gray-500">
-                    Memuat data inventaris...
-                  </td>
-                </tr>
+                Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse border-b">
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-4"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-40"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-32"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-8"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-20"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-32"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24"></div></td>
+                    <td className="px-6 py-4"><div className="h-8 bg-gray-100 rounded w-16 mx-auto"></div></td>
+                  </tr>
+                ))
               ) : dataInventaris.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="px-6 py-8 text-center text-gray-500">

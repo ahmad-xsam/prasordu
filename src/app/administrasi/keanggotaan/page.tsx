@@ -139,11 +139,16 @@ export default function Keanggotaan() {
             </thead>
             <tbody>
               {isLoading ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                    Memuat data...
-                  </td>
-                </tr>
+                Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse border-b">
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-4"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-40"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-16"></div></td>
+                    <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-20"></div></td>
+                    <td className="px-6 py-4"><div className="h-8 bg-gray-100 rounded w-16 mx-auto"></div></td>
+                  </tr>
+                ))
               ) : data.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
