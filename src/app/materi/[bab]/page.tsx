@@ -1,16 +1,28 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { materiPramuka } from '@/data/materiPramuka';
-import { ArrowLeft, BookOpen, CheckCircle } from 'lucide-react';
+import dbConnect from '@/lib/mongodb';
+import MateriPramuka from '@/models/MateriPramuka';
+import { ArrowLeft, BookOpen, CheckCircle, Youtube } from 'lucide-react';
 
-export default function BabPage({ params }: { params: { bab: string } }) {
+// Extract YouTube ID from URL helper
+function getYoutubeId(url: string) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
+export default async function BabPage({ params }: { params: { bab: string } }) {
   const babNumber = parseInt(params.bab);
-  const materi = materiPramuka.find(m => m.bab === babNumber);
+  
+  await dbConnect();
+  const materi = await MateriPramuka.findOne({ bab: babNumber }).lean();
 
   if (!materi) {
     notFound();
   }
+
+  const youtubeId = materi.youtubeUrl ? getYoutubeId(materi.youtubeUrl) : null;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -20,12 +32,23 @@ export default function BabPage({ params }: { params: { bab: string } }) {
       </Link>
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        {materi.imageUrl && (
+        {youtubeId ? (
+          <div className="aspect-video w-full bg-gray-900">
+            <iframe 
+              width="100%" 
+              height="100%" 
+              src={`https://www.youtube.com/embed/${youtubeId}`} 
+              title="YouTube video player" 
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowFullScreen
+            ></iframe>
+          </div>
+        ) : materi.imageUrl ? (
           <div className="h-64 w-full bg-gray-100 flex items-center justify-center p-4 border-b">
-            {/* If it's a real image, we would use next/image. For now standard img tag to support external SVG/placeholder */}
             <img src={materi.imageUrl} alt={materi.title} className="max-h-full object-contain mix-blend-multiply" />
           </div>
-        )}
+        ) : null}
         
         <div className="p-8">
           <div className="inline-flex items-center gap-2 bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-bold mb-4">

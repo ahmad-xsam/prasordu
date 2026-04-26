@@ -1,22 +1,49 @@
 "use client";
 
 import { useState } from 'react';
-import { notFound } from 'next/navigation';
-import { materiPramuka } from '@/data/materiPramuka';
+import { useEffect } from 'react';
 import { ArrowLeft, CheckCircle, XCircle, Star, Award } from 'lucide-react';
 import Link from 'next/link';
 
 export default function QuizPage({ params }: { params: { bab: string } }) {
   const babNumber = parseInt(params.bab);
-  const materi = materiPramuka.find(m => m.bab === babNumber);
+  const [materi, setMateri] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [score, setScore] = useState(0);
 
-  if (!materi) {
-    notFound();
+  useEffect(() => {
+    fetch(`/api/materi-pramuka/${babNumber}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setMateri(data.data);
+        }
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error("Failed to load materi for quiz", err);
+        setIsLoading(false);
+      });
+  }, [babNumber]);
+
+  if (isLoading) {
+    return <div className="text-center py-20 text-gray-500">Memuat Kuis...</div>;
+  }
+
+  if (!materi || !materi.quiz || materi.quiz.length === 0) {
+    return (
+      <div className="max-w-2xl mx-auto text-center space-y-6 pt-10">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-10">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Kuis belum tersedia</h1>
+          <p className="text-gray-500 mb-6">Belum ada pertanyaan kuis untuk BAB ini.</p>
+          <Link href={`/materi/${babNumber}`} className="px-6 py-2 bg-primary-600 text-white rounded-lg">Kembali</Link>
+        </div>
+      </div>
+    );
   }
 
   const questions = materi.quiz;
