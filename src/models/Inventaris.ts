@@ -20,4 +20,6 @@ const InventarisSchema: Schema = new Schema({
   kondisi: { type: String, required: true },
 }, { timestamps: true });
 
+InventarisSchema.index({ createdAt: -1 });
+
 export default mongoose.models.Inventaris || mongoose.model<IInventaris>('Inventaris', InventarisSchema);

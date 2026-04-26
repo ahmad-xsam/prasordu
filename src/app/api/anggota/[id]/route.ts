@@ -10,7 +10,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     const anggota = await Anggota.findByIdAndUpdate(params.id, body, {
       new: true,
       runValidators: true,
-    });
+    }).lean();
     if (!anggota) {
       return NextResponse.json({ success: false, error: 'Data not found' }, { status: 404 });
     }

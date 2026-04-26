@@ -7,7 +7,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   try {
     await dbConnect();
     const body = await request.json();
-    const data = await Inventaris.findByIdAndUpdate(params.id, body, { new: true, runValidators: true });
+    const data = await Inventaris.findByIdAndUpdate(params.id, body, { new: true, runValidators: true }).lean();
     if (!data) return NextResponse.json({ success: false, error: 'Data not found' }, { status: 404 });
     return NextResponse.json({ success: true, data });
   } catch (error) {

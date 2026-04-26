@@ -10,7 +10,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     const kehadiran = await Kehadiran.findByIdAndUpdate(params.id, body, {
       new: true,
       runValidators: true,
-    }).populate('anggotaId', 'nama kelas');
+    }).populate('anggotaId', 'nama kelas').lean();
     
     if (!kehadiran) {
       return NextResponse.json({ success: false, error: 'Data not found' }, { status: 404 });
