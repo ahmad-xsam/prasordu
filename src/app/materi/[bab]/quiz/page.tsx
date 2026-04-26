@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { notFound, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { notFound } from 'next/navigation';
 import { materiPramuka } from '@/data/materiPramuka';
 import { ArrowLeft, CheckCircle, XCircle, Star, Award } from 'lucide-react';
 import Link from 'next/link';
 
 export default function QuizPage({ params }: { params: { bab: string } }) {
-  const router = useRouter();
   const babNumber = parseInt(params.bab);
   const materi = materiPramuka.find(m => m.bab === babNumber);
   
