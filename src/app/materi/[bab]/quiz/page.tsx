@@ -77,7 +77,7 @@ export default function QuizPage({ params }: { params: { bab: string } }) {
             {isSuccess ? 'Luar Biasa!' : 'Coba Lagi!'}
           </h1>
           <p className="text-gray-600 mb-6 text-lg">
-            Nilai Anda: <span className={\`font-bold \${isSuccess ? 'text-green-600' : 'text-red-600'}\`}>{score}</span>/100
+            Nilai Anda: <span className={`font-bold ${isSuccess ? 'text-green-600' : 'text-red-600'}`}>{score}</span>/100
           </p>
 
           {isSuccess ? (
@@ -118,7 +118,7 @@ export default function QuizPage({ params }: { params: { bab: string } }) {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <Link href={\`/materi/\${babNumber}\`} className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 mb-2">
+      <Link href={`/materi/${babNumber}`} className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 mb-2">
         <ArrowLeft className="mr-2 h-4 w-4" />
         Kembali ke Materi BAB {babNumber}
       </Link>
@@ -135,7 +135,7 @@ export default function QuizPage({ params }: { params: { bab: string } }) {
           <div className="w-full bg-gray-200 rounded-full h-2.5 mb-6">
             <div 
               className="bg-primary-600 h-2.5 rounded-full transition-all" 
-              style={{ width: \`\${((currentQuestionIdx + 1) / questions.length) * 100}%\` }}
+              style={{ width: `${((currentQuestionIdx + 1) / questions.length) * 100}%` }}
             ></div>
           </div>
 
@@ -148,12 +148,12 @@ export default function QuizPage({ params }: { params: { bab: string } }) {
               <button
                 key={idx}
                 onClick={() => handleSelect(idx)}
-                className={\`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center justify-between
-                  \${selectedAnswers[currentQuestionIdx] === idx 
+                className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center justify-between
+                  ${selectedAnswers[currentQuestionIdx] === idx 
                     ? 'border-primary-500 bg-primary-50 text-primary-900' 
                     : 'border-gray-200 hover:border-primary-200 hover:bg-gray-50'
                   }
-                \`}
+                `}
               >
                 <span>{opt}</span>
                 {selectedAnswers[currentQuestionIdx] === idx && (

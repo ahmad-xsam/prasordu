@@ -46,7 +46,7 @@ export default function BabPage({ params }: { params: { bab: string } }) {
         <p className="text-gray-600 mb-6 max-w-md">Uji pemahaman Anda melalui kuis singkat ini. Dapatkan 5 bintang untuk membuka BAB selanjutnya!</p>
         
         <Link 
-          href={\`/materi/\${materi.bab}/quiz\`} 
+          href={`/materi/${materi.bab}/quiz`} 
           className="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
         >
           Mulai Kuis BAB {materi.bab}

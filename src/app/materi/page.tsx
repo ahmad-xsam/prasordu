@@ -38,10 +38,10 @@ export default function Materi() {
           return (
             <div 
               key={materi.id} 
-              className={\`border rounded-xl p-5 flex items-center justify-between transition-all \${isUnlocked ? 'border-primary-200 bg-primary-50/30 hover:border-primary-400' : 'border-gray-200 bg-gray-50 opacity-75'}\`}
+              className={`border rounded-xl p-5 flex items-center justify-between transition-all ${isUnlocked ? 'border-primary-200 bg-primary-50/30 hover:border-primary-400' : 'border-gray-200 bg-gray-50 opacity-75'}`}
             >
               <div className="flex items-center gap-4">
-                <div className={\`h-12 w-12 rounded-full flex items-center justify-center \${isUnlocked ? 'bg-primary-100 text-primary-600' : 'bg-gray-200 text-gray-400'}\`}>
+                <div className={`h-12 w-12 rounded-full flex items-center justify-center ${isUnlocked ? 'bg-primary-100 text-primary-600' : 'bg-gray-200 text-gray-400'}`}>
                   {isUnlocked ? <Unlock size={20} /> : <Lock size={20} />}
                 </div>
                 <div>
@@ -53,7 +53,7 @@ export default function Materi() {
               </div>
               
               {isUnlocked ? (
-                <Link href={\`/materi/\${materi.bab}\`} className="bg-primary-600 hover:bg-primary-700 text-white px-5 py-2 rounded-lg font-medium text-sm transition-colors shadow-sm">
+                <Link href={`/materi/${materi.bab}`} className="bg-primary-600 hover:bg-primary-700 text-white px-5 py-2 rounded-lg font-medium text-sm transition-colors shadow-sm">
                   {isCompleted ? 'Baca Ulang' : 'Mulai Belajar'}
                 </Link>
               ) : (
