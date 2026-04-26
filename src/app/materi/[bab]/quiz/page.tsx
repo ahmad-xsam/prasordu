@@ -18,13 +18,13 @@ export default function QuizPage({ params }: { params: { bab: string } }) {
   useEffect(() => {
     fetch(`/api/materi-pramuka/${babNumber}`)
       .then(res => res.json())
-      .then(data => {
+      .then((data: any) => {
         if (data.success) {
           setMateri(data.data);
         }
         setIsLoading(false);
       })
-      .catch(err => {
+      .catch((err: any) => {
         console.error("Failed to load materi for quiz", err);
         setIsLoading(false);
       });
@@ -68,7 +68,7 @@ export default function QuizPage({ params }: { params: { bab: string } }) {
 
   const handleSubmit = () => {
     let correctCount = 0;
-    questions.forEach((q, idx) => {
+    questions.forEach((q: any, idx: number) => {
       if (selectedAnswers[idx] === q.correctAnswerIndex) {
         correctCount++;
       }
@@ -171,7 +171,7 @@ export default function QuizPage({ params }: { params: { bab: string } }) {
           </h2>
 
           <div className="space-y-3">
-            {currentQuestion.options.map((opt, idx) => (
+            {currentQuestion.options.map((opt: string, idx: number) => (
               <button
                 key={idx}
                 onClick={() => handleSelect(idx)}

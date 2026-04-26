@@ -21,13 +21,13 @@ export default function Materi() {
     // Fetch materi from API
     fetch('/api/materi-pramuka')
       .then(res => res.json())
-      .then(data => {
+      .then((data: any) => {
         if (data.success) {
           setMateriList(data.data);
         }
         setIsLoading(false);
       })
-      .catch(err => {
+      .catch((err: any) => {
         console.error("Failed to fetch materi", err);
         setIsLoading(false);
       });
@@ -54,7 +54,7 @@ export default function Materi() {
           <div className="text-center py-10 text-gray-500">Memuat data materi...</div>
         ) : materiList.length === 0 ? (
           <div className="text-center py-10 text-gray-500 border rounded-xl border-dashed">Belum ada materi. Silakan tambah materi baru.</div>
-        ) : materiList.map((materi) => {
+        ) : materiList.map((materi: any) => {
           const isUnlocked = materi.bab <= unlockedBab;
           const isCompleted = materi.bab < unlockedBab;
 

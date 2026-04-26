@@ -166,7 +166,7 @@ export default function TambahMateriPage() {
             </div>
 
             <div className="space-y-6">
-              {formData.quiz.map((q, qIdx) => (
+              {formData.quiz.map((q: any, qIdx: number) => (
                 <div key={qIdx} className="border border-gray-200 rounded-xl p-5 bg-gray-50 relative group">
                   <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button 
@@ -190,7 +190,7 @@ export default function TambahMateriPage() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {q.options.map((opt, optIdx) => (
+                    {q.options.map((opt: string, optIdx: number) => (
                       <div key={optIdx} className="flex items-center">
                         <input 
                           type="radio" 
