@@ -16,7 +16,7 @@ export default async function BabPage({ params }: { params: { bab: string } }) {
   const babNumber = parseInt(params.bab);
   
   await dbConnect();
-  const materi = await MateriPramuka.findOne({ bab: babNumber }).lean();
+  const materi = await MateriPramuka.findOne({ bab: babNumber }).lean() as any;
 
   if (!materi) {
     notFound();
