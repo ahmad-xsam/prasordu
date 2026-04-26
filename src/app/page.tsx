@@ -1,4 +1,5 @@
 import { BookOpen, Users, Award, Clock } from 'lucide-react';
+import DashboardWidgets from '@/components/DashboardWidgets';
 
 export default function Home() {
   return (
@@ -12,6 +13,8 @@ export default function Home() {
           Mulai Belajar
         </button>
       </div>
+
+      <DashboardWidgets />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
