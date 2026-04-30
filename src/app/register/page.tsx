@@ -26,7 +26,7 @@ export default function RegisterPage() {
       <div className="max-w-5xl w-full bg-[#EBF3D3] rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[650px] border border-white/20 relative z-10">
         
         {/* Left Side - Monkey Hero */}
-        <div className="w-full md:w-[45%] relative bg-[#f7eedf] min-h-[300px] md:min-h-full hidden md:block">
+        <div className="w-full h-[250px] md:h-auto md:w-[45%] relative bg-[#f7eedf] md:min-h-full block">
           <Image
             src="/monkey_hero.png"
             alt="Monkey Explorer"
