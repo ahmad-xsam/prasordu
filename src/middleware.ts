@@ -27,6 +27,7 @@ export default withAuth(
     callbacks: {
       authorized: () => true,
     },
+    secret: process.env.NEXTAUTH_SECRET || "fallback_secret_key_change_me",
   }
 );
 
