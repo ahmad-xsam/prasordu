@@ -13,6 +13,7 @@ import {
   X
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react';
 
 const menuItems = [
   { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
@@ -31,6 +32,9 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const { data: session } = useSession();
+
+  const isAdmin = (session?.user as any)?.role === 'ADMIN';
 
   return (
     <>
@@ -87,8 +91,37 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             })}
           </ul>
 
+          {isAdmin && (
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="px-3 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                Admin
+              </div>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    href="/admin/users"
+                    onClick={onClose}
+                    className={`group flex items-center rounded-lg p-3 transition-all ${
+                      pathname === '/admin/users' 
+                        ? 'bg-primary-50 text-primary-600' 
+                        : 'text-gray-700 hover:bg-gray-50 hover:text-primary-600'
+                    }`}
+                  >
+                    <UserCheck className={`h-5 w-5 transition-colors ${
+                      pathname === '/admin/users' ? 'text-primary-600' : 'text-gray-400 group-hover:text-primary-600'
+                    }`} />
+                    <span className="ms-3">Kelola Pengguna</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          )}
+
           <div className="mt-auto pt-4 border-t border-gray-100">
-            <button className="w-full group flex items-center rounded-lg p-3 text-red-600 hover:bg-red-50 transition-colors">
+            <button 
+              onClick={() => signOut()}
+              className="w-full group flex items-center rounded-lg p-3 text-red-600 hover:bg-red-50 transition-colors"
+            >
               <LogOut className="h-5 w-5" />
               <span className="ms-3 font-medium">Keluar</span>
             </button>
