@@ -47,8 +47,14 @@ export default function PlayGame() {
   };
 
   useEffect(() => {
-    // In a real app, fetch from /api/admin/games here
-    // fetch('/api/admin/games').then(res => res.json()).then(data => setDbLevels(data.levels));
+    fetch('/api/admin/games')
+      .then(res => res.json())
+      .then(data => {
+        if (data.levels && data.levels.length > 0) {
+          setDbLevels(data.levels);
+        }
+      })
+      .catch(e => console.log("Failed to fetch games", e));
   }, []);
 
   // Timer logic
@@ -64,7 +70,10 @@ export default function PlayGame() {
 
   const getActiveQuestions = () => {
     // Return DB questions if exist, otherwise fallback
-    if (dbLevels.length > 0) return dbLevels[selectedLevel - 1]?.questions || defaultQuestions;
+    const currentLevelInfo = (dbLevels.length > 0 ? dbLevels : defaultLevels).find(l => (l.levelNumber || l.id) === selectedLevel);
+    if (currentLevelInfo && currentLevelInfo.questions && currentLevelInfo.questions.length > 0) {
+      return currentLevelInfo.questions;
+    }
     
     // Fallback logic for demo
     if (selectedLevel === 2) {
@@ -74,6 +83,10 @@ export default function PlayGame() {
       return [{ type: 'OPEN_BOX', question: "Berapa usia Gerakan Pramuka pada tahun 2021 (Lahir 1961)?", options: [], answer: "60" }];
     }
     return defaultQuestions;
+  };
+
+  const getCurrentLevelInfo = () => {
+    return (dbLevels.length > 0 ? dbLevels : defaultLevels).find(l => (l.levelNumber || l.id) === selectedLevel) || defaultLevels[0];
   };
 
   const startGame = (levelId: number) => {
@@ -135,7 +148,8 @@ export default function PlayGame() {
         setIsAnswerCorrect(null);
       } else {
         playSound('victory');
-        if (selectedLevel === unlockedLevels && unlockedLevels < defaultLevels.length) {
+        const activeLevels = dbLevels.length > 0 ? dbLevels : defaultLevels;
+        if (selectedLevel === unlockedLevels && unlockedLevels < activeLevels.length) {
           setUnlockedLevels(prev => prev + 1);
         }
         setGameState('VICTORY');
@@ -146,8 +160,16 @@ export default function PlayGame() {
   const quitToMap = () => setGameState('MAP');
 
   const continueNextMission = () => {
-    if (unlockedLevels > selectedLevel) {
-      startGame(selectedLevel + 1);
+    const activeLevels = dbLevels.length > 0 ? dbLevels : defaultLevels;
+    if (unlockedLevels > selectedLevel && selectedLevel < activeLevels.length) {
+      // Find the next level ID
+      const currentIdx = activeLevels.findIndex(l => (l.levelNumber || l.id) === selectedLevel);
+      if (currentIdx !== -1 && currentIdx + 1 < activeLevels.length) {
+        const nextLevelId = activeLevels[currentIdx + 1].levelNumber || activeLevels[currentIdx + 1].id;
+        startGame(nextLevelId);
+      } else {
+        setGameState('MAP');
+      }
     } else {
       setGameState('MAP');
     }
@@ -273,18 +295,20 @@ export default function PlayGame() {
 
                 <div className="flex-1 relative flex items-center justify-center py-10">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative z-10 w-full px-4 max-w-4xl mx-auto">
-                    {defaultLevels.map((level, i) => {
-                      const isUnlocked = level.id <= unlockedLevels;
-                      const isCurrent = level.id === unlockedLevels;
+                    {(dbLevels.length > 0 ? dbLevels : defaultLevels).map((level: any, i: number) => {
+                      const isUnlocked = level.levelNumber ? level.levelNumber <= unlockedLevels : level.id <= unlockedLevels;
+                      const isCurrent = level.levelNumber ? level.levelNumber === unlockedLevels : level.id === unlockedLevels;
+                      const levelId = level.levelNumber || level.id;
+
                       
                       return (
                         <motion.div 
-                          key={level.id}
+                          key={levelId}
                           whileHover={isUnlocked ? { y: -10, scale: 1.05 } : {}}
                           className={`flex flex-col items-center gap-4 ${!isUnlocked && 'opacity-50 grayscale'}`}
                         >
                           <button
-                            onClick={() => isUnlocked && startGame(level.id)}
+                            onClick={() => isUnlocked && startGame(levelId)}
                             disabled={!isUnlocked}
                             className={`w-32 h-32 rounded-3xl flex items-center justify-center border-4 shadow-2xl relative transition-all overflow-hidden
                               ${isCurrent ? 'bg-emerald-900 border-emerald-400 shadow-[0_0_40px_rgba(16,185,129,0.5)]' : 
@@ -305,7 +329,7 @@ export default function PlayGame() {
                             {isCurrent && <span className="absolute -inset-2 rounded-3xl border-2 border-emerald-400 animate-ping opacity-50" />}
                             
                             <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-black border-2 border-slate-700 flex items-center justify-center font-bold">
-                              {level.id}
+                              {levelId}
                             </div>
                           </button>
                           
@@ -339,13 +363,13 @@ export default function PlayGame() {
                     </div>
                     <div>
                       <h2 className="text-emerald-500 font-bold tracking-widest text-sm mb-1">MISSION BRIEFING</h2>
-                      <h3 className="text-3xl font-black">{defaultLevels[selectedLevel - 1].title}</h3>
+                      <h3 className="text-3xl font-black">{getCurrentLevelInfo().title}</h3>
                     </div>
                   </div>
 
                   <div className="space-y-6 mb-10 bg-black/30 p-6 rounded-2xl border border-white/5">
                     <p className="text-slate-300 leading-relaxed text-lg">
-                      Uji pengetahuanmu dalam mode <span className="text-emerald-400 font-bold">{defaultLevels[selectedLevel - 1].type}</span>. 
+                      Uji pengetahuanmu dalam mode <span className="text-emerald-400 font-bold">{getCurrentLevelInfo().type}</span>. 
                       Selesaikan misi untuk mendapatkan Bintang 5 dan melaju ke level berikutnya!
                     </p>
                     <div className="flex gap-4">
@@ -393,7 +417,7 @@ export default function PlayGame() {
 
                   <div className="text-center px-4">
                     <span className="text-slate-500 font-bold text-sm tracking-widest">TASK {currentQuestion + 1}/{getActiveQuestions().length}</span>
-                    <h3 className="text-xl md:text-2xl font-black text-emerald-400 uppercase">{defaultLevels[selectedLevel - 1].title}</h3>
+                    <h3 className="text-xl md:text-2xl font-black text-emerald-400 uppercase">{getCurrentLevelInfo().title}</h3>
                   </div>
 
                   <div className="flex-1 max-w-[200px] text-right">

@@ -1,25 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Save, BookOpen, Image as ImageIcon } from "lucide-react";
 
 export default function AdminMaterialManager() {
   const [materials, setMaterials] = useState<any[]>([]);
   const [currentMaterial, setCurrentMaterial] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchMaterials();
+  }, []);
+
+  const fetchMaterials = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/materials');
+      const data = await res.json();
+      if (data.materials) setMaterials(data.materials);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addNewMaterial = () => {
     setCurrentMaterial({
       title: "Materi Baru",
-      category: "Sejarah Pramuka",
+      category: "",
       content: "",
       imageUrl: ""
     });
   };
 
-  const handleSave = () => {
-    alert("Materi berhasil disimpan! (Sistem tersambung ke Database)");
-    setMaterials([...materials, currentMaterial]);
-    setCurrentMaterial(null);
+  const handleSave = async () => {
+    if (!currentMaterial) return;
+    try {
+      const res = await fetch('/api/materials', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentMaterial)
+      });
+      if (res.ok) {
+        alert("Materi berhasil disimpan ke Database!");
+        fetchMaterials();
+        setCurrentMaterial(null);
+      } else {
+        alert("Gagal menyimpan materi.");
+      }
+    } catch (error) {
+      alert("Terjadi kesalahan.");
+    }
   };
 
   return (
@@ -43,15 +75,17 @@ export default function AdminMaterialManager() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <h2 className="font-bold text-xl mb-4 border-b pb-2">Daftar Materi</h2>
-          <div className="space-y-3">
-            {materials.map((mat, i) => (
-              <div key={i} className="p-4 border rounded-xl bg-gray-50">
-                <div className="font-bold">{mat.title}</div>
-                <div className="text-xs text-gray-500">{mat.category}</div>
-              </div>
-            ))}
-            {materials.length === 0 && <p className="text-gray-500 italic">Belum ada materi.</p>}
-          </div>
+          {loading ? <p>Loading...</p> : (
+            <div className="space-y-3">
+              {materials.map((mat, i) => (
+                <div key={i} className="p-4 border rounded-xl bg-gray-50">
+                  <div className="font-bold">{mat.title}</div>
+                  <div className="text-xs text-gray-500">{mat.category}</div>
+                </div>
+              ))}
+              {materials.length === 0 && <p className="text-gray-500 italic">Belum ada materi.</p>}
+            </div>
+          )}
         </div>
 
         {currentMaterial && (
@@ -71,26 +105,24 @@ export default function AdminMaterialManager() {
                   value={currentMaterial.title}
                   onChange={(e) => setCurrentMaterial({...currentMaterial, title: e.target.value})}
                   className="w-full p-3 border rounded-xl"
+                  placeholder="Contoh: Sejarah Baden Powell"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">Kategori</label>
-                <select 
+                <label className="block text-sm font-bold text-gray-700 mb-1">Kategori Materi (Ketik Bebas)</label>
+                <input 
+                  type="text"
                   value={currentMaterial.category}
                   onChange={(e) => setCurrentMaterial({...currentMaterial, category: e.target.value})}
                   className="w-full p-3 border rounded-xl bg-white"
-                >
-                  <option>Sejarah Pramuka</option>
-                  <option>Lambang Gerakan Pramuka</option>
-                  <option>Sandi & Morse</option>
-                  <option>P3K & Kesehatan</option>
-                </select>
+                  placeholder="Contoh: Sejarah Dunia, P3K, Sandi"
+                />
               </div>
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
-                  <ImageIcon size={18} /> URL Gambar Ilustrasi (Upload Bergambar)
+                  <ImageIcon size={18} /> URL Gambar Ilustrasi (Opsional)
                 </label>
                 <input 
                   type="text" 
