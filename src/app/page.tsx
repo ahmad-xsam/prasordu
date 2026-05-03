@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { Volume2, VolumeX, Shield, Swords, Map as MapIcon, Users } from "lucide-react";
+import { Volume2, VolumeX, Shield, Swords, Map as MapIcon, Users, BookOpen } from "lucide-react";
 
 import jungleBg from "../../public/jungle_bg.png";
 import scoutBoy from "../../public/scout_boy.png";
@@ -94,11 +94,15 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8 }}
-            className="flex gap-6 flex-col sm:flex-row"
+            className="flex gap-6 flex-col sm:flex-row flex-wrap justify-center"
           >
             <Link href="/play" className="group relative px-8 py-4 bg-emerald-600 rounded-xl font-bold text-white text-lg overflow-hidden shadow-[0_0_20px_rgba(16,185,129,0.6)] hover:shadow-[0_0_30px_rgba(16,185,129,0.8)] transition-all">
               <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
               Join Adventure
+            </Link>
+            <Link href="/belajar" className="group relative px-8 py-4 bg-amber-600 rounded-xl font-bold text-white text-lg overflow-hidden shadow-[0_0_20px_rgba(245,158,11,0.6)] hover:shadow-[0_0_30px_rgba(245,158,11,0.8)] transition-all flex items-center gap-2">
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
+              <BookOpen size={24} /> Ruang Belajar
             </Link>
             <Link href="/login" className="px-8 py-4 rounded-xl font-bold text-emerald-400 text-lg border-2 border-emerald-500/50 hover:bg-emerald-500/10 transition-all hover:border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
               Login to Play

@@ -154,8 +154,23 @@ export default function AdminGameManager() {
                       <option value="QUIZ">Pilihan Ganda (Quiz)</option>
                       <option value="MATCH_WORD">Pencocokan Kata</option>
                       <option value="OPEN_BOX">Membuka Kotak</option>
+                      <option value="MATCHING_PAIRS">Menemukan Kecocokan (Matching Pairs)</option>
+                      <option value="MATCH_UP">Mencocokkan Item (Match Up)</option>
+                      <option value="SPIN_WHEEL">Roda Acak (Spin Wheel)</option>
+                      <option value="ANAGRAMS">Anagram (Acak Kata)</option>
                     </select>
                   </div>
+
+                  <input 
+                    type="text" 
+                    placeholder="URL Gambar Pendukung (Opsional - Upload Game Bergambar)" 
+                    onChange={(e) => {
+                      const newQ = [...currentLevel.questions];
+                      (newQ[idx] as any).imageUrl = e.target.value;
+                      setCurrentLevel({...currentLevel, questions: newQ});
+                    }}
+                    className="w-full p-2 border rounded mb-3 bg-blue-50 focus:border-blue-500"
+                  />
 
                   <input 
                     type="text" 

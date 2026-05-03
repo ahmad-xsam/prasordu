@@ -123,8 +123,9 @@ export default function PlayGame() {
     }
 
     setTimeout(() => {
-      if (!correct && hp <= 35) {
+      if (!correct) {
         playSound('gameover');
+        setUnlockedLevels(1); // Perintah: Kembali ke misi 1 lagi jika ada yang salah
         setGameState('GAMEOVER');
       } else if (currentQuestion < getActiveQuestions().length - 1) {
         setCurrentQuestion(prev => prev + 1);

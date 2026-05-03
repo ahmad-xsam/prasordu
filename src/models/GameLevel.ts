@@ -1,10 +1,11 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IQuestion {
-  type: 'QUIZ' | 'MATCH_WORD' | 'OPEN_BOX';
+  type: 'QUIZ' | 'MATCH_WORD' | 'OPEN_BOX' | 'MATCHING_PAIRS' | 'MATCH_UP' | 'SPIN_WHEEL' | 'ANAGRAMS';
   question: string;
-  options: string[]; // For QUIZ: [A, B, C, D], For MATCH_WORD: pairs, For OPEN_BOX: items
-  answer: number | string; // Index for QUIZ, matching string for others
+  imageUrl?: string;
+  options: string[]; 
+  answer: number | string; 
   points: number;
 }
 
@@ -18,8 +19,9 @@ export interface IGameLevel extends Document {
 }
 
 const QuestionSchema = new Schema<IQuestion>({
-  type: { type: String, enum: ['QUIZ', 'MATCH_WORD', 'OPEN_BOX'], required: true, default: 'QUIZ' },
+  type: { type: String, enum: ['QUIZ', 'MATCH_WORD', 'OPEN_BOX', 'MATCHING_PAIRS', 'MATCH_UP', 'SPIN_WHEEL', 'ANAGRAMS'], required: true, default: 'QUIZ' },
   question: { type: String, required: true },
+  imageUrl: { type: String },
   options: [{ type: String }],
   answer: { type: Schema.Types.Mixed, required: true },
   points: { type: Number, default: 100 }
