@@ -55,12 +55,10 @@ export default function LoginPage() {
         
         {/* Left Side - Monkey Hero */}
         <div className="w-full h-[250px] md:h-auto md:w-[45%] relative bg-[#f7eedf] md:min-h-full block">
-          <Image
+          <img
             src="/monkey_hero.png"
             alt="Monkey Explorer"
-            fill
-            className="object-cover object-center"
-            priority
+            className="w-full h-full object-cover object-center absolute inset-0"
           />
         </div>
 
