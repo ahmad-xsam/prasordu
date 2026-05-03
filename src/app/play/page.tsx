@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Sword, Swords, Heart, Clock, ArrowLeft, Star, Trophy, Unlock, Lock, Box, SpellCheck, CheckCircle2, XCircle, Award, Medal, Crown } from "lucide-react";
+import { Shield, Sword, Swords, Heart, Clock, ArrowLeft, Star, Trophy, Unlock, Lock, Box, SpellCheck, CheckCircle2, XCircle, Award, Medal, Crown, Download, Share2 } from "lucide-react";
 import Link from "next/link";
+import { useRef } from "react";
 
 // ---------------- DEFAULT GAME DATA (Fallback) ----------------
 const defaultLevels = [
@@ -39,14 +40,31 @@ export default function PlayGame() {
   const playSound = (type: 'start' | 'correct' | 'wrong' | 'victory' | 'gameover' | 'flip') => {
     const audio = new Audio();
     if (type === 'start') audio.src = 'https://actions.google.com/sounds/v1/foley/whoosh_heavy.ogg';
-    if (type === 'correct') audio.src = 'https://actions.google.com/sounds/v1/cartoon/woodpecker.ogg'; 
+    if (type === 'correct') audio.src = 'https://actions.google.com/sounds/v1/cartoon/magic_chime_scintillation.ogg'; 
     if (type === 'wrong') audio.src = 'https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg';
-    if (type === 'victory') audio.src = 'https://actions.google.com/sounds/v1/crowds/light_applause.ogg';
+    if (type === 'victory') audio.src = 'https://actions.google.com/sounds/v1/brass/orchestral_fanfare.ogg';
     if (type === 'gameover') audio.src = 'https://actions.google.com/sounds/v1/cartoon/conk_head.ogg';
     if (type === 'flip') audio.src = 'https://actions.google.com/sounds/v1/cartoon/pop.ogg';
     audio.volume = 0.5;
     audio.play().catch(e => console.log("Audio prevented", e));
   };
+
+  const bgmRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Background Music Logic
+    if (!bgmRef.current) {
+      bgmRef.current = new Audio('https://actions.google.com/sounds/v1/science_fiction/alien_spaceship_interior.ogg');
+      bgmRef.current.loop = true;
+      bgmRef.current.volume = 0.3;
+    }
+    
+    if (gameState === 'PLAYING') {
+      bgmRef.current.play().catch(e => console.log("BGM play prevented", e));
+    } else {
+      bgmRef.current.pause();
+    }
+  }, [gameState]);
 
   useEffect(() => {
     fetch('/api/admin/games')
@@ -209,6 +227,40 @@ export default function PlayGame() {
     } else {
       setGameState('MAP');
     }
+  };
+
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const loadHtml2Canvas = async () => {
+    if ((window as any).html2canvas) return (window as any).html2canvas;
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+      script.onload = () => resolve((window as any).html2canvas);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handleDownloadCard = async () => {
+    if (!cardRef.current) return;
+    try {
+      const html2canvas = await loadHtml2Canvas();
+      const canvas = await html2canvas(cardRef.current, { backgroundColor: '#0d1627' });
+      const url = canvas.toDataURL("image/png");
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `prasordu-badge-level-${selectedLevel}.png`;
+      a.click();
+    } catch (e) {
+      console.error("Failed to generate image", e);
+    }
+  };
+
+  const handleShareWA = async () => {
+    // Web Share API if on mobile, otherwise just generic whatsapp link
+    const text = `Saya baru saja menyelesaikan Misi Level ${selectedLevel} di Prasordu Adventure Digital Mission! Ayo bergabung bersama Pramuka dan selesaikan tantangannya di website ini!`;
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+    window.open(waUrl, '_blank');
   };
 
   const renderGameUI = () => {
@@ -588,70 +640,94 @@ export default function PlayGame() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="flex-1 flex items-center justify-center"
               >
-                <div className="text-center bg-[#0d1627] p-12 rounded-3xl border border-slate-700 shadow-2xl max-w-xl w-full relative overflow-hidden">
-                  
-                  {gameState === 'VICTORY' ? (
-                    <>
-                      <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/20 to-transparent" />
-                      
-                      {/* DYNAMIC BADGE RENDERER BASED ON LEVEL */}
-                      {(() => {
-                        const levelIndex = (dbLevels.length > 0 ? dbLevels : defaultLevels).findIndex(l => (l.levelNumber || l.id) === selectedLevel);
-                        const displayLevel = levelIndex + 1; // 1-indexed
+                <div className="text-center max-w-xl w-full">
+                  <div ref={cardRef} className="bg-[#0d1627] p-12 pb-16 rounded-3xl border border-slate-700 shadow-2xl relative overflow-hidden mb-6">
+                    
+                    {gameState === 'VICTORY' ? (
+                      <>
+                        <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/20 to-transparent" />
+                        
+                        {/* DYNAMIC BADGE RENDERER BASED ON LEVEL */}
+                        {(() => {
+                          const levelIndex = (dbLevels.length > 0 ? dbLevels : defaultLevels).findIndex(l => (l.levelNumber || l.id) === selectedLevel);
+                          const displayLevel = levelIndex + 1; // 1-indexed
 
-                        let badgeColor = "from-amber-700 to-amber-900 border-amber-600 shadow-amber-700/50 text-amber-500";
-                        let BadgeIcon = Award;
-                        let badgeTitle = "BRONZE SCOUT";
+                          let badgeColor = "from-amber-700 to-amber-900 border-amber-600 shadow-amber-700/50 text-amber-500";
+                          let BadgeIcon = Award;
+                          let badgeTitle = "BRONZE SCOUT";
 
-                        if (displayLevel === 2) { badgeColor = "from-slate-300 to-slate-500 border-slate-400 shadow-slate-400/50 text-slate-200"; BadgeIcon = Medal; badgeTitle = "SILVER RANGER"; }
-                        if (displayLevel === 3) { badgeColor = "from-yellow-400 to-yellow-600 border-yellow-500 shadow-yellow-500/50 text-yellow-300"; BadgeIcon = Shield; badgeTitle = "GOLD EAGLE"; }
-                        if (displayLevel === 4) { badgeColor = "from-cyan-300 to-blue-500 border-cyan-400 shadow-cyan-400/50 text-cyan-200"; BadgeIcon = Star; badgeTitle = "PLATINUM MASTER"; }
-                        if (displayLevel >= 5) { badgeColor = "from-fuchsia-500 to-purple-700 border-fuchsia-400 shadow-fuchsia-500/50 text-fuchsia-300"; BadgeIcon = Crown; badgeTitle = "DIAMOND LEGEND"; }
+                          if (displayLevel === 2) { badgeColor = "from-slate-300 to-slate-500 border-slate-400 shadow-slate-400/50 text-slate-200"; BadgeIcon = Medal; badgeTitle = "SILVER RANGER"; }
+                          if (displayLevel === 3) { badgeColor = "from-yellow-400 to-yellow-600 border-yellow-500 shadow-yellow-500/50 text-yellow-300"; BadgeIcon = Shield; badgeTitle = "GOLD EAGLE"; }
+                          if (displayLevel === 4) { badgeColor = "from-cyan-300 to-blue-500 border-cyan-400 shadow-cyan-400/50 text-cyan-200"; BadgeIcon = Star; badgeTitle = "PLATINUM MASTER"; }
+                          if (displayLevel >= 5) { badgeColor = "from-fuchsia-500 to-purple-700 border-fuchsia-400 shadow-fuchsia-500/50 text-fuchsia-300"; BadgeIcon = Crown; badgeTitle = "DIAMOND LEGEND"; }
 
-                        return (
-                          <div className="relative mb-8">
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white/5 rounded-full animate-ping" />
-                            <div className={`mx-auto w-32 h-32 rounded-3xl rotate-45 bg-gradient-to-br border-4 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center relative z-10 ${badgeColor}`}>
-                              <div className="-rotate-45 text-white drop-shadow-lg">
-                                <BadgeIcon size={64} />
+                          return (
+                            <div className="relative mb-8 pt-4">
+                              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white/5 rounded-full animate-ping" />
+                              <div className={`mx-auto w-32 h-32 rounded-3xl rotate-45 bg-gradient-to-br border-4 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center relative z-10 ${badgeColor}`}>
+                                <div className="-rotate-45 text-white drop-shadow-lg">
+                                  <BadgeIcon size={64} />
+                                </div>
+                              </div>
+                              <div className="mt-8">
+                                <span className={`px-4 py-1 rounded-full text-xs font-black tracking-widest border bg-black/50 ${badgeColor.split(' ')[4] /* text color */}`}>BADGE LEVEL {displayLevel}: {badgeTitle}</span>
                               </div>
                             </div>
-                            <div className="mt-8">
-                              <span className={`px-4 py-1 rounded-full text-xs font-black tracking-widest border bg-black/50 ${badgeColor.split(' ')[4] /* text color */}`}>BADGE LEVEL {displayLevel}: {badgeTitle}</span>
-                            </div>
-                          </div>
-                        );
-                      })()}
+                          );
+                        })()}
 
-                      <h2 className="text-4xl font-black text-white mb-2 uppercase tracking-widest">MISSION CLEARED</h2>
-                      
-                      <div className="flex justify-center gap-2 mb-4 text-amber-400">
-                        <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
-                        <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
-                        <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
-                        <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
-                        <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
-                      </div>
-                      
-                      <p className="text-emerald-400 font-bold text-lg mb-2">Keahlian Pramukamu terbukti tangguh!</p>
-                      <p className="text-slate-400 text-sm mb-8 px-4 leading-relaxed">
-                        Kumpulkan badge ini dan laporkan kepada pembina untuk ditukarkan menjadi point tambahan pada Raport dan Bintang Tahunan Seragam Pramuka.
+                        <h2 className="text-4xl font-black text-white mb-2 uppercase tracking-widest mt-4">MISSION CLEARED</h2>
+                        
+                        <div className="flex justify-center gap-2 mb-4 text-amber-400">
+                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
+                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
+                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
+                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
+                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
+                        </div>
+                        
+                        <p className="text-emerald-400 font-bold text-lg mb-2">Keahlian Pramukamu terbukti tangguh!</p>
+                        <p className="text-slate-400 text-sm mb-8 px-4 leading-relaxed">
+                          Kumpulkan badge ini dan laporkan kepada pembina untuk ditukarkan menjadi point tambahan pada Raport dan Bintang Tahunan Seragam Pramuka.
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="absolute inset-0 bg-gradient-to-b from-red-500/20 to-transparent" />
+                        <div className="w-24 h-24 mx-auto mb-6 bg-red-500/20 rounded-full flex items-center justify-center border-4 border-red-500 text-red-400 shadow-[0_0_50px_rgba(239,68,68,0.5)] mt-4">
+                          <Sword size={48} />
+                        </div>
+                        <h2 className="text-4xl font-black text-white mb-2 uppercase tracking-widest mt-4">MISSION FAILED</h2>
+                        <p className="text-red-400 font-bold text-lg mb-8">Kamu melakukan kesalahan. Kembali ke Level 1!</p>
+                      </>
+                    )}
+
+                    <div className="bg-black/50 rounded-2xl p-6 mb-8 border border-white/5 mx-auto max-w-sm">
+                      <p className="text-slate-400 font-bold mb-2">TOTAL SCORE</p>
+                      <p className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">{score}</p>
+                    </div>
+
+                    {/* FOOTER TEXT INSIDE CARD */}
+                    <div className="absolute bottom-0 left-0 w-full bg-emerald-950/50 py-3 border-t border-emerald-500/20">
+                      <p className="text-emerald-400/80 text-xs font-bold px-4 leading-relaxed uppercase tracking-wider">
+                        Mari bergabung bersama menjadi bagian dari Scout Sordu Adventure Digital Mission<br/>
+                        <span className="text-slate-400 text-[10px] lowercase">Website ini dikelola oleh prasordu official</span>
                       </p>
-                    </>
-                  ) : (
-                    <>
-                      <div className="absolute inset-0 bg-gradient-to-b from-red-500/20 to-transparent" />
-                      <div className="w-24 h-24 mx-auto mb-6 bg-red-500/20 rounded-full flex items-center justify-center border-4 border-red-500 text-red-400 shadow-[0_0_50px_rgba(239,68,68,0.5)]">
-                        <Sword size={48} />
-                      </div>
-                      <h2 className="text-4xl font-black text-white mb-2 uppercase tracking-widest">MISSION FAILED</h2>
-                      <p className="text-red-400 font-bold text-lg mb-8">Kamu melakukan kesalahan. Kembali ke Level 1!</p>
-                    </>
-                  )}
+                    </div>
+                  </div>
 
-                  <div className="bg-black/50 rounded-2xl p-6 mb-8 border border-white/5">
-                    <p className="text-slate-400 font-bold mb-2">TOTAL SCORE</p>
-                    <p className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">{score}</p>
+                  {/* ACTION BUTTONS (Outside the card so they aren't downloaded) */}
+                  <div className="flex gap-4 flex-col sm:flex-row mb-8">
+                    {gameState === 'VICTORY' && (
+                      <>
+                        <button onClick={handleDownloadCard} className="flex-1 py-4 bg-amber-500 hover:bg-amber-400 text-black font-black rounded-xl transition-all shadow-[0_0_20px_rgba(245,158,11,0.4)] flex items-center justify-center gap-2">
+                          <Download size={20} /> UNDUH BADGE
+                        </button>
+                        <button onClick={handleShareWA} className="flex-1 py-4 bg-green-500 hover:bg-green-400 text-white font-black rounded-xl transition-all shadow-[0_0_20px_rgba(34,197,94,0.4)] flex items-center justify-center gap-2">
+                          <Share2 size={20} /> BAGIKAN (WA)
+                        </button>
+                      </>
+                    )}
                   </div>
 
                   <div className="flex gap-4">
