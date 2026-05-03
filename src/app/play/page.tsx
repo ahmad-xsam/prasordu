@@ -45,16 +45,18 @@ export default function PlayGame() {
 
     if (!win.sfxMap[type]) {
       let src = '';
-      if (type === 'start') src = 'https://actions.google.com/sounds/v1/foley/whoosh_heavy.ogg';
-      if (type === 'correct') src = 'https://actions.google.com/sounds/v1/cartoon/magic_chime_scintillation.ogg'; 
-      if (type === 'wrong') src = 'https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg';
-      if (type === 'victory') src = 'https://actions.google.com/sounds/v1/brass/orchestral_fanfare.ogg';
-      if (type === 'gameover') src = 'https://actions.google.com/sounds/v1/cartoon/conk_head.ogg';
-      if (type === 'flip') src = 'https://actions.google.com/sounds/v1/cartoon/pop.ogg';
-      if (type === 'bgm') src = 'https://actions.google.com/sounds/v1/science_fiction/alien_spaceship_interior.ogg';
+      if (type === 'start') src = 'https://cdn.freesound.org/previews/600/600130_13506646-lq.mp3';
+      if (type === 'correct') src = 'https://cdn.freesound.org/previews/270/270404_5123851-lq.mp3'; 
+      if (type === 'wrong') src = 'https://cdn.freesound.org/previews/142/142608_1840739-lq.mp3';
+      if (type === 'victory') src = 'https://cdn.freesound.org/previews/320/320655_5260872-lq.mp3';
+      if (type === 'gameover') src = 'https://cdn.freesound.org/previews/173/173859_2375818-lq.mp3';
+      if (type === 'flip') src = 'https://cdn.freesound.org/previews/240/240776_4107740-lq.mp3';
+      if (type === 'bgm') src = 'https://cdn.freesound.org/previews/612/612059_11861866-lq.mp3';
       
       const audio = new Audio(src);
       if (type === 'bgm') audio.loop = true;
+      // Pre-load audio to ensure it's ready when played on mobile
+      audio.load();
       win.sfxMap[type] = audio;
     }
 
@@ -64,7 +66,10 @@ export default function PlayGame() {
     } else {
       if (type !== 'bgm') el.currentTime = 0;
       el.volume = type === 'bgm' ? 0.3 : 1.0;
-      el.play().catch((e:any) => console.log("Audio prevented:", e));
+      const playPromise = el.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((e:any) => console.log("Audio prevented:", e));
+      }
     }
   };
 
@@ -278,7 +283,7 @@ export default function PlayGame() {
     
     if (q.type === 'QUIZ') {
       return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
           {q.options.map((option: string, index: number) => {
             let btnStyle = "bg-slate-800 border-slate-600 hover:border-emerald-500 hover:bg-slate-700";
             if (selectedAnswer !== null) {
@@ -287,8 +292,8 @@ export default function PlayGame() {
               else btnStyle = "bg-slate-900 border-slate-800 opacity-50";
             }
             return (
-              <button key={index} disabled={selectedAnswer !== null} onClick={() => handleQuizAnswer(index)} className={`p-6 rounded-2xl border-2 text-left font-bold text-lg transition-all ${btnStyle}`}>
-                <span className="inline-block w-8 text-slate-400 mr-2">{['A', 'B', 'C', 'D'][index]}</span>
+              <button key={index} disabled={selectedAnswer !== null} onClick={() => handleQuizAnswer(index)} className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 text-left font-bold text-sm sm:text-base md:text-lg transition-all ${btnStyle}`}>
+                <span className="inline-block w-6 sm:w-8 text-slate-400 mr-1 sm:mr-2">{['A', 'B', 'C', 'D'][index]}</span>
                 {option}
               </button>
             );
@@ -299,31 +304,31 @@ export default function PlayGame() {
 
     if (q.type === 'YES_NO') {
       return (
-        <div className="flex gap-4 max-w-xl mx-auto">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-xl mx-auto w-full">
           <button 
             disabled={selectedAnswer !== null} 
             onClick={() => handleQuizAnswer(true)} 
-            className={`flex-1 flex flex-col items-center justify-center gap-4 py-8 rounded-3xl border-4 transition-all ${
+            className={`flex-1 flex flex-row sm:flex-col items-center justify-center gap-3 sm:gap-4 py-4 sm:py-8 rounded-2xl sm:rounded-3xl border-4 transition-all ${
               selectedAnswer !== null 
                 ? (q.answer === true ? 'bg-emerald-600 border-emerald-400 shadow-[0_0_30px_#10b981]' : selectedAnswer === true ? 'bg-red-600 border-red-400' : 'bg-slate-900 border-slate-800 opacity-50')
                 : 'bg-emerald-900/50 border-emerald-500/50 hover:bg-emerald-800 hover:scale-105'
             }`}
           >
-            <CheckCircle2 size={64} className={selectedAnswer !== null && q.answer === true ? "text-white" : "text-emerald-400"} />
-            <span className="font-black text-2xl tracking-widest text-white">BENAR</span>
+            <CheckCircle2 size={64} className={`w-10 h-10 sm:w-16 sm:h-16 ${selectedAnswer !== null && q.answer === true ? "text-white" : "text-emerald-400"}`} />
+            <span className="font-black text-xl sm:text-2xl tracking-widest text-white">BENAR</span>
           </button>
           
           <button 
             disabled={selectedAnswer !== null} 
             onClick={() => handleQuizAnswer(false)} 
-            className={`flex-1 flex flex-col items-center justify-center gap-4 py-8 rounded-3xl border-4 transition-all ${
+            className={`flex-1 flex flex-row sm:flex-col items-center justify-center gap-3 sm:gap-4 py-4 sm:py-8 rounded-2xl sm:rounded-3xl border-4 transition-all ${
               selectedAnswer !== null 
                 ? (q.answer === false ? 'bg-emerald-600 border-emerald-400 shadow-[0_0_30px_#10b981]' : selectedAnswer === false ? 'bg-red-600 border-red-400' : 'bg-slate-900 border-slate-800 opacity-50')
                 : 'bg-red-900/50 border-red-500/50 hover:bg-red-800 hover:scale-105'
             }`}
           >
-            <XCircle size={64} className={selectedAnswer !== null && q.answer === false ? "text-white" : "text-red-400"} />
-            <span className="font-black text-2xl tracking-widest text-white">SALAH</span>
+            <XCircle size={64} className={`w-10 h-10 sm:w-16 sm:h-16 ${selectedAnswer !== null && q.answer === false ? "text-white" : "text-red-400"}`} />
+            <span className="font-black text-xl sm:text-2xl tracking-widest text-white">SALAH</span>
           </button>
         </div>
       );
@@ -333,21 +338,21 @@ export default function PlayGame() {
       return (
         <div className="flex flex-col items-center gap-6">
           {q.type === 'OPEN_BOX' && (
-            <div className={`w-32 h-32 rounded-2xl border-4 flex items-center justify-center transition-all duration-500 ${isAnswerCorrect ? 'border-emerald-400 bg-emerald-900/50 scale-110 shadow-[0_0_30px_#10b981]' : 'border-amber-400 bg-amber-900/20'}`}>
-              <Box size={64} className={isAnswerCorrect ? 'text-emerald-400' : 'text-amber-400 animate-pulse'} />
+            <div className={`w-24 h-24 sm:w-32 sm:h-32 rounded-2xl border-4 flex items-center justify-center transition-all duration-500 ${isAnswerCorrect ? 'border-emerald-400 bg-emerald-900/50 scale-110 shadow-[0_0_30px_#10b981]' : 'border-amber-400 bg-amber-900/20'}`}>
+              <Box className={`w-12 h-12 sm:w-16 sm:h-16 ${isAnswerCorrect ? 'text-emerald-400' : 'text-amber-400 animate-pulse'}`} />
             </div>
           )}
-          <div className="w-full max-w-md flex gap-2">
+          <div className="w-full max-w-md flex flex-col sm:flex-row gap-2">
             <input 
               type="text" 
               placeholder={q.type === 'OPEN_BOX' ? "Masukkan kode rahasia..." : "Ketik kata yang hilang..."} 
               value={textInput} 
               onChange={e => setTextInput(e.target.value)}
               disabled={isAnswerCorrect !== null}
-              className="flex-1 bg-slate-800 border-2 border-slate-600 rounded-xl px-4 py-3 font-bold text-lg focus:border-amber-400 outline-none uppercase text-center tracking-widest"
+              className="flex-1 w-full bg-slate-800 border-2 border-slate-600 rounded-xl px-4 py-3 sm:py-4 font-bold text-sm sm:text-lg focus:border-amber-400 outline-none uppercase text-center tracking-widest"
               onKeyDown={e => e.key === 'Enter' && handleTextAnswer()}
             />
-            <button onClick={handleTextAnswer} disabled={isAnswerCorrect !== null} className="bg-amber-500 hover:bg-amber-400 text-black px-8 font-black rounded-xl transition-colors">
+            <button onClick={handleTextAnswer} disabled={isAnswerCorrect !== null} className="w-full sm:w-auto py-3 sm:py-0 bg-amber-500 hover:bg-amber-400 text-black px-8 font-black rounded-xl transition-colors">
               SUBMIT
             </button>
           </div>
@@ -364,25 +369,25 @@ export default function PlayGame() {
       return (
         <div className="flex flex-col items-center gap-6">
           {textInput === "" && (
-            <div className="flex flex-wrap gap-3 justify-center mb-6">
+            <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-6 px-2">
               {letters.map((letter: string, i: number) => (
-                <motion.div initial={{scale:0}} animate={{scale:1}} transition={{delay: i*0.1}} key={i} className="w-14 h-14 bg-cyan-900/50 rounded-xl flex items-center justify-center font-black text-2xl border-b-4 border-cyan-700 text-cyan-100 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                <motion.div initial={{scale:0}} animate={{scale:1}} transition={{delay: i*0.1}} key={i} className="w-10 h-10 sm:w-14 sm:h-14 bg-cyan-900/50 rounded-xl flex items-center justify-center font-black text-xl sm:text-2xl border-b-2 sm:border-b-4 border-cyan-700 text-cyan-100 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
                   {letter}
                 </motion.div>
               ))}
             </div>
           )}
-          <div className="w-full max-w-md flex gap-2">
+          <div className="w-full max-w-md flex flex-col sm:flex-row gap-2">
             <input 
               type="text" 
               placeholder="Susun kata yang benar..." 
               value={textInput} 
               onChange={e => setTextInput(e.target.value)}
               disabled={isAnswerCorrect !== null}
-              className="flex-1 bg-slate-800 border-2 border-slate-600 rounded-xl px-4 py-3 font-black text-2xl focus:border-cyan-400 outline-none text-center tracking-widest uppercase"
+              className="flex-1 w-full bg-slate-800 border-2 border-slate-600 rounded-xl px-4 py-3 sm:py-4 font-black text-lg sm:text-2xl focus:border-cyan-400 outline-none text-center tracking-widest uppercase"
               onKeyDown={e => e.key === 'Enter' && handleTextAnswer()}
             />
-            <button onClick={handleTextAnswer} disabled={isAnswerCorrect !== null} className="bg-cyan-500 hover:bg-cyan-400 text-black px-6 font-black rounded-xl"><SpellCheck /></button>
+            <button onClick={handleTextAnswer} disabled={isAnswerCorrect !== null} className="w-full sm:w-auto py-3 sm:py-0 bg-cyan-500 hover:bg-cyan-400 text-black px-6 font-black rounded-xl flex justify-center items-center"><SpellCheck /></button>
           </div>
         </div>
       );
@@ -390,7 +395,7 @@ export default function PlayGame() {
 
     if (q.type === 'MATCHING_PAIRS') {
       return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-4 max-w-3xl mx-auto w-full">
           {memoryCards.map((card, i) => {
             const isFlipped = flippedCards.includes(i) || card.isMatched;
             return (
@@ -402,17 +407,17 @@ export default function PlayGame() {
                     setFlippedCards([...flippedCards, i]);
                   }
                 }}
-                className={`relative w-full aspect-square rounded-2xl cursor-pointer transition-all duration-500 transform-gpu ${isFlipped ? '[transform:rotateY(180deg)]' : 'hover:-translate-y-2'}`}
+                className={`relative w-full aspect-square rounded-xl sm:rounded-2xl cursor-pointer transition-all duration-500 transform-gpu ${isFlipped ? '[transform:rotateY(180deg)]' : 'hover:-translate-y-2'}`}
                 style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
               >
                 {/* Back of Card */}
-                <div className="absolute inset-0 bg-indigo-900 border-4 border-indigo-500/50 rounded-2xl flex items-center justify-center backface-hidden" style={{ backfaceVisibility: 'hidden' }}>
+                <div className="absolute inset-0 bg-indigo-900 border-2 sm:border-4 border-indigo-500/50 rounded-xl sm:rounded-2xl flex items-center justify-center backface-hidden" style={{ backfaceVisibility: 'hidden' }}>
                   <Star className="text-indigo-500/30 w-1/2 h-1/2" />
                 </div>
                 
                 {/* Front of Card */}
-                <div className={`absolute inset-0 rounded-2xl flex items-center justify-center p-4 border-4 text-center break-words [transform:rotateY(180deg)] shadow-xl ${card.isMatched ? 'bg-emerald-900 border-emerald-400 text-emerald-100 shadow-[0_0_20px_#10b981]' : 'bg-slate-800 border-indigo-400 text-white'}`} style={{ backfaceVisibility: 'hidden' }}>
-                  <span className="font-bold text-lg md:text-xl">{card.text}</span>
+                <div className={`absolute inset-0 rounded-xl sm:rounded-2xl flex items-center justify-center p-2 sm:p-4 border-2 sm:border-4 text-center break-words [transform:rotateY(180deg)] shadow-xl ${card.isMatched ? 'bg-emerald-900 border-emerald-400 text-emerald-100 shadow-[0_0_20px_#10b981]' : 'bg-slate-800 border-indigo-400 text-white'}`} style={{ backfaceVisibility: 'hidden' }}>
+                  <span className="font-bold text-xs sm:text-lg md:text-xl">{card.text}</span>
                 </div>
               </div>
             );
@@ -456,7 +461,7 @@ export default function PlayGame() {
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 flex flex-col p-6 overflow-hidden">
+        <main className="flex-1 flex flex-col p-3 sm:p-6 overflow-hidden relative z-10 w-full h-full">
           <AnimatePresence mode="wait">
             
             {/* 1. MAP SELECTION STATE */}
@@ -609,15 +614,15 @@ export default function PlayGame() {
                 </div>
 
                 {/* Question Card */}
-                <div className="bg-[#0f1c2e] p-8 md:p-12 rounded-3xl border-2 border-slate-700 shadow-2xl relative">
+                <div className="bg-[#0f1c2e] p-4 sm:p-8 md:p-12 rounded-3xl border-2 border-slate-700 shadow-2xl relative w-full">
                   
                   {getActiveQuestions()[currentQuestion]?.imageUrl && (
-                    <div className="w-48 h-48 mx-auto mb-6 rounded-2xl overflow-hidden border-4 border-slate-600 shadow-[0_0_20px_rgba(0,0,0,0.5)] bg-black">
+                    <div className="w-32 h-32 sm:w-48 sm:h-48 mx-auto mb-6 rounded-2xl overflow-hidden border-2 sm:border-4 border-slate-600 shadow-[0_0_20px_rgba(0,0,0,0.5)] bg-black">
                       <img src={getActiveQuestions()[currentQuestion].imageUrl} className="w-full h-full object-cover" alt="Clue" />
                     </div>
                   )}
 
-                  <h2 className="text-2xl md:text-3xl font-bold leading-relaxed text-white text-center mb-10">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold leading-relaxed text-white text-center mb-6 sm:mb-10 px-2 sm:px-0">
                     {getActiveQuestions()[currentQuestion].question}
                   </h2>
 
