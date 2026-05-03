@@ -7,8 +7,8 @@ import dynamic from "next/dynamic";
 import { Volume2, VolumeX, Shield, Swords, Map as MapIcon, Users, BookOpen } from "lucide-react";
 
 import jungleBg from "../../public/cave_bg.jpg";
-import scoutBoy from "../../public/scout_boy.png";
-import scoutGirl from "../../public/scout_girl.png";
+import scoutBoy from "../../public/scout_boy.jpg";
+import scoutGirl from "../../public/scout_girl.jpg";
 
 // Dynamically import heavy components to avoid SSR issues
 const ThreeCanvas = dynamic(() => import("@/components/ThreeCanvas"), { ssr: false });
