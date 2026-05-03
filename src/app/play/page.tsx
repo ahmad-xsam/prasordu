@@ -36,35 +36,21 @@ export default function PlayGame() {
   // DB Levels
   const [dbLevels, setDbLevels] = useState<any[]>([]);
 
-  // Sound Effects
-  const playSound = (type: 'start' | 'correct' | 'wrong' | 'victory' | 'gameover' | 'flip') => {
-    const audio = new Audio();
-    if (type === 'start') audio.src = 'https://actions.google.com/sounds/v1/foley/whoosh_heavy.ogg';
-    if (type === 'correct') audio.src = 'https://actions.google.com/sounds/v1/cartoon/magic_chime_scintillation.ogg'; 
-    if (type === 'wrong') audio.src = 'https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg';
-    if (type === 'victory') audio.src = 'https://actions.google.com/sounds/v1/brass/orchestral_fanfare.ogg';
-    if (type === 'gameover') audio.src = 'https://actions.google.com/sounds/v1/cartoon/conk_head.ogg';
-    if (type === 'flip') audio.src = 'https://actions.google.com/sounds/v1/cartoon/pop.ogg';
-    audio.volume = 0.5;
-    audio.play().catch(e => console.log("Audio prevented", e));
+  // Sound Effects via DOM Elements to ensure preload & bypass strict autoplay policies
+  const playSound = (type: 'start' | 'correct' | 'wrong' | 'victory' | 'gameover' | 'flip' | 'bgm', action: 'play' | 'pause' = 'play') => {
+    if (typeof document !== 'undefined') {
+      const el = document.getElementById(`sfx-${type}`) as HTMLAudioElement;
+      if (el) {
+        if (action === 'pause') {
+          el.pause();
+        } else {
+          if (type !== 'bgm') el.currentTime = 0;
+          el.volume = type === 'bgm' ? 0.3 : 0.5;
+          el.play().catch(e => console.log("Audio prevented:", e));
+        }
+      }
+    }
   };
-
-  const bgmRef = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    // Background Music Logic
-    if (!bgmRef.current) {
-      bgmRef.current = new Audio('https://actions.google.com/sounds/v1/science_fiction/alien_spaceship_interior.ogg');
-      bgmRef.current.loop = true;
-      bgmRef.current.volume = 0.3;
-    }
-    
-    if (gameState === 'PLAYING') {
-      bgmRef.current.play().catch(e => console.log("BGM play prevented", e));
-    } else {
-      bgmRef.current.pause();
-    }
-  }, [gameState]);
 
   useEffect(() => {
     fetch('/api/admin/games')
@@ -76,6 +62,14 @@ export default function PlayGame() {
       })
       .catch(e => console.log("Failed to fetch games", e));
   }, []);
+
+  useEffect(() => {
+    if (gameState === 'PLAYING') {
+      playSound('bgm', 'play');
+    } else {
+      playSound('bgm', 'pause');
+    }
+  }, [gameState]);
 
   const getCurrentLevelInfo = () => {
     return (dbLevels.length > 0 ? dbLevels : defaultLevels).find(l => (l.levelNumber || l.id) === selectedLevel) || defaultLevels[0];
@@ -416,6 +410,15 @@ export default function PlayGame() {
 
   return (
     <div className="min-h-screen bg-[#070b14] text-white font-sans selection:bg-emerald-500 overflow-hidden relative">
+      {/* Preloaded Audio Elements for Instant Playback without Safari/Chrome blocking */}
+      <audio id="sfx-start" src="https://actions.google.com/sounds/v1/foley/whoosh_heavy.ogg" preload="auto" />
+      <audio id="sfx-correct" src="https://actions.google.com/sounds/v1/cartoon/magic_chime_scintillation.ogg" preload="auto" />
+      <audio id="sfx-wrong" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg" preload="auto" />
+      <audio id="sfx-victory" src="https://actions.google.com/sounds/v1/brass/orchestral_fanfare.ogg" preload="auto" />
+      <audio id="sfx-gameover" src="https://actions.google.com/sounds/v1/cartoon/conk_head.ogg" preload="auto" />
+      <audio id="sfx-flip" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg" preload="auto" />
+      <audio id="sfx-bgm" src="https://actions.google.com/sounds/v1/science_fiction/alien_spaceship_interior.ogg" loop preload="auto" />
+
       {/* Dynamic Backgrounds based on Level Type */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
@@ -704,7 +707,7 @@ export default function PlayGame() {
 
                     <div className="bg-black/50 rounded-2xl p-6 mb-8 border border-white/5 mx-auto max-w-sm">
                       <p className="text-slate-400 font-bold mb-2">TOTAL SCORE</p>
-                      <p className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">{score}</p>
+                      <p className="text-5xl font-black text-emerald-400 drop-shadow-md">{score}</p>
                     </div>
 
                     {/* FOOTER TEXT INSIDE CARD */}
@@ -717,16 +720,16 @@ export default function PlayGame() {
                   </div>
 
                   {/* ACTION BUTTONS (Outside the card so they aren't downloaded) */}
-                  <div className="flex gap-4 flex-col sm:flex-row mb-8">
+                  <div className="flex gap-4 flex-col sm:flex-row mb-8 justify-center items-center">
                     {gameState === 'VICTORY' && (
-                      <>
-                        <button onClick={handleDownloadCard} className="flex-1 py-4 bg-amber-500 hover:bg-amber-400 text-black font-black rounded-xl transition-all shadow-[0_0_20px_rgba(245,158,11,0.4)] flex items-center justify-center gap-2">
-                          <Download size={20} /> UNDUH BADGE
+                      <div className="flex gap-4">
+                        <button onClick={handleDownloadCard} className="w-16 h-16 bg-amber-500 hover:bg-amber-400 text-black font-black rounded-full transition-all shadow-[0_0_20px_rgba(245,158,11,0.4)] flex items-center justify-center">
+                          <Download size={28} />
                         </button>
-                        <button onClick={handleShareWA} className="flex-1 py-4 bg-green-500 hover:bg-green-400 text-white font-black rounded-xl transition-all shadow-[0_0_20px_rgba(34,197,94,0.4)] flex items-center justify-center gap-2">
-                          <Share2 size={20} /> BAGIKAN (WA)
+                        <button onClick={handleShareWA} className="w-16 h-16 bg-green-500 hover:bg-green-400 text-white font-black rounded-full transition-all shadow-[0_0_20px_rgba(34,197,94,0.4)] flex items-center justify-center">
+                          <Share2 size={28} />
                         </button>
-                      </>
+                      </div>
                     )}
                   </div>
 
