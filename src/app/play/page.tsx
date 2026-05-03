@@ -33,6 +33,9 @@ export default function PlayGame() {
   const [memoryCards, setMemoryCards] = useState<{id: number, text: string, isMatched: boolean}[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
 
+  // DB Levels
+  const [dbLevels, setDbLevels] = useState<any[]>([]);
+
   // Sound Effects Caching
   const playSound = (type: 'start' | 'correct' | 'wrong' | 'victory' | 'gameover' | 'flip' | 'bgm', action: 'play' | 'pause' = 'play') => {
     if (typeof window === 'undefined') return;
