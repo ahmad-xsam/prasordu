@@ -51,7 +51,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       }`}>
         <div className="flex h-full flex-col overflow-y-auto px-3 py-4">
           <div className="flex items-center justify-between mb-8 px-2">
-            <Link href="/" className="flex items-center" onClick={onClose}>
+            <Link href="/dashboard" className="flex items-center" onClick={onClose}>
               <div className="h-8 w-8 bg-primary-600 rounded-lg flex items-center justify-center mr-3">
                 <span className="text-white font-bold text-xl">P</span>
               </div>

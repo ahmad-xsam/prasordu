@@ -16,7 +16,7 @@ export default function MainLayout({
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
 
-  if (pathname === '/login') {
+  if (pathname === '/login' || pathname === '/register' || pathname === '/') {
     return <>{children}</>;
   }
 

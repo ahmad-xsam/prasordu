@@ -32,7 +32,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.replace("/");
+      router.replace("/dashboard");
     } catch (error) {
       setError("Terjadi kesalahan sistem");
       setLoading(false);

@@ -4,17 +4,18 @@ import { NextResponse } from "next/server";
 export default withAuth(
   function middleware(req) {
     const isAuth = !!req.nextauth.token;
-    const isAuthPage = req.nextUrl.pathname.startsWith('/login');
+    const isAuthPage = req.nextUrl.pathname.startsWith('/login') || req.nextUrl.pathname.startsWith('/register');
+    const isPublicPage = req.nextUrl.pathname === '/';
     const role = req.nextauth.token?.role;
 
     if (isAuthPage) {
       if (isAuth) {
-        return NextResponse.redirect(new URL('/', req.url));
+        return NextResponse.redirect(new URL('/dashboard', req.url));
       }
       return null;
     }
 
-    if (!isAuth) {
+    if (!isAuth && !isPublicPage) {
       return NextResponse.redirect(new URL('/login', req.url));
     }
 
