@@ -7,6 +7,9 @@ import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
+import jungleBg from "../../public/jungle_bg.png";
+import monkeyHero from "../../public/monkey_hero.png";
+
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -46,7 +49,7 @@ export default function LoginPage() {
       <div 
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: "url('/jungle_bg.png')",
+          backgroundImage: `url('${jungleBg.src}')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -56,7 +59,7 @@ export default function LoginPage() {
         {/* Left Side - Monkey Hero */}
         <div className="w-full h-[250px] md:h-auto md:w-[45%] relative bg-[#f7eedf] md:min-h-full block">
           <img
-            src="/monkey_hero.png"
+            src={monkeyHero.src}
             alt="Monkey Explorer"
             className="w-full h-full object-cover object-center absolute inset-0"
           />

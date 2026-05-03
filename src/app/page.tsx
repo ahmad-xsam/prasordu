@@ -6,6 +6,10 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Volume2, VolumeX, Shield, Swords, Map as MapIcon, Users } from "lucide-react";
 
+import jungleBg from "../../public/jungle_bg.png";
+import scoutBoy from "../../public/scout_boy.png";
+import scoutGirl from "../../public/scout_girl.png";
+
 // Dynamically import heavy components to avoid SSR issues
 const ThreeCanvas = dynamic(() => import("@/components/ThreeCanvas"), { ssr: false });
 const MiniMap = dynamic(() => import("@/components/MiniMap"), { ssr: false, loading: () => <div className="w-full h-full bg-slate-900 animate-pulse rounded-2xl" /> });
@@ -48,7 +52,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
         <motion.div style={{ y: yBg }} className="absolute inset-0 z-0 opacity-40">
-          <img src="/jungle_bg.png?v=2" alt="Jungle" className="w-full h-full object-cover" />
+          <img src={jungleBg.src} alt="Jungle" className="w-full h-full object-cover" />
         </motion.div>
         
         {/* 3D Canvas Background Element */}
@@ -152,7 +156,7 @@ export default function LandingPage() {
             >
               <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-3xl blur opacity-0 group-hover:opacity-20 transition duration-500" />
               <div className="relative aspect-square w-full mb-8 rounded-2xl overflow-hidden bg-gradient-to-b from-slate-800 to-[#0f1c2e]">
-                <img src="/scout_boy.png?v=2" alt="Boy Scout with Bow" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={scoutBoy.src} alt="Boy Scout with Bow" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f1c2e] via-transparent to-transparent" />
               </div>
               <h3 className="text-3xl font-black text-white mb-2 group-hover:text-emerald-400 transition-colors">Archer Scout</h3>
@@ -173,7 +177,7 @@ export default function LandingPage() {
             >
               <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl blur opacity-0 group-hover:opacity-20 transition duration-500" />
               <div className="relative aspect-square w-full mb-8 rounded-2xl overflow-hidden bg-gradient-to-b from-slate-800 to-[#0f1c2e]">
-                <img src="/scout_girl.png?v=2" alt="Girl Scout with Kujang" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={scoutGirl.src} alt="Girl Scout with Kujang" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f1c2e] via-transparent to-transparent" />
               </div>
               <h3 className="text-3xl font-black text-white mb-2 group-hover:text-amber-400 transition-colors">Kujang Master</h3>
