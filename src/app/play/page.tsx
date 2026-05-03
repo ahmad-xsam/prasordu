@@ -170,7 +170,7 @@ export default function PlayGame() {
 
   const processResult = (correct: boolean, ansIndex: any) => {
     setIsAnswerCorrect(correct);
-    if (ansIndex !== null) playSound(correct ? 'correct' : 'wrong');
+    playSound(correct ? 'correct' : 'wrong');
 
     if (correct) {
       setScore(prev => prev + 50 + (timeLeft * 2));
@@ -411,13 +411,13 @@ export default function PlayGame() {
   return (
     <div className="min-h-screen bg-[#070b14] text-white font-sans selection:bg-emerald-500 overflow-hidden relative">
       {/* Preloaded Audio Elements for Instant Playback without Safari/Chrome blocking */}
-      <audio id="sfx-start" src="https://www.myinstants.com/media/sounds/whoosh.mp3" preload="auto" />
-      <audio id="sfx-correct" src="https://www.myinstants.com/media/sounds/level-up-1-199574.mp3" preload="auto" />
-      <audio id="sfx-wrong" src="https://www.myinstants.com/media/sounds/buzzer3.mp3" preload="auto" />
-      <audio id="sfx-victory" src="https://www.myinstants.com/media/sounds/final-fantasy-vii-victory-fanfare-1.mp3" preload="auto" />
-      <audio id="sfx-gameover" src="https://www.myinstants.com/media/sounds/mario-game-over.mp3" preload="auto" />
-      <audio id="sfx-flip" src="https://www.myinstants.com/media/sounds/pop_1.mp3" preload="auto" />
-      <audio id="sfx-bgm" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3" loop preload="auto" />
+      <audio id="sfx-start" src="https://actions.google.com/sounds/v1/foley/whoosh_heavy.ogg" preload="auto" />
+      <audio id="sfx-correct" src="https://actions.google.com/sounds/v1/cartoon/magic_chime_scintillation.ogg" preload="auto" />
+      <audio id="sfx-wrong" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg" preload="auto" />
+      <audio id="sfx-victory" src="https://actions.google.com/sounds/v1/brass/orchestral_fanfare.ogg" preload="auto" />
+      <audio id="sfx-gameover" src="https://actions.google.com/sounds/v1/cartoon/conk_head.ogg" preload="auto" />
+      <audio id="sfx-flip" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg" preload="auto" />
+      <audio id="sfx-bgm" src="https://actions.google.com/sounds/v1/science_fiction/alien_spaceship_interior.ogg" loop preload="auto" />
 
       {/* Dynamic Backgrounds based on Level Type */}
       <div className="absolute inset-0 z-0">
