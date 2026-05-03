@@ -32,7 +32,4 @@ const MateriPramukaSchema: Schema = new Schema({
   timestamps: true,
 });
 
-// Add index to speed up querying by bab
-MateriPramukaSchema.index({ bab: 1 });
-
 export default mongoose.models.MateriPramuka || mongoose.model<IMateriPramuka>('MateriPramuka', MateriPramukaSchema);
