@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-import jungleBg from "../../public/jungle_bg.png";
-import monkeyHero from "../../public/monkey_hero.png";
+import jungleBg from "../../../public/jungle_bg.png";
+import monkeyHero from "../../../public/monkey_hero.png";
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);

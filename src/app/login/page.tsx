@@ -7,8 +7,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-import jungleBg from "../../public/jungle_bg.png";
-import monkeyHero from "../../public/monkey_hero.png";
+import jungleBg from "../../../public/jungle_bg.png";
+import monkeyHero from "../../../public/monkey_hero.png";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
