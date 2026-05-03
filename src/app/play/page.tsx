@@ -132,7 +132,10 @@ export default function PlayGame() {
     playSound('start');
     setCurrentQuestion(0);
     setHp(100);
-    setTimeLeft(15);
+    
+    const firstQ = getActiveQuestions()[0];
+    setTimeLeft(firstQ?.duration || 15);
+    
     setSelectedAnswer(null);
     setTextInput("");
     setIsAnswerCorrect(null);
@@ -174,8 +177,9 @@ export default function PlayGame() {
         setUnlockedLevels(1); // RESET TO LEVEL 1 (Rogue-like mechanic)
         setGameState('GAMEOVER');
       } else if (currentQuestion < getActiveQuestions().length - 1) {
+        const nextQ = getActiveQuestions()[currentQuestion + 1];
         setCurrentQuestion(prev => prev + 1);
-        setTimeLeft(15);
+        setTimeLeft(nextQ?.duration || 15);
         setSelectedAnswer(null);
         setTextInput("");
         setIsAnswerCorrect(null);
@@ -537,7 +541,7 @@ export default function PlayGame() {
                       </span>
                     </div>
                     <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700 flex justify-end">
-                      <motion.div initial={{ width: "100%" }} animate={{ width: `${(timeLeft / 15) * 100}%` }} className={`h-full rounded-full ${timeLeft <= 5 ? 'bg-red-500' : 'bg-amber-400 shadow-[0_0_10px_#fbbf24]'}`} />
+                      <motion.div initial={{ width: "100%" }} animate={{ width: `${(timeLeft / (getActiveQuestions()[currentQuestion]?.duration || 15)) * 100}%` }} className={`h-full rounded-full ${timeLeft <= 5 ? 'bg-red-500' : 'bg-amber-400 shadow-[0_0_10px_#fbbf24]'}`} />
                     </div>
                   </div>
                 </div>

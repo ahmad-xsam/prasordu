@@ -7,6 +7,7 @@ export interface IQuestion {
   options: string[]; 
   answer: any; 
   points: number;
+  duration?: number;
 }
 
 export interface IGameLevel extends Document {
@@ -24,7 +25,8 @@ const QuestionSchema = new Schema<IQuestion>({
   imageUrl: { type: String },
   options: [{ type: String }],
   answer: { type: Schema.Types.Mixed, required: true },
-  points: { type: Number, default: 100 }
+  points: { type: Number, default: 100 },
+  duration: { type: Number, default: 15 }
 });
 
 const GameLevelSchema = new Schema<IGameLevel>({

@@ -43,6 +43,24 @@ export default function DetailMateriPage() {
     );
   }
 
+  const getEmbedUrl = (url: string) => {
+    if (!url) return null;
+    
+    // YouTube
+    const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+    if (ytMatch && ytMatch[1]) {
+      return `https://www.youtube.com/embed/${ytMatch[1]}`;
+    }
+    
+    // TikTok (Simple iframe for TikTok video)
+    const tiktokMatch = url.match(/tiktok\.com\/.*\/video\/(\d+)/);
+    if (tiktokMatch && tiktokMatch[1]) {
+      return `https://www.tiktok.com/embed/v2/${tiktokMatch[1]}`;
+    }
+    
+    return url; // fallback
+  };
+
   return (
     <div className="min-h-screen bg-[#070b14] text-white font-sans selection:bg-amber-500 overflow-hidden relative">
       <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/old-mathematics.png')]" />
@@ -66,6 +84,17 @@ export default function DetailMateriPage() {
           {materi.imageUrl && (
             <div className="w-full h-[300px] md:h-[400px] rounded-2xl overflow-hidden mb-10 border-2 border-slate-700 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
               <img src={materi.imageUrl} alt={materi.title} className="w-full h-full object-cover" />
+            </div>
+          )}
+
+          {materi.videoUrl && getEmbedUrl(materi.videoUrl) && (
+            <div className="w-full aspect-video rounded-2xl overflow-hidden mb-10 border-2 border-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.2)]">
+              <iframe 
+                src={getEmbedUrl(materi.videoUrl) || ''} 
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowFullScreen
+              />
             </div>
           )}
 

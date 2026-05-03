@@ -4,6 +4,7 @@ export interface IMaterial extends Document {
   title: string;
   category: string;
   imageUrl: string;
+  videoUrl?: string;
   content: string;
 }
 
@@ -11,6 +12,7 @@ const MaterialSchema = new Schema<IMaterial>({
   title: { type: String, required: true },
   category: { type: String, required: true },
   imageUrl: { type: String },
+  videoUrl: { type: String },
   content: { type: String, required: true }
 }, { timestamps: true });
 

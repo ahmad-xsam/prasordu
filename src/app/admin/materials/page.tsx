@@ -30,7 +30,8 @@ export default function AdminMaterialManager() {
       title: "Materi Baru",
       category: "",
       content: "",
-      imageUrl: ""
+      imageUrl: "",
+      videoUrl: ""
     });
   };
 
@@ -151,6 +152,19 @@ export default function AdminMaterialManager() {
                   value={currentMaterial.imageUrl || ''}
                   onChange={(e) => setCurrentMaterial({...currentMaterial, imageUrl: e.target.value})}
                   className="w-full p-3 border rounded-xl bg-amber-50 focus:border-amber-500 outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
+                  URL Video YouTube / TikTok (Opsional)
+                </label>
+                <input 
+                  type="text" 
+                  placeholder="https://www.youtube.com/watch?v=..."
+                  value={currentMaterial.videoUrl || ''}
+                  onChange={(e) => setCurrentMaterial({...currentMaterial, videoUrl: e.target.value})}
+                  className="w-full p-3 border rounded-xl bg-red-50 focus:border-red-500 outline-none"
                 />
               </div>
 

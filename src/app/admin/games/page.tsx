@@ -217,6 +217,18 @@ export default function AdminGameManager() {
                       />
                     </div>
 
+                    <div>
+                      <label className="text-xs font-bold text-gray-500 uppercase">Durasi Waktu Mengerjakan (Detik)</label>
+                      <input 
+                        type="number" 
+                        min="5" max="300"
+                        placeholder="15" 
+                        value={q.duration || 15}
+                        onChange={(e) => handleQuestionChange(idx, 'duration', parseInt(e.target.value) || 15)}
+                        className="w-full p-3 border-2 rounded-xl bg-gray-50 focus:border-emerald-500 outline-none font-bold text-emerald-700"
+                      />
+                    </div>
+
                     {/* DYNAMIC FORMS BASED ON GAME TYPE */}
                     
                     {q.type === 'QUIZ' && (
