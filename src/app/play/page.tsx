@@ -51,10 +51,13 @@ export default function PlayGame() {
       if (type === 'victory') src = 'https://cdn.freesound.org/previews/320/320655_5260872-lq.mp3';
       if (type === 'gameover') src = 'https://cdn.freesound.org/previews/173/173859_2375818-lq.mp3';
       if (type === 'flip') src = 'https://cdn.freesound.org/previews/240/240776_4107740-lq.mp3';
-      if (type === 'bgm') src = 'https://cdn.freesound.org/previews/612/612059_11861866-lq.mp3';
+      if (type === 'bgm') src = 'https://cdn.freesound.org/previews/398/398936_3534884-lq.mp3'; // Energetic Action Loop
       
       const audio = new Audio(src);
-      if (type === 'bgm') audio.loop = true;
+      if (type === 'bgm') {
+        audio.loop = true;
+        audio.volume = 0.6; // Increased volume for BGM
+      }
       // Pre-load audio to ensure it's ready when played on mobile
       audio.load();
       win.sfxMap[type] = audio;
@@ -65,7 +68,7 @@ export default function PlayGame() {
       el.pause();
     } else {
       if (type !== 'bgm') el.currentTime = 0;
-      el.volume = type === 'bgm' ? 0.3 : 1.0;
+      el.volume = type === 'bgm' ? 0.6 : 1.0;
       const playPromise = el.play();
       if (playPromise !== undefined) {
         playPromise.catch((e:any) => console.log("Audio prevented:", e));
@@ -635,7 +638,7 @@ export default function PlayGame() {
                         initial={{ opacity: 0, scale: 0.5, y: -20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0 }}
-                        className={`absolute -top-6 left-1/2 -translate-x-1/2 px-8 py-3 rounded-full font-black text-xl border-2 shadow-2xl z-20 ${
+                        className={`absolute -top-4 sm:-top-6 left-1/2 -translate-x-1/2 px-4 sm:px-8 py-2 sm:py-3 rounded-full font-black text-sm sm:text-xl border-2 shadow-2xl z-20 w-max whitespace-nowrap ${
                           isAnswerCorrect ? 'bg-emerald-900 text-emerald-400 border-emerald-500' : 'bg-red-900 text-red-400 border-red-500'
                         }`}
                       >
