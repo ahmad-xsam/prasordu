@@ -33,22 +33,35 @@ export default function PlayGame() {
   const [memoryCards, setMemoryCards] = useState<{id: number, text: string, isMatched: boolean}[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
 
-  // DB Levels
-  const [dbLevels, setDbLevels] = useState<any[]>([]);
-
-  // Sound Effects via DOM Elements to ensure preload & bypass strict autoplay policies
+  // Sound Effects Caching
   const playSound = (type: 'start' | 'correct' | 'wrong' | 'victory' | 'gameover' | 'flip' | 'bgm', action: 'play' | 'pause' = 'play') => {
-    if (typeof document !== 'undefined') {
-      const el = document.getElementById(`sfx-${type}`) as HTMLAudioElement;
-      if (el) {
-        if (action === 'pause') {
-          el.pause();
-        } else {
-          if (type !== 'bgm') el.currentTime = 0;
-          el.volume = type === 'bgm' ? 0.3 : 0.5;
-          el.play().catch(e => console.log("Audio prevented:", e));
-        }
-      }
+    if (typeof window === 'undefined') return;
+    
+    const win = window as any;
+    if (!win.sfxMap) win.sfxMap = {};
+
+    if (!win.sfxMap[type]) {
+      let src = '';
+      if (type === 'start') src = 'https://actions.google.com/sounds/v1/foley/whoosh_heavy.ogg';
+      if (type === 'correct') src = 'https://actions.google.com/sounds/v1/cartoon/magic_chime_scintillation.ogg'; 
+      if (type === 'wrong') src = 'https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg';
+      if (type === 'victory') src = 'https://actions.google.com/sounds/v1/brass/orchestral_fanfare.ogg';
+      if (type === 'gameover') src = 'https://actions.google.com/sounds/v1/cartoon/conk_head.ogg';
+      if (type === 'flip') src = 'https://actions.google.com/sounds/v1/cartoon/pop.ogg';
+      if (type === 'bgm') src = 'https://actions.google.com/sounds/v1/science_fiction/alien_spaceship_interior.ogg';
+      
+      const audio = new Audio(src);
+      if (type === 'bgm') audio.loop = true;
+      win.sfxMap[type] = audio;
+    }
+
+    const el = win.sfxMap[type];
+    if (action === 'pause') {
+      el.pause();
+    } else {
+      if (type !== 'bgm') el.currentTime = 0;
+      el.volume = type === 'bgm' ? 0.3 : 1.0;
+      el.play().catch((e:any) => console.log("Audio prevented:", e));
     }
   };
 
@@ -410,15 +423,6 @@ export default function PlayGame() {
 
   return (
     <div className="min-h-screen bg-[#070b14] text-white font-sans selection:bg-emerald-500 overflow-hidden relative">
-      {/* Preloaded Audio Elements for Instant Playback without Safari/Chrome blocking */}
-      <audio id="sfx-start" src="https://actions.google.com/sounds/v1/foley/whoosh_heavy.ogg" preload="auto" />
-      <audio id="sfx-correct" src="https://actions.google.com/sounds/v1/cartoon/magic_chime_scintillation.ogg" preload="auto" />
-      <audio id="sfx-wrong" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg" preload="auto" />
-      <audio id="sfx-victory" src="https://actions.google.com/sounds/v1/brass/orchestral_fanfare.ogg" preload="auto" />
-      <audio id="sfx-gameover" src="https://actions.google.com/sounds/v1/cartoon/conk_head.ogg" preload="auto" />
-      <audio id="sfx-flip" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg" preload="auto" />
-      <audio id="sfx-bgm" src="https://actions.google.com/sounds/v1/science_fiction/alien_spaceship_interior.ogg" loop preload="auto" />
-
       {/* Dynamic Backgrounds based on Level Type */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
@@ -523,39 +527,39 @@ export default function PlayGame() {
                 exit={{ opacity: 0, x: -50 }}
                 className="flex-1 flex items-center justify-center"
               >
-                <div className="max-w-2xl w-full bg-[#0d1627] border border-emerald-500/30 rounded-3xl p-8 md:p-12 shadow-[0_0_50px_rgba(16,185,129,0.15)] relative overflow-hidden">
+                <div className="max-w-2xl w-full bg-[#0d1627] border border-emerald-500/30 rounded-3xl p-6 md:p-12 shadow-[0_0_50px_rgba(16,185,129,0.15)] relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-cyan-500" />
                   
                   <div className="flex items-center gap-4 mb-8">
-                    <div className="w-16 h-16 rounded-xl bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400">
-                      <Shield size={32} />
+                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 shrink-0">
+                      <Shield className="w-6 h-6 md:w-8 md:h-8" />
                     </div>
                     <div>
-                      <h2 className="text-emerald-500 font-bold tracking-widest text-sm mb-1">MISSION BRIEFING</h2>
-                      <h3 className="text-3xl font-black">{getCurrentLevelInfo().title}</h3>
+                      <h2 className="text-emerald-500 font-bold tracking-widest text-xs md:text-sm mb-1">MISSION BRIEFING</h2>
+                      <h3 className="text-xl md:text-3xl font-black">{getCurrentLevelInfo().title}</h3>
                     </div>
                   </div>
 
-                  <div className="space-y-6 mb-10 bg-black/30 p-6 rounded-2xl border border-white/5">
-                    <p className="text-slate-300 leading-relaxed text-lg">
+                  <div className="space-y-4 md:space-y-6 mb-8 md:mb-10 bg-black/30 p-4 md:p-6 rounded-2xl border border-white/5">
+                    <p className="text-slate-300 leading-relaxed text-sm md:text-lg">
                       Selesaikan <span className="text-emerald-400 font-bold">{getCurrentLevelInfo().questions?.length || 0} Tantangan</span> untuk mendapatkan Bintang 5.
                       <strong className="text-red-400 block mt-2">Peringatan: Satu kesalahan, dan kamu akan dilempar ke Level 1!</strong>
                     </p>
-                    <div className="flex gap-4">
-                      <div className="flex items-center gap-2 text-sm font-bold bg-white/5 px-4 py-2 rounded-lg">
+                    <div className="flex flex-wrap gap-2 md:gap-4">
+                      <div className="flex items-center gap-2 text-xs md:text-sm font-bold bg-white/5 px-3 py-1.5 md:px-4 md:py-2 rounded-lg">
                         <Clock size={16} className="text-amber-400" /> 15s / Task
                       </div>
-                      <div className="flex items-center gap-2 text-sm font-bold bg-white/5 px-4 py-2 rounded-lg">
+                      <div className="flex items-center gap-2 text-xs md:text-sm font-bold bg-white/5 px-3 py-1.5 md:px-4 md:py-2 rounded-lg">
                         <Heart size={16} className="text-red-400" /> 1 HP
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
-                    <button onClick={startLevel} className="flex-1 py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xl rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]">
+                  <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                    <button onClick={startLevel} className="flex-1 py-3 md:py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-lg md:text-xl rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]">
                       START MISSION
                     </button>
-                    <button onClick={quitToMap} className="px-8 py-4 bg-transparent border-2 border-slate-700 hover:border-slate-500 text-white font-bold rounded-xl transition-all">
+                    <button onClick={quitToMap} className="px-6 py-3 md:px-8 md:py-4 bg-transparent border-2 border-slate-700 hover:border-slate-500 text-white font-bold rounded-xl transition-all">
                       CANCEL
                     </button>
                   </div>
@@ -573,29 +577,29 @@ export default function PlayGame() {
                 className="flex-1 flex flex-col max-w-4xl mx-auto w-full justify-center"
               >
                 {/* Game HUD */}
-                <div className="flex justify-between items-end mb-8 bg-black/40 p-6 rounded-3xl border border-white/5 backdrop-blur-md">
-                  <div className="flex-1 max-w-[200px]">
-                    <div className="flex justify-between mb-2">
-                      <span className="font-bold text-red-400 flex items-center gap-2"><Heart size={18} /> HP</span>
+                <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end mb-6 md:mb-8 bg-black/40 p-4 md:p-6 rounded-3xl border border-white/5 backdrop-blur-md gap-4">
+                  <div className="w-full sm:w-auto sm:flex-1 sm:max-w-[200px]">
+                    <div className="flex justify-between mb-1 md:mb-2 text-xs md:text-base">
+                      <span className="font-bold text-red-400 flex items-center gap-1 md:gap-2"><Heart size={16} className="md:w-[18px] md:h-[18px]" /> HP</span>
                       <span className="font-bold text-white">{hp}/100</span>
                     </div>
-                    <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                    <div className="h-2 md:h-3 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700">
                       <motion.div initial={{ width: "100%" }} animate={{ width: `${hp}%` }} className={`h-full rounded-full ${hp > 35 ? 'bg-red-500 shadow-[0_0_10px_#ef4444]' : 'bg-red-600 animate-pulse'}`} />
                     </div>
                   </div>
 
-                  <div className="text-center px-4">
-                    <span className="text-slate-500 font-bold text-sm tracking-widest">TASK {currentQuestion + 1}/{getActiveQuestions().length}</span>
-                    <h3 className="text-xl md:text-2xl font-black text-emerald-400 uppercase">{getCurrentLevelInfo().title}</h3>
+                  <div className="text-center px-2 order-first sm:order-none w-full sm:w-auto">
+                    <span className="text-slate-500 font-bold text-xs md:text-sm tracking-widest block mb-1">TASK {currentQuestion + 1}/{getActiveQuestions().length}</span>
+                    <h3 className="text-lg md:text-2xl font-black text-emerald-400 uppercase leading-tight">{getCurrentLevelInfo().title}</h3>
                   </div>
 
-                  <div className="flex-1 max-w-[200px] text-right">
-                    <div className="flex justify-end mb-2">
-                      <span className={`font-bold flex items-center gap-2 ${timeLeft <= 5 ? 'text-red-400 animate-pulse' : 'text-amber-400'}`}>
-                        <Clock size={18} /> {timeLeft}s
+                  <div className="w-full sm:w-auto sm:flex-1 sm:max-w-[200px] sm:text-right">
+                    <div className="flex justify-between sm:justify-end mb-1 md:mb-2 text-xs md:text-base">
+                      <span className={`font-bold flex items-center gap-1 md:gap-2 ${timeLeft <= 5 ? 'text-red-400 animate-pulse' : 'text-amber-400'}`}>
+                        <Clock size={16} className="md:w-[18px] md:h-[18px]" /> {timeLeft}s
                       </span>
                     </div>
-                    <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700 flex justify-end">
+                    <div className="h-2 md:h-3 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700 flex justify-end">
                       <motion.div initial={{ width: "100%" }} animate={{ width: `${(timeLeft / (getActiveQuestions()[currentQuestion]?.duration || 15)) * 100}%` }} className={`h-full rounded-full ${timeLeft <= 5 ? 'bg-red-500' : 'bg-amber-400 shadow-[0_0_10px_#fbbf24]'}`} />
                     </div>
                   </div>
@@ -641,10 +645,10 @@ export default function PlayGame() {
                 key="result"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="flex-1 flex items-center justify-center"
+                className="flex-1 flex items-center justify-center p-4 sm:p-6"
               >
                 <div className="text-center max-w-xl w-full">
-                  <div ref={cardRef} className="bg-[#0d1627] p-12 pb-16 rounded-3xl border border-slate-700 shadow-2xl relative overflow-hidden mb-6">
+                  <div ref={cardRef} className="bg-[#0d1627] p-6 sm:p-12 pb-14 sm:pb-16 rounded-3xl border border-slate-700 shadow-2xl relative overflow-hidden mb-6">
                     
                     {gameState === 'VICTORY' ? (
                       <>
@@ -665,81 +669,81 @@ export default function PlayGame() {
                           if (displayLevel >= 5) { badgeColor = "from-fuchsia-500 to-purple-700 border-fuchsia-400 shadow-fuchsia-500/50 text-fuchsia-300"; BadgeIcon = Crown; badgeTitle = "DIAMOND LEGEND"; }
 
                           return (
-                            <div className="relative mb-8 pt-4">
-                              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white/5 rounded-full animate-ping" />
-                              <div className={`mx-auto w-32 h-32 rounded-3xl rotate-45 bg-gradient-to-br border-4 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center relative z-10 ${badgeColor}`}>
-                                <div className="-rotate-45 text-white drop-shadow-lg">
-                                  <BadgeIcon size={64} />
+                            <div className="relative mb-6 sm:mb-8 pt-2 sm:pt-4">
+                              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-48 sm:h-48 bg-white/5 rounded-full animate-ping" />
+                              <div className={`mx-auto w-24 h-24 sm:w-32 sm:h-32 rounded-2xl sm:rounded-3xl rotate-45 bg-gradient-to-br border-4 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center relative z-10 ${badgeColor}`}>
+                                <div className="-rotate-45 text-white drop-shadow-lg flex items-center justify-center w-full h-full">
+                                  <BadgeIcon className="w-12 h-12 sm:w-16 sm:h-16" />
                                 </div>
                               </div>
-                              <div className="mt-8">
-                                <span className={`px-4 py-1 rounded-full text-xs font-black tracking-widest border bg-black/50 ${badgeColor.split(' ')[4] /* text color */}`}>BADGE LEVEL {displayLevel}: {badgeTitle}</span>
+                              <div className="mt-6 sm:mt-8">
+                                <span className={`px-3 py-1 sm:px-4 sm:py-1 rounded-full text-[10px] sm:text-xs font-black tracking-widest border bg-black/50 ${badgeColor.split(' ')[4] /* text color */}`}>BADGE LEVEL {displayLevel}: {badgeTitle}</span>
                               </div>
                             </div>
                           );
                         })()}
 
-                        <h2 className="text-4xl font-black text-white mb-2 uppercase tracking-widest mt-4">MISSION CLEARED</h2>
+                        <h2 className="text-2xl sm:text-4xl font-black text-white mb-2 uppercase tracking-widest mt-2 sm:mt-4">MISSION CLEARED</h2>
                         
-                        <div className="flex justify-center gap-2 mb-4 text-amber-400">
-                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
-                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
-                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
-                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
-                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
+                        <div className="flex justify-center gap-1 sm:gap-2 mb-4 text-amber-400">
+                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24] w-6 h-6 sm:w-8 sm:h-8" />
+                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24] w-6 h-6 sm:w-8 sm:h-8" />
+                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24] w-6 h-6 sm:w-8 sm:h-8" />
+                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24] w-6 h-6 sm:w-8 sm:h-8" />
+                          <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24] w-6 h-6 sm:w-8 sm:h-8" />
                         </div>
                         
-                        <p className="text-emerald-400 font-bold text-lg mb-2">Keahlian Pramukamu terbukti tangguh!</p>
-                        <p className="text-slate-400 text-sm mb-8 px-4 leading-relaxed">
+                        <p className="text-emerald-400 font-bold text-sm sm:text-lg mb-2">Keahlian Pramukamu terbukti tangguh!</p>
+                        <p className="text-slate-400 text-xs sm:text-sm mb-6 sm:mb-8 px-2 sm:px-4 leading-relaxed">
                           Kumpulkan badge ini dan laporkan kepada pembina untuk ditukarkan menjadi point tambahan pada Raport dan Bintang Tahunan Seragam Pramuka.
                         </p>
                       </>
                     ) : (
                       <>
                         <div className="absolute inset-0 bg-gradient-to-b from-red-500/20 to-transparent" />
-                        <div className="w-24 h-24 mx-auto mb-6 bg-red-500/20 rounded-full flex items-center justify-center border-4 border-red-500 text-red-400 shadow-[0_0_50px_rgba(239,68,68,0.5)] mt-4">
-                          <Sword size={48} />
+                        <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 bg-red-500/20 rounded-full flex items-center justify-center border-4 border-red-500 text-red-400 shadow-[0_0_50px_rgba(239,68,68,0.5)] mt-4">
+                          <Sword className="w-10 h-10 sm:w-12 sm:h-12" />
                         </div>
-                        <h2 className="text-4xl font-black text-white mb-2 uppercase tracking-widest mt-4">MISSION FAILED</h2>
-                        <p className="text-red-400 font-bold text-lg mb-8">Kamu melakukan kesalahan. Kembali ke Level 1!</p>
+                        <h2 className="text-2xl sm:text-4xl font-black text-white mb-2 uppercase tracking-widest mt-4">MISSION FAILED</h2>
+                        <p className="text-red-400 font-bold text-sm sm:text-lg mb-8">Kamu melakukan kesalahan. Kembali ke Level 1!</p>
                       </>
                     )}
 
-                    <div className="bg-black/50 rounded-2xl p-6 mb-8 border border-white/5 mx-auto max-w-sm">
-                      <p className="text-slate-400 font-bold mb-2">TOTAL SCORE</p>
-                      <p className="text-5xl font-black text-emerald-400 drop-shadow-md">{score}</p>
+                    <div className="bg-black/50 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 border border-white/5 mx-auto max-w-xs sm:max-w-sm w-full">
+                      <p className="text-slate-400 font-bold mb-1 sm:mb-2 text-xs sm:text-sm">TOTAL SCORE</p>
+                      <p className="text-4xl sm:text-5xl font-black text-emerald-400 drop-shadow-md">{score}</p>
                     </div>
 
                     {/* FOOTER TEXT INSIDE CARD */}
-                    <div className="absolute bottom-0 left-0 w-full bg-emerald-950/50 py-3 border-t border-emerald-500/20">
-                      <p className="text-emerald-400/80 text-xs font-bold px-4 leading-relaxed uppercase tracking-wider">
+                    <div className="absolute bottom-0 left-0 w-full bg-emerald-950/50 py-2 sm:py-3 border-t border-emerald-500/20">
+                      <p className="text-emerald-400/80 text-[8px] sm:text-[10px] md:text-xs font-bold px-2 sm:px-4 leading-relaxed uppercase tracking-wider">
                         Mari bergabung bersama menjadi bagian dari Scout Sordu Adventure Digital Mission<br/>
-                        <span className="text-slate-400 text-[10px] lowercase">Website ini dikelola oleh prasordu official</span>
+                        <span className="text-slate-400 text-[8px] sm:text-[10px] lowercase">Website ini dikelola oleh prasordu official</span>
                       </p>
                     </div>
                   </div>
 
-                  {/* ACTION BUTTONS (Outside the card so they aren't downloaded) */}
-                  <div className="flex gap-4 flex-col sm:flex-row mb-8 justify-center items-center">
+                  {/* ACTION BUTTONS */}
+                  <div className="flex gap-4 flex-row mb-6 sm:mb-8 justify-center items-center">
                     {gameState === 'VICTORY' && (
                       <div className="flex gap-4">
-                        <button onClick={handleDownloadCard} className="w-16 h-16 bg-amber-500 hover:bg-amber-400 text-black font-black rounded-full transition-all shadow-[0_0_20px_rgba(245,158,11,0.4)] flex items-center justify-center">
-                          <Download size={28} />
+                        <button onClick={handleDownloadCard} className="w-14 h-14 sm:w-16 sm:h-16 bg-amber-500 hover:bg-amber-400 text-black font-black rounded-full transition-all shadow-[0_0_20px_rgba(245,158,11,0.4)] flex items-center justify-center">
+                          <Download size={24} className="sm:w-7 sm:h-7" />
                         </button>
-                        <button onClick={handleShareWA} className="w-16 h-16 bg-green-500 hover:bg-green-400 text-white font-black rounded-full transition-all shadow-[0_0_20px_rgba(34,197,94,0.4)] flex items-center justify-center">
-                          <Share2 size={28} />
+                        <button onClick={handleShareWA} className="w-14 h-14 sm:w-16 sm:h-16 bg-green-500 hover:bg-green-400 text-white font-black rounded-full transition-all shadow-[0_0_20px_rgba(34,197,94,0.4)] flex items-center justify-center">
+                          <Share2 size={24} className="sm:w-7 sm:h-7" />
                         </button>
                       </div>
                     )}
                   </div>
 
-                  <div className="flex gap-4">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                     {gameState === 'VICTORY' && (
-                      <button onClick={continueNextMission} className="flex-1 py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-black rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]">
+                      <button onClick={continueNextMission} className="w-full sm:flex-1 py-3 sm:py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm sm:text-base rounded-xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]">
                         NEXT MISSION
                       </button>
                     )}
-                    <button onClick={quitToMap} className="flex-1 py-4 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold rounded-xl transition-all">
+                    <button onClick={quitToMap} className="w-full sm:flex-1 py-3 sm:py-4 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold text-sm sm:text-base rounded-xl transition-all">
                       PETA UTAMA
                     </button>
                   </div>
