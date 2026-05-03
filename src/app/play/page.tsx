@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Sword, Heart, Clock, ArrowLeft, Star, Trophy, Unlock, Lock } from "lucide-react";
+import { Shield, Sword, Swords, Heart, Clock, ArrowLeft, Star, Trophy, Unlock, Lock } from "lucide-react";
 import Link from "next/link";
 
 // ---------------- GAME DATA ----------------
