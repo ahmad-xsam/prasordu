@@ -10,7 +10,8 @@ import {
   UserCheck, 
   Calendar,
   LogOut,
-  X
+  X,
+  Gamepad2
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
@@ -111,6 +112,22 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                       pathname === '/admin/users' ? 'text-primary-600' : 'text-gray-400 group-hover:text-primary-600'
                     }`} />
                     <span className="ms-3">Kelola Pengguna</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/admin/games"
+                    onClick={onClose}
+                    className={`group flex items-center rounded-lg p-3 transition-all ${
+                      pathname === '/admin/games' 
+                        ? 'bg-primary-50 text-primary-600' 
+                        : 'text-gray-700 hover:bg-gray-50 hover:text-primary-600'
+                    }`}
+                  >
+                    <Gamepad2 className={`h-5 w-5 transition-colors ${
+                      pathname === '/admin/games' ? 'text-primary-600' : 'text-gray-400 group-hover:text-primary-600'
+                    }`} />
+                    <span className="ms-3">Kelola Misi Game</span>
                   </Link>
                 </li>
               </ul>
