@@ -2,19 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Sword, Swords, Heart, Clock, ArrowLeft, Star, Trophy, Unlock, Lock, Box, SpellCheck } from "lucide-react";
+import { Shield, Sword, Swords, Heart, Clock, ArrowLeft, Star, Trophy, Unlock, Lock, Box, SpellCheck, CheckCircle2, XCircle } from "lucide-react";
 import Link from "next/link";
 
 // ---------------- DEFAULT GAME DATA (Fallback) ----------------
 const defaultLevels = [
-  { id: 1, title: "Sejarah Pramuka Indonesia", type: "QUIZ", points: 100 },
-  { id: 2, title: "Pencocokan Kata Sandi", type: "MATCH_WORD", points: 150 },
-  { id: 3, title: "Membuka Kotak Rahasia", type: "OPEN_BOX", points: 200 },
+  { id: 1, title: "Pengetahuan Kepramukaan Dasar", type: "Adventure", points: 100 },
 ];
 
 const defaultQuestions = [
   { type: 'QUIZ', question: "Siapakah Bapak Pramuka Indonesia?", options: ["Soekarno", "Sri Sultan Hamengkubuwono IX", "Ki Hajar Dewantara", "Baden Powell"], answer: 1 },
-  { type: 'QUIZ', question: "Pada tanggal berapakah Hari Pramuka diperingati?", options: ["14 Agustus", "17 Agustus", "28 Oktober", "1 Juni"], answer: 0 },
 ];
 
 export default function PlayGame() {
@@ -27,21 +24,26 @@ export default function PlayGame() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [hp, setHp] = useState(100);
   const [timeLeft, setTimeLeft] = useState(15);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<any>(null);
   const [textInput, setTextInput] = useState("");
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
 
-  // Levels Data from Admin (Fallback for now)
+  // Special States for Matching Pairs
+  const [memoryCards, setMemoryCards] = useState<{id: number, text: string, isMatched: boolean}[]>([]);
+  const [flippedCards, setFlippedCards] = useState<number[]>([]);
+
+  // DB Levels
   const [dbLevels, setDbLevels] = useState<any[]>([]);
 
   // Sound Effects
-  const playSound = (type: 'start' | 'correct' | 'wrong' | 'victory' | 'gameover') => {
+  const playSound = (type: 'start' | 'correct' | 'wrong' | 'victory' | 'gameover' | 'flip') => {
     const audio = new Audio();
     if (type === 'start') audio.src = 'https://actions.google.com/sounds/v1/foley/whoosh_heavy.ogg';
     if (type === 'correct') audio.src = 'https://actions.google.com/sounds/v1/cartoon/woodpecker.ogg'; 
     if (type === 'wrong') audio.src = 'https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg';
     if (type === 'victory') audio.src = 'https://actions.google.com/sounds/v1/crowds/light_applause.ogg';
     if (type === 'gameover') audio.src = 'https://actions.google.com/sounds/v1/cartoon/conk_head.ogg';
+    if (type === 'flip') audio.src = 'https://actions.google.com/sounds/v1/cartoon/pop.ogg';
     audio.volume = 0.5;
     audio.play().catch(e => console.log("Audio prevented", e));
   };
@@ -57,6 +59,18 @@ export default function PlayGame() {
       .catch(e => console.log("Failed to fetch games", e));
   }, []);
 
+  const getCurrentLevelInfo = () => {
+    return (dbLevels.length > 0 ? dbLevels : defaultLevels).find(l => (l.levelNumber || l.id) === selectedLevel) || defaultLevels[0];
+  };
+
+  const getActiveQuestions = () => {
+    const currentLevelInfo = getCurrentLevelInfo();
+    if (currentLevelInfo && currentLevelInfo.questions && currentLevelInfo.questions.length > 0) {
+      return currentLevelInfo.questions;
+    }
+    return defaultQuestions;
+  };
+
   // Timer logic
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -68,26 +82,45 @@ export default function PlayGame() {
     return () => clearTimeout(timer);
   }, [timeLeft, gameState, selectedAnswer, isAnswerCorrect]);
 
-  const getActiveQuestions = () => {
-    // Return DB questions if exist, otherwise fallback
-    const currentLevelInfo = (dbLevels.length > 0 ? dbLevels : defaultLevels).find(l => (l.levelNumber || l.id) === selectedLevel);
-    if (currentLevelInfo && currentLevelInfo.questions && currentLevelInfo.questions.length > 0) {
-      return currentLevelInfo.questions;
+  // Setup Memory Cards if type changes
+  useEffect(() => {
+    if (gameState === 'PLAYING') {
+      const q = getActiveQuestions()[currentQuestion];
+      if (q && q.type === 'MATCHING_PAIRS') {
+        const pairedWords = [...q.options, ...q.options]; // Duplicate to make pairs
+        const shuffled = pairedWords.sort(() => Math.random() - 0.5).map((text, i) => ({ id: i, text, isMatched: false }));
+        setMemoryCards(shuffled);
+        setFlippedCards([]);
+      }
     }
-    
-    // Fallback logic for demo
-    if (selectedLevel === 2) {
-      return [{ type: 'MATCH_WORD', question: "Susun huruf menjadi: Tunas Kelapa", options: ["P", "E", "A", "L", "K", "A", "T", "U", "N", "S"], answer: "TUNAS KELAPA" }];
-    }
-    if (selectedLevel === 3) {
-      return [{ type: 'OPEN_BOX', question: "Berapa usia Gerakan Pramuka pada tahun 2021 (Lahir 1961)?", options: [], answer: "60" }];
-    }
-    return defaultQuestions;
-  };
+  }, [currentQuestion, gameState]);
 
-  const getCurrentLevelInfo = () => {
-    return (dbLevels.length > 0 ? dbLevels : defaultLevels).find(l => (l.levelNumber || l.id) === selectedLevel) || defaultLevels[0];
-  };
+  // Handle Memory Card Logic
+  useEffect(() => {
+    if (flippedCards.length === 2) {
+      const [first, second] = flippedCards;
+      if (memoryCards[first].text === memoryCards[second].text) {
+        // Match!
+        playSound('correct');
+        const newCards = [...memoryCards];
+        newCards[first].isMatched = true;
+        newCards[second].isMatched = true;
+        setMemoryCards(newCards);
+        setFlippedCards([]);
+        
+        // Check if all matched
+        if (newCards.every(c => c.isMatched)) {
+          processResult(true, null);
+        }
+      } else {
+        // No match
+        playSound('wrong');
+        setHp(prev => Math.max(0, prev - 10)); // Tiny penalty for wrong card flip
+        if (hp - 10 <= 0) processResult(false, null);
+        setTimeout(() => setFlippedCards([]), 1000);
+      }
+    }
+  }, [flippedCards]);
 
   const startGame = (levelId: number) => {
     playSound('start');
@@ -110,35 +143,35 @@ export default function PlayGame() {
     processResult(false, null);
   };
 
-  const handleQuizAnswer = (index: number) => {
+  const handleQuizAnswer = (answer: any) => {
     if (selectedAnswer !== null) return;
-    setSelectedAnswer(index);
+    setSelectedAnswer(answer);
     const questions = getActiveQuestions();
-    const correct = index === questions[currentQuestion].answer;
-    processResult(correct, index);
+    const correct = answer === questions[currentQuestion].answer;
+    processResult(correct, answer);
   };
 
   const handleTextAnswer = () => {
     if (isAnswerCorrect !== null) return;
     const questions = getActiveQuestions();
-    const correct = textInput.toUpperCase().trim() === String(questions[currentQuestion].answer).toUpperCase();
+    const correct = textInput.toUpperCase().trim() === String(questions[currentQuestion].answer).toUpperCase().trim();
     processResult(correct, -1);
   };
 
-  const processResult = (correct: boolean, ansIndex: number | null) => {
+  const processResult = (correct: boolean, ansIndex: any) => {
     setIsAnswerCorrect(correct);
-    playSound(correct ? 'correct' : 'wrong');
+    if (ansIndex !== null) playSound(correct ? 'correct' : 'wrong');
 
     if (correct) {
       setScore(prev => prev + 50 + (timeLeft * 2));
     } else {
-      setHp(prev => Math.max(0, prev - 35));
+      setHp(0); // Any mistake drops HP to 0 instantly for instant fail!
     }
 
     setTimeout(() => {
       if (!correct) {
         playSound('gameover');
-        setUnlockedLevels(1); // Perintah: Kembali ke misi 1 lagi jika ada yang salah
+        setUnlockedLevels(1); // RESET TO LEVEL 1 (Rogue-like mechanic)
         setGameState('GAMEOVER');
       } else if (currentQuestion < getActiveQuestions().length - 1) {
         setCurrentQuestion(prev => prev + 1);
@@ -162,7 +195,6 @@ export default function PlayGame() {
   const continueNextMission = () => {
     const activeLevels = dbLevels.length > 0 ? dbLevels : defaultLevels;
     if (unlockedLevels > selectedLevel && selectedLevel < activeLevels.length) {
-      // Find the next level ID
       const currentIdx = activeLevels.findIndex(l => (l.levelNumber || l.id) === selectedLevel);
       if (currentIdx !== -1 && currentIdx + 1 < activeLevels.length) {
         const nextLevelId = activeLevels[currentIdx + 1].levelNumber || activeLevels[currentIdx + 1].id;
@@ -199,49 +231,131 @@ export default function PlayGame() {
       );
     }
 
-    if (q.type === 'OPEN_BOX') {
+    if (q.type === 'YES_NO') {
+      return (
+        <div className="flex gap-4 max-w-xl mx-auto">
+          <button 
+            disabled={selectedAnswer !== null} 
+            onClick={() => handleQuizAnswer(true)} 
+            className={`flex-1 flex flex-col items-center justify-center gap-4 py-8 rounded-3xl border-4 transition-all ${
+              selectedAnswer !== null 
+                ? (q.answer === true ? 'bg-emerald-600 border-emerald-400 shadow-[0_0_30px_#10b981]' : selectedAnswer === true ? 'bg-red-600 border-red-400' : 'bg-slate-900 border-slate-800 opacity-50')
+                : 'bg-emerald-900/50 border-emerald-500/50 hover:bg-emerald-800 hover:scale-105'
+            }`}
+          >
+            <CheckCircle2 size={64} className={selectedAnswer !== null && q.answer === true ? "text-white" : "text-emerald-400"} />
+            <span className="font-black text-2xl tracking-widest text-white">BENAR</span>
+          </button>
+          
+          <button 
+            disabled={selectedAnswer !== null} 
+            onClick={() => handleQuizAnswer(false)} 
+            className={`flex-1 flex flex-col items-center justify-center gap-4 py-8 rounded-3xl border-4 transition-all ${
+              selectedAnswer !== null 
+                ? (q.answer === false ? 'bg-emerald-600 border-emerald-400 shadow-[0_0_30px_#10b981]' : selectedAnswer === false ? 'bg-red-600 border-red-400' : 'bg-slate-900 border-slate-800 opacity-50')
+                : 'bg-red-900/50 border-red-500/50 hover:bg-red-800 hover:scale-105'
+            }`}
+          >
+            <XCircle size={64} className={selectedAnswer !== null && q.answer === false ? "text-white" : "text-red-400"} />
+            <span className="font-black text-2xl tracking-widest text-white">SALAH</span>
+          </button>
+        </div>
+      );
+    }
+
+    if (q.type === 'OPEN_BOX' || q.type === 'FILL_BLANK') {
       return (
         <div className="flex flex-col items-center gap-6">
-          <div className={`w-32 h-32 rounded-2xl border-4 flex items-center justify-center transition-all duration-500 ${isAnswerCorrect ? 'border-emerald-400 bg-emerald-900/50 scale-110 shadow-[0_0_30px_#10b981]' : 'border-amber-400 bg-amber-900/20'}`}>
-            <Box size={64} className={isAnswerCorrect ? 'text-emerald-400' : 'text-amber-400 animate-pulse'} />
-          </div>
+          {q.type === 'OPEN_BOX' && (
+            <div className={`w-32 h-32 rounded-2xl border-4 flex items-center justify-center transition-all duration-500 ${isAnswerCorrect ? 'border-emerald-400 bg-emerald-900/50 scale-110 shadow-[0_0_30px_#10b981]' : 'border-amber-400 bg-amber-900/20'}`}>
+              <Box size={64} className={isAnswerCorrect ? 'text-emerald-400' : 'text-amber-400 animate-pulse'} />
+            </div>
+          )}
           <div className="w-full max-w-md flex gap-2">
             <input 
               type="text" 
-              placeholder="Masukkan kode rahasia kotak..." 
+              placeholder={q.type === 'OPEN_BOX' ? "Masukkan kode rahasia..." : "Ketik kata yang hilang..."} 
               value={textInput} 
               onChange={e => setTextInput(e.target.value)}
               disabled={isAnswerCorrect !== null}
-              className="flex-1 bg-slate-800 border-2 border-slate-600 rounded-xl px-4 py-3 font-bold text-lg focus:border-amber-400 outline-none"
+              className="flex-1 bg-slate-800 border-2 border-slate-600 rounded-xl px-4 py-3 font-bold text-lg focus:border-amber-400 outline-none uppercase text-center tracking-widest"
+              onKeyDown={e => e.key === 'Enter' && handleTextAnswer()}
             />
-            <button onClick={handleTextAnswer} disabled={isAnswerCorrect !== null} className="bg-amber-500 hover:bg-amber-400 text-black px-6 font-black rounded-xl">Buka</button>
+            <button onClick={handleTextAnswer} disabled={isAnswerCorrect !== null} className="bg-amber-500 hover:bg-amber-400 text-black px-8 font-black rounded-xl transition-colors">
+              SUBMIT
+            </button>
           </div>
         </div>
       );
     }
 
-    if (q.type === 'MATCH_WORD') {
+    if (q.type === 'ANAGRAMS') {
+      // Scramble the target word
+      const target = String(q.answer).toUpperCase();
+      // Only scramble initially if textInput is empty to avoid reshuffling
+      const letters = textInput === "" ? target.split('').sort(() => Math.random() - 0.5) : [];
+      
       return (
         <div className="flex flex-col items-center gap-6">
-          <div className="flex flex-wrap gap-2 justify-center mb-4">
-            {q.options.map((letter: string, i: number) => (
-              <div key={i} className="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center font-black text-xl border-b-4 border-slate-900">{letter}</div>
-            ))}
-          </div>
+          {textInput === "" && (
+            <div className="flex flex-wrap gap-3 justify-center mb-6">
+              {letters.map((letter: string, i: number) => (
+                <motion.div initial={{scale:0}} animate={{scale:1}} transition={{delay: i*0.1}} key={i} className="w-14 h-14 bg-cyan-900/50 rounded-xl flex items-center justify-center font-black text-2xl border-b-4 border-cyan-700 text-cyan-100 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+                  {letter}
+                </motion.div>
+              ))}
+            </div>
+          )}
           <div className="w-full max-w-md flex gap-2">
             <input 
               type="text" 
-              placeholder="Ketik kata yang benar..." 
+              placeholder="Susun kata yang benar..." 
               value={textInput} 
               onChange={e => setTextInput(e.target.value)}
               disabled={isAnswerCorrect !== null}
-              className="flex-1 bg-slate-800 border-2 border-slate-600 rounded-xl px-4 py-3 font-bold text-lg focus:border-cyan-400 outline-none text-center tracking-widest uppercase"
+              className="flex-1 bg-slate-800 border-2 border-slate-600 rounded-xl px-4 py-3 font-black text-2xl focus:border-cyan-400 outline-none text-center tracking-widest uppercase"
+              onKeyDown={e => e.key === 'Enter' && handleTextAnswer()}
             />
             <button onClick={handleTextAnswer} disabled={isAnswerCorrect !== null} className="bg-cyan-500 hover:bg-cyan-400 text-black px-6 font-black rounded-xl"><SpellCheck /></button>
           </div>
         </div>
       );
     }
+
+    if (q.type === 'MATCHING_PAIRS') {
+      return (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+          {memoryCards.map((card, i) => {
+            const isFlipped = flippedCards.includes(i) || card.isMatched;
+            return (
+              <div 
+                key={i} 
+                onClick={() => {
+                  if (!isFlipped && flippedCards.length < 2) {
+                    playSound('flip');
+                    setFlippedCards([...flippedCards, i]);
+                  }
+                }}
+                className={`relative w-full aspect-square rounded-2xl cursor-pointer transition-all duration-500 transform-gpu ${isFlipped ? '[transform:rotateY(180deg)]' : 'hover:-translate-y-2'}`}
+                style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
+              >
+                {/* Back of Card */}
+                <div className="absolute inset-0 bg-indigo-900 border-4 border-indigo-500/50 rounded-2xl flex items-center justify-center backface-hidden" style={{ backfaceVisibility: 'hidden' }}>
+                  <Star className="text-indigo-500/30 w-1/2 h-1/2" />
+                </div>
+                
+                {/* Front of Card */}
+                <div className={`absolute inset-0 rounded-2xl flex items-center justify-center p-4 border-4 text-center break-words [transform:rotateY(180deg)] shadow-xl ${card.isMatched ? 'bg-emerald-900 border-emerald-400 text-emerald-100 shadow-[0_0_20px_#10b981]' : 'bg-slate-800 border-indigo-400 text-white'}`} style={{ backfaceVisibility: 'hidden' }}>
+                  <span className="font-bold text-lg md:text-xl">{card.text}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    return <div>Tipe game belum didukung UI ini.</div>;
   }
 
   return (
@@ -249,7 +363,7 @@ export default function PlayGame() {
       {/* Dynamic Backgrounds based on Level Type */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
-        <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] blur-[120px] rounded-full pointer-events-none transition-colors duration-1000 ${gameState === 'PLAYING' && getActiveQuestions()[currentQuestion]?.type === 'OPEN_BOX' ? 'bg-amber-600/20' : 'bg-emerald-600/20'}`} />
+        <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] blur-[120px] rounded-full pointer-events-none transition-colors duration-1000 ${gameState === 'PLAYING' && getActiveQuestions()[currentQuestion]?.type === 'OPEN_BOX' ? 'bg-amber-600/20' : gameState === 'PLAYING' && getActiveQuestions()[currentQuestion]?.type === 'YES_NO' ? 'bg-indigo-600/20' : 'bg-emerald-600/20'}`} />
         <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-teal-600/20 blur-[100px] rounded-full pointer-events-none" />
       </div>
 
@@ -290,16 +404,15 @@ export default function PlayGame() {
               >
                 <div className="text-center mb-10 mt-6">
                   <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight uppercase">Peta <span className="text-emerald-400">Petualangan</span></h2>
-                  <p className="text-slate-400 text-lg">Taklukkan misi dan ambil Aset 3D Legendari dari setiap Pos.</p>
+                  <p className="text-slate-400 text-lg">Taklukkan misi. Satu kesalahan = Kembali ke Awal!</p>
                 </div>
 
                 <div className="flex-1 relative flex items-center justify-center py-10">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative z-10 w-full px-4 max-w-4xl mx-auto">
+                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 relative z-10 w-full px-4 max-w-5xl mx-auto">
                     {(dbLevels.length > 0 ? dbLevels : defaultLevels).map((level: any, i: number) => {
                       const isUnlocked = level.levelNumber ? level.levelNumber <= unlockedLevels : level.id <= unlockedLevels;
                       const isCurrent = level.levelNumber ? level.levelNumber === unlockedLevels : level.id === unlockedLevels;
                       const levelId = level.levelNumber || level.id;
-
                       
                       return (
                         <motion.div 
@@ -315,13 +428,10 @@ export default function PlayGame() {
                                 isUnlocked ? 'bg-slate-800 border-emerald-700' : 'bg-slate-900 border-slate-700'}
                             `}
                           >
-                            {/* Dummy Placeholder for 3D Asset from Flaticon/Itchio */}
                             <div className="absolute inset-0 opacity-20 bg-[url('https://cdn-icons-png.flaticon.com/512/5260/5260498.png')] bg-cover bg-center" />
                             
                             {isUnlocked ? (
-                              level.type === 'QUIZ' ? <Swords size={48} className={isCurrent ? "text-emerald-400 drop-shadow-[0_0_10px_#10b981] z-10" : "text-emerald-600 z-10"} /> :
-                              level.type === 'OPEN_BOX' ? <Box size={48} className={isCurrent ? "text-amber-400 drop-shadow-[0_0_10px_#fbbf24] z-10" : "text-amber-600 z-10"} /> :
-                              <SpellCheck size={48} className={isCurrent ? "text-cyan-400 drop-shadow-[0_0_10px_#22d3ee] z-10" : "text-cyan-600 z-10"} />
+                              <Swords size={48} className={isCurrent ? "text-emerald-400 drop-shadow-[0_0_10px_#10b981] z-10" : "text-emerald-600 z-10"} />
                             ) : (
                               <Lock size={48} className="text-slate-600 z-10" />
                             )}
@@ -335,7 +445,7 @@ export default function PlayGame() {
                           
                           <div className="text-center bg-slate-900/50 p-3 rounded-xl border border-white/5 w-full">
                             <h3 className="font-bold text-sm text-slate-200 mb-1">{level.title}</h3>
-                            <span className="text-xs text-emerald-500 font-black px-2 py-1 bg-emerald-500/10 rounded-md block">Tipe: {level.type}</span>
+                            <span className="text-xs text-emerald-500 font-black px-2 py-1 bg-emerald-500/10 rounded-md block uppercase">{level.questions?.length || 0} Task</span>
                           </div>
                         </motion.div>
                       );
@@ -369,15 +479,15 @@ export default function PlayGame() {
 
                   <div className="space-y-6 mb-10 bg-black/30 p-6 rounded-2xl border border-white/5">
                     <p className="text-slate-300 leading-relaxed text-lg">
-                      Uji pengetahuanmu dalam mode <span className="text-emerald-400 font-bold">{getCurrentLevelInfo().type}</span>. 
-                      Selesaikan misi untuk mendapatkan Bintang 5 dan melaju ke level berikutnya!
+                      Selesaikan <span className="text-emerald-400 font-bold">{getCurrentLevelInfo().questions?.length || 0} Tantangan</span> untuk mendapatkan Bintang 5.
+                      <strong className="text-red-400 block mt-2">Peringatan: Satu kesalahan, dan kamu akan dilempar ke Level 1!</strong>
                     </p>
                     <div className="flex gap-4">
                       <div className="flex items-center gap-2 text-sm font-bold bg-white/5 px-4 py-2 rounded-lg">
                         <Clock size={16} className="text-amber-400" /> 15s / Task
                       </div>
                       <div className="flex items-center gap-2 text-sm font-bold bg-white/5 px-4 py-2 rounded-lg">
-                        <Heart size={16} className="text-red-400" /> 100 HP
+                        <Heart size={16} className="text-red-400" /> 1 HP
                       </div>
                     </div>
                   </div>
@@ -434,6 +544,13 @@ export default function PlayGame() {
 
                 {/* Question Card */}
                 <div className="bg-[#0f1c2e] p-8 md:p-12 rounded-3xl border-2 border-slate-700 shadow-2xl relative">
+                  
+                  {getActiveQuestions()[currentQuestion]?.imageUrl && (
+                    <div className="w-48 h-48 mx-auto mb-6 rounded-2xl overflow-hidden border-4 border-slate-600 shadow-[0_0_20px_rgba(0,0,0,0.5)] bg-black">
+                      <img src={getActiveQuestions()[currentQuestion].imageUrl} className="w-full h-full object-cover" alt="Clue" />
+                    </div>
+                  )}
+
                   <h2 className="text-2xl md:text-3xl font-bold leading-relaxed text-white text-center mb-10">
                     {getActiveQuestions()[currentQuestion].question}
                   </h2>
@@ -484,7 +601,7 @@ export default function PlayGame() {
                         <Star className="fill-amber-400" size={32} />
                         <Star className="fill-amber-400" size={32} />
                       </div>
-                      <p className="text-emerald-400 font-bold text-lg mb-8">Pangkatmu naik! 5 Bintang didapatkan!</p>
+                      <p className="text-emerald-400 font-bold text-lg mb-8">Keahlian Pramukamu terbukti tangguh!</p>
                     </>
                   ) : (
                     <>
@@ -493,7 +610,7 @@ export default function PlayGame() {
                         <Sword size={48} />
                       </div>
                       <h2 className="text-4xl font-black text-white mb-2 uppercase tracking-widest">MISSION FAILED</h2>
-                      <p className="text-red-400 font-bold text-lg mb-8">Kamu kehabisan HP. Coba lagi!</p>
+                      <p className="text-red-400 font-bold text-lg mb-8">Kamu melakukan kesalahan. Kembali ke Level 1!</p>
                     </>
                   )}
 
