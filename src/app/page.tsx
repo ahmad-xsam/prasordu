@@ -96,7 +96,7 @@ export default function LandingPage() {
             transition={{ duration: 1, delay: 0.8 }}
             className="flex gap-6 flex-col sm:flex-row"
           >
-            <Link href="/register" className="group relative px-8 py-4 bg-emerald-600 rounded-xl font-bold text-white text-lg overflow-hidden shadow-[0_0_20px_rgba(16,185,129,0.6)] hover:shadow-[0_0_30px_rgba(16,185,129,0.8)] transition-all">
+            <Link href="/play" className="group relative px-8 py-4 bg-emerald-600 rounded-xl font-bold text-white text-lg overflow-hidden shadow-[0_0_20px_rgba(16,185,129,0.6)] hover:shadow-[0_0_30px_rgba(16,185,129,0.8)] transition-all">
               <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
               Join Adventure
             </Link>
@@ -272,8 +272,8 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-emerald-900/20" />
         <div className="relative z-10">
           <h2 className="text-3xl md:text-5xl font-black mb-8">SIAP MEMULAI PETUALANGAN?</h2>
-          <Link href="/register" className="inline-block px-10 py-5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl font-black text-white text-xl shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:shadow-[0_0_50px_rgba(16,185,129,0.8)] hover:scale-105 transition-all">
-            DAFTAR SEKARANG
+          <Link href="/play" className="inline-block px-10 py-5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl font-black text-white text-xl shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:shadow-[0_0_50px_rgba(16,185,129,0.8)] hover:scale-105 transition-all">
+            MAIN SEKARANG
           </Link>
         </div>
       </section>

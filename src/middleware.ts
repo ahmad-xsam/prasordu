@@ -5,7 +5,7 @@ export default withAuth(
   function middleware(req) {
     const isAuth = !!req.nextauth.token;
     const isAuthPage = req.nextUrl.pathname.startsWith('/login') || req.nextUrl.pathname.startsWith('/register');
-    const isPublicPage = req.nextUrl.pathname === '/';
+    const isPublicPage = req.nextUrl.pathname === '/' || req.nextUrl.pathname.startsWith('/play');
     const role = req.nextauth.token?.role;
 
     if (isAuthPage) {
