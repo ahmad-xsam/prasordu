@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Volume2, VolumeX, Shield, Swords, Map as MapIcon, Users, BookOpen } from "lucide-react";
 
-import jungleBg from "../../public/jungle_bg.png";
+import jungleBg from "../../public/cave_bg.jpg";
 import scoutBoy from "../../public/scout_boy.png";
 import scoutGirl from "../../public/scout_girl.png";
 

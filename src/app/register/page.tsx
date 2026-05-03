@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-import jungleBg from "../../../public/jungle_bg.png";
+import jungleBg from "../../../public/cave_bg.jpg";
 import monkeyHero from "../../../public/monkey_hero.png";
 
 export default function RegisterPage() {
