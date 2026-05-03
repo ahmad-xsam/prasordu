@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Sword, Swords, Heart, Clock, ArrowLeft, Star, Trophy, Unlock, Lock, Box, SpellCheck, CheckCircle2, XCircle } from "lucide-react";
+import { Shield, Sword, Swords, Heart, Clock, ArrowLeft, Star, Trophy, Unlock, Lock, Box, SpellCheck, CheckCircle2, XCircle, Award, Medal, Crown } from "lucide-react";
 import Link from "next/link";
 
 // ---------------- DEFAULT GAME DATA (Fallback) ----------------
@@ -593,19 +593,50 @@ export default function PlayGame() {
                   {gameState === 'VICTORY' ? (
                     <>
                       <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/20 to-transparent" />
-                      <div className="w-24 h-24 mx-auto mb-6 bg-emerald-500/20 rounded-full flex items-center justify-center border-4 border-emerald-500 text-emerald-400 shadow-[0_0_50px_rgba(16,185,129,0.5)]">
-                        <Trophy size={48} />
-                      </div>
+                      
+                      {/* DYNAMIC BADGE RENDERER BASED ON LEVEL */}
+                      {(() => {
+                        const levelIndex = (dbLevels.length > 0 ? dbLevels : defaultLevels).findIndex(l => (l.levelNumber || l.id) === selectedLevel);
+                        const displayLevel = levelIndex + 1; // 1-indexed
+
+                        let badgeColor = "from-amber-700 to-amber-900 border-amber-600 shadow-amber-700/50 text-amber-500";
+                        let BadgeIcon = Award;
+                        let badgeTitle = "BRONZE SCOUT";
+
+                        if (displayLevel === 2) { badgeColor = "from-slate-300 to-slate-500 border-slate-400 shadow-slate-400/50 text-slate-200"; BadgeIcon = Medal; badgeTitle = "SILVER RANGER"; }
+                        if (displayLevel === 3) { badgeColor = "from-yellow-400 to-yellow-600 border-yellow-500 shadow-yellow-500/50 text-yellow-300"; BadgeIcon = Shield; badgeTitle = "GOLD EAGLE"; }
+                        if (displayLevel === 4) { badgeColor = "from-cyan-300 to-blue-500 border-cyan-400 shadow-cyan-400/50 text-cyan-200"; BadgeIcon = Star; badgeTitle = "PLATINUM MASTER"; }
+                        if (displayLevel >= 5) { badgeColor = "from-fuchsia-500 to-purple-700 border-fuchsia-400 shadow-fuchsia-500/50 text-fuchsia-300"; BadgeIcon = Crown; badgeTitle = "DIAMOND LEGEND"; }
+
+                        return (
+                          <div className="relative mb-8">
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white/5 rounded-full animate-ping" />
+                            <div className={`mx-auto w-32 h-32 rounded-3xl rotate-45 bg-gradient-to-br border-4 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center relative z-10 ${badgeColor}`}>
+                              <div className="-rotate-45 text-white drop-shadow-lg">
+                                <BadgeIcon size={64} />
+                              </div>
+                            </div>
+                            <div className="mt-8">
+                              <span className={`px-4 py-1 rounded-full text-xs font-black tracking-widest border bg-black/50 ${badgeColor.split(' ')[4] /* text color */}`}>BADGE LEVEL {displayLevel}: {badgeTitle}</span>
+                            </div>
+                          </div>
+                        );
+                      })()}
+
                       <h2 className="text-4xl font-black text-white mb-2 uppercase tracking-widest">MISSION CLEARED</h2>
                       
-                      <div className="flex justify-center gap-2 mb-6 text-amber-400">
-                        <Star className="fill-amber-400" size={32} />
-                        <Star className="fill-amber-400" size={32} />
-                        <Star className="fill-amber-400" size={32} />
-                        <Star className="fill-amber-400" size={32} />
-                        <Star className="fill-amber-400" size={32} />
+                      <div className="flex justify-center gap-2 mb-4 text-amber-400">
+                        <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
+                        <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
+                        <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
+                        <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
+                        <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24]" size={32} />
                       </div>
-                      <p className="text-emerald-400 font-bold text-lg mb-8">Keahlian Pramukamu terbukti tangguh!</p>
+                      
+                      <p className="text-emerald-400 font-bold text-lg mb-2">Keahlian Pramukamu terbukti tangguh!</p>
+                      <p className="text-slate-400 text-sm mb-8 px-4 leading-relaxed">
+                        Kumpulkan badge ini dan laporkan kepada pembina untuk ditukarkan menjadi point tambahan pada Raport dan Bintang Tahunan Seragam Pramuka.
+                      </p>
                     </>
                   ) : (
                     <>
