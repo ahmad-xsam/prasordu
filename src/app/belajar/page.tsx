@@ -74,6 +74,15 @@ export default function BelajarPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {materiData.filter(m => m.title.toLowerCase().includes(search.toLowerCase()) || m.category.toLowerCase().includes(search.toLowerCase())).map((materi, i) => {
               const Icon = getIconForCategory(materi.category);
+              const colorSchemes = [
+                { border: 'border-amber-500/30', bg: 'bg-amber-500/10', text: 'text-amber-500', hover: 'group-hover:text-amber-400' },
+                { border: 'border-red-500/30', bg: 'bg-red-500/10', text: 'text-red-500', hover: 'group-hover:text-red-400' },
+                { border: 'border-emerald-500/30', bg: 'bg-emerald-500/10', text: 'text-emerald-500', hover: 'group-hover:text-emerald-400' },
+                { border: 'border-blue-500/30', bg: 'bg-blue-500/10', text: 'text-blue-500', hover: 'group-hover:text-blue-400' },
+                { border: 'border-purple-500/30', bg: 'bg-purple-500/10', text: 'text-purple-500', hover: 'group-hover:text-purple-400' }
+              ];
+              const color = colorSchemes[i % colorSchemes.length];
+
               return (
                 <motion.div
                   key={materi._id || i}
@@ -81,16 +90,16 @@ export default function BelajarPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
                 >
-                  <Link href={`/belajar/${materi._id}`} className={`block h-full bg-slate-900/80 backdrop-blur-sm border-2 border-amber-500/30 rounded-3xl p-6 hover:-translate-y-2 transition-all hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] group`}>
-                    <div className="w-16 h-16 bg-amber-500/10 rounded-2xl flex items-center justify-center mb-6 border border-white/5 group-hover:scale-110 transition-transform overflow-hidden relative">
+                  <Link href={`/belajar/${materi._id}`} className={`block h-full bg-slate-900/80 backdrop-blur-sm border-2 ${color.border} rounded-3xl p-6 hover:-translate-y-2 transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] group`}>
+                    <div className={`w-16 h-16 ${color.bg} rounded-2xl flex items-center justify-center mb-6 border border-white/5 group-hover:scale-110 transition-transform overflow-hidden relative`}>
                       {materi.imageUrl ? (
                         <img src={materi.imageUrl} alt={materi.title} className="w-full h-full object-cover" />
                       ) : (
-                        <Icon className="text-amber-500" size={32} />
+                        <Icon className={color.text} size={32} />
                       )}
                     </div>
-                    <h3 className="text-xl font-bold mb-1 text-slate-200 group-hover:text-amber-400 transition-colors leading-snug">{materi.title}</h3>
-                    <p className="text-amber-500/50 text-xs font-bold uppercase mb-4">{materi.category}</p>
+                    <h3 className={`text-xl font-bold mb-1 text-slate-200 ${color.hover} transition-colors leading-snug`}>{materi.title}</h3>
+                    <p className={`${color.text} opacity-50 text-xs font-bold uppercase mb-4`}>{materi.category}</p>
                     <p className="text-slate-500 text-sm">Baca selengkapnya &rarr;</p>
                   </Link>
                 </motion.div>

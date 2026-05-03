@@ -1,27 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Save, Trash, Gamepad2 } from "lucide-react";
-
-interface Question {
-  type: string;
-  question: string;
-  options: string[];
-  answer: string | number;
-  points: number;
-}
-
-interface GameLevel {
-  levelNumber: number;
-  title: string;
-  description: string;
-  type: string;
-  questions: Question[];
-}
+import { Plus, Save, Trash, Gamepad2, X } from "lucide-react";
 
 export default function AdminGameManager() {
-  const [levels, setLevels] = useState<GameLevel[]>([]);
-  const [currentLevel, setCurrentLevel] = useState<GameLevel | null>(null);
+  const [levels, setLevels] = useState<any[]>([]);
+  const [currentLevel, setCurrentLevel] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -59,6 +43,20 @@ export default function AdminGameManager() {
     }
   };
 
+  const handleDeleteLevel = async (id: string) => {
+    if (!confirm("Yakin ingin menghapus level ini beserta seluruh soalnya?")) return;
+    try {
+      const res = await fetch(`/api/admin/games?id=${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert("Level dihapus!");
+        fetchLevels();
+        if (currentLevel && currentLevel._id === id) setCurrentLevel(null);
+      }
+    } catch (error) {
+      alert("Gagal menghapus level");
+    }
+  };
+
   const addNewQuestion = () => {
     if (!currentLevel) return;
     setCurrentLevel({
@@ -68,6 +66,14 @@ export default function AdminGameManager() {
         { type: 'QUIZ', question: 'Pertanyaan Baru', options: ['A', 'B', 'C', 'D'], answer: 0, points: 100 }
       ]
     });
+  };
+
+  const removeQuestion = (idx: number) => {
+    if (!currentLevel) return;
+    if (!confirm("Hapus soal ini?")) return;
+    const newQ = [...currentLevel.questions];
+    newQ.splice(idx, 1);
+    setCurrentLevel({...currentLevel, questions: newQ});
   };
 
   return (
@@ -96,12 +102,19 @@ export default function AdminGameManager() {
             <div className="space-y-3">
               {levels.map((lvl) => (
                 <div 
-                  key={lvl.levelNumber} 
-                  onClick={() => setCurrentLevel(lvl)}
-                  className={`p-4 rounded-xl cursor-pointer border-2 transition-all ${currentLevel?.levelNumber === lvl.levelNumber ? 'border-emerald-500 bg-emerald-50' : 'border-gray-100 hover:border-emerald-200'}`}
+                  key={lvl._id} 
+                  className={`p-4 rounded-xl border-2 transition-all group relative ${currentLevel?.levelNumber === lvl.levelNumber ? 'border-emerald-500 bg-emerald-50' : 'border-gray-100 hover:border-emerald-200'}`}
                 >
-                  <div className="font-bold text-gray-800">Level {lvl.levelNumber}: {lvl.title}</div>
-                  <div className="text-sm text-gray-500">{lvl.questions.length} Soal</div>
+                  <div className="cursor-pointer" onClick={() => setCurrentLevel(lvl)}>
+                    <div className="font-bold text-gray-800">Level {lvl.levelNumber}: {lvl.title}</div>
+                    <div className="text-sm text-gray-500">{lvl.questions.length} Soal</div>
+                  </div>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); handleDeleteLevel(lvl._id); }}
+                    className="absolute top-4 right-4 text-red-400 hover:text-red-600 p-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-50 rounded-lg"
+                  >
+                    <Trash size={16} />
+                  </button>
                 </div>
               ))}
             </div>
@@ -113,7 +126,7 @@ export default function AdminGameManager() {
           <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="font-bold text-2xl">Edit Level {currentLevel.levelNumber}</h2>
-              <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2">
+              <button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2">
                 <Save size={18} /> Simpan Level
               </button>
             </div>
@@ -132,15 +145,23 @@ export default function AdminGameManager() {
 
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-bold text-xl">Daftar Soal</h3>
-              <button onClick={addNewQuestion} className="text-emerald-600 font-bold bg-emerald-50 px-3 py-1 rounded-lg">
-                + Tambah Soal
+              <button onClick={addNewQuestion} className="text-emerald-600 font-bold hover:bg-emerald-100 bg-emerald-50 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                <Plus size={16} /> Tambah Soal
               </button>
             </div>
 
             <div className="space-y-6">
-              {currentLevel.questions.map((q, idx) => (
-                <div key={idx} className="p-4 border rounded-xl bg-gray-50">
-                  <div className="flex justify-between mb-4">
+              {currentLevel.questions.map((q: any, idx: number) => (
+                <div key={idx} className="p-4 border rounded-xl bg-gray-50 relative group">
+                  <button 
+                    onClick={() => removeQuestion(idx)}
+                    className="absolute top-4 right-4 bg-red-100 text-red-600 p-1.5 rounded-lg hover:bg-red-200 transition-colors"
+                    title="Hapus Soal"
+                  >
+                    <Trash size={16} />
+                  </button>
+
+                  <div className="flex justify-between mb-4 mr-10">
                     <h4 className="font-bold">Soal {idx + 1}</h4>
                     <select 
                       value={q.type}
@@ -149,7 +170,7 @@ export default function AdminGameManager() {
                         newQ[idx].type = e.target.value;
                         setCurrentLevel({...currentLevel, questions: newQ});
                       }}
-                      className="border rounded px-2 py-1"
+                      className="border rounded px-2 py-1 font-medium bg-white"
                     >
                       <option value="QUIZ">Pilihan Ganda (Quiz)</option>
                       <option value="MATCH_WORD">Pencocokan Kata</option>
@@ -164,12 +185,13 @@ export default function AdminGameManager() {
                   <input 
                     type="text" 
                     placeholder="URL Gambar Pendukung (Opsional - Upload Game Bergambar)" 
+                    value={q.imageUrl || ''}
                     onChange={(e) => {
                       const newQ = [...currentLevel.questions];
-                      (newQ[idx] as any).imageUrl = e.target.value;
+                      newQ[idx].imageUrl = e.target.value;
                       setCurrentLevel({...currentLevel, questions: newQ});
                     }}
-                    className="w-full p-2 border rounded mb-3 bg-blue-50 focus:border-blue-500"
+                    className="w-full p-2 border rounded mb-3 bg-blue-50 focus:border-blue-500 outline-none"
                   />
 
                   <input 
@@ -181,13 +203,13 @@ export default function AdminGameManager() {
                       newQ[idx].question = e.target.value;
                       setCurrentLevel({...currentLevel, questions: newQ});
                     }}
-                    className="w-full p-2 border rounded mb-3"
+                    className="w-full p-2 border rounded mb-3 outline-none"
                   />
 
                   {q.type === 'QUIZ' && (
                     <div className="grid grid-cols-2 gap-2">
-                      {q.options.map((opt, oIdx) => (
-                        <div key={oIdx} className="flex items-center gap-2">
+                      {q.options.map((opt: string, oIdx: number) => (
+                        <div key={oIdx} className="flex items-center gap-2 bg-white p-2 border rounded">
                           <input 
                             type="radio" 
                             name={`answer-${idx}`} 
@@ -206,28 +228,16 @@ export default function AdminGameManager() {
                               newQ[idx].options[oIdx] = e.target.value;
                               setCurrentLevel({...currentLevel, questions: newQ});
                             }}
-                            className="w-full p-2 border rounded"
+                            className="w-full outline-none"
                           />
                         </div>
                       ))}
                     </div>
                   )}
-
-                  {q.type === 'MATCH_WORD' && (
-                    <div className="text-sm text-gray-500">
-                      Format: Isi opsi dengan kata-kata yang diacak (pisahkan dengan koma di kotak opsi pertama), lalu jawaban yang benar. (Contoh sederhana).
-                    </div>
-                  )}
-
-                  {q.type === 'OPEN_BOX' && (
-                    <div className="text-sm text-gray-500">
-                      Terdapat kotak rahasia. Jawaban adalah isi teks atau angka yang benar untuk membuka kotak.
-                    </div>
-                  )}
                 </div>
               ))}
               {currentLevel.questions.length === 0 && (
-                <p className="text-gray-500 italic text-center py-4">Belum ada soal.</p>
+                <p className="text-gray-500 italic text-center py-8 border-2 border-dashed rounded-xl">Belum ada soal. Klik Tambah Soal.</p>
               )}
             </div>
 

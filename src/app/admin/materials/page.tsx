@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Save, BookOpen, Image as ImageIcon } from "lucide-react";
+import { Plus, Save, BookOpen, Image as ImageIcon, Trash } from "lucide-react";
 
 export default function AdminMaterialManager() {
   const [materials, setMaterials] = useState<any[]>([]);
@@ -37,8 +37,9 @@ export default function AdminMaterialManager() {
   const handleSave = async () => {
     if (!currentMaterial) return;
     try {
+      const method = currentMaterial._id ? 'PUT' : 'POST';
       const res = await fetch('/api/materials', {
-        method: 'POST',
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(currentMaterial)
       });
@@ -51,6 +52,20 @@ export default function AdminMaterialManager() {
       }
     } catch (error) {
       alert("Terjadi kesalahan.");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Yakin hapus materi ini?")) return;
+    try {
+      const res = await fetch(`/api/materials?id=${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert("Materi dihapus!");
+        fetchMaterials();
+        if (currentMaterial && currentMaterial._id === id) setCurrentMaterial(null);
+      }
+    } catch (error) {
+      alert("Gagal menghapus.");
     }
   };
 
@@ -78,9 +93,15 @@ export default function AdminMaterialManager() {
           {loading ? <p>Loading...</p> : (
             <div className="space-y-3">
               {materials.map((mat, i) => (
-                <div key={i} className="p-4 border rounded-xl bg-gray-50">
+                <div key={mat._id || i} className="p-4 border-2 border-gray-100 hover:border-amber-200 rounded-xl transition-all cursor-pointer group relative" onClick={() => setCurrentMaterial(mat)}>
                   <div className="font-bold">{mat.title}</div>
                   <div className="text-xs text-gray-500">{mat.category}</div>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); handleDelete(mat._id); }}
+                    className="absolute top-4 right-4 text-red-400 hover:text-red-600 p-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-50 rounded-lg"
+                  >
+                    <Trash size={16} />
+                  </button>
                 </div>
               ))}
               {materials.length === 0 && <p className="text-gray-500 italic">Belum ada materi.</p>}
@@ -127,19 +148,19 @@ export default function AdminMaterialManager() {
                 <input 
                   type="text" 
                   placeholder="https://link-gambar.com/ilustrasi.png"
-                  value={currentMaterial.imageUrl}
+                  value={currentMaterial.imageUrl || ''}
                   onChange={(e) => setCurrentMaterial({...currentMaterial, imageUrl: e.target.value})}
-                  className="w-full p-3 border rounded-xl bg-amber-50 focus:border-amber-500"
+                  className="w-full p-3 border rounded-xl bg-amber-50 focus:border-amber-500 outline-none"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">Isi Materi</label>
                 <textarea 
-                  rows={10}
+                  rows={15}
                   value={currentMaterial.content}
                   onChange={(e) => setCurrentMaterial({...currentMaterial, content: e.target.value})}
-                  className="w-full p-3 border rounded-xl"
+                  className="w-full p-3 border rounded-xl outline-none"
                   placeholder="Tuliskan isi materi pramuka di sini..."
                 />
               </div>
