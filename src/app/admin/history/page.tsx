@@ -37,7 +37,7 @@ export default function MissionHistory() {
   };
 
   return (
-    <div className="p-8 bg-slate-950 dark:bg-black min-h-screen text-white transition-colors">
+    <div className="p-8 bg-gray-50 dark:bg-slate-950 min-h-screen text-gray-900 dark:text-white transition-colors">
       <div className="flex flex-col items-center mb-12">
         <img src="/logo_prasordu.png" alt="Logo" className="h-32 w-auto mb-6 drop-shadow-[0_0_20px_rgba(16,185,129,0.4)]" />
         <div className="flex items-center gap-4">
@@ -52,15 +52,15 @@ export default function MissionHistory() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-slate-900 border border-white/5 p-6 rounded-3xl">
-          <p className="text-slate-500 font-bold text-xs uppercase tracking-widest mb-1">TOTAL PENYELESAIAN</p>
-          <p className="text-4xl font-black text-white">{history.length}</p>
+        <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-white/5 p-6 rounded-3xl shadow-sm">
+          <p className="text-gray-500 dark:text-slate-500 font-bold text-xs uppercase tracking-widest mb-1">TOTAL PENYELESAIAN</p>
+          <p className="text-4xl font-black text-gray-900 dark:text-white">{history.length}</p>
         </div>
       </div>
 
-      <div className="bg-slate-900 border border-white/5 rounded-3xl overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-white/5 rounded-3xl shadow-md overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-white/5 text-xs font-black text-slate-400 uppercase tracking-widest">
+          <thead className="bg-gray-50 dark:bg-white/5 text-xs font-black text-gray-500 dark:text-slate-400 uppercase tracking-widest border-b border-gray-100 dark:border-white/5">
             <tr>
               <th className="px-6 py-4">Waktu</th>
               <th className="px-6 py-4">Nama Agen</th>
@@ -70,7 +70,7 @@ export default function MissionHistory() {
               <th className="px-6 py-4 text-right">Aksi</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-gray-100 dark:divide-white/5">
             {history.map((h, i) => (
               <tr key={i} className="hover:bg-white/5 transition-colors">
                 <td className="px-6 py-4 text-sm text-slate-400">
