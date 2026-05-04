@@ -1,8 +1,8 @@
 "use client";
 
-import { Bell, Search, User, Menu, Sun, Moon } from 'lucide-react';
+import { Bell, Search, User, Menu, Sun, Moon, Shield } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -10,6 +10,9 @@ interface HeaderProps {
 
 export default function Header({ onMenuClick }: HeaderProps) {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const { data: session } = useSession();
+  
+  const isAdmin = (session?.user as any)?.role === 'ADMIN';
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark';
@@ -63,12 +66,14 @@ export default function Header({ onMenuClick }: HeaderProps) {
           <Bell className="h-6 w-6" />
         </button>
         <div className="flex items-center gap-2 border-l border-gray-200 dark:border-slate-700 pl-4">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-100 text-primary-700 overflow-hidden">
-            <img src="/logo_prasordu.png?v=2" alt="Logo" className="w-full h-full object-contain" />
+          <div className={`flex h-9 w-9 items-center justify-center rounded-full ${isAdmin ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400' : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'}`}>
+            {isAdmin ? <Shield size={18} /> : <User size={18} />}
           </div>
           <div className="hidden flex-col md:flex">
-            <span className="text-sm font-semibold text-gray-700 dark:text-slate-200">Prasordu Agent</span>
-            <span className="text-xs text-gray-500">Online</span>
+            <span className="text-sm font-semibold text-gray-700 dark:text-slate-200">
+              {isAdmin ? 'Admin' : 'Anggota'}
+            </span>
+            <span className="text-xs text-gray-500 dark:text-slate-400">Online</span>
           </div>
         </div>
       </div>

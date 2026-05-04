@@ -130,17 +130,17 @@ export default function DashboardWidgets() {
       </div>
 
       {/* 2. Kalender & Cuaca Widget */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-0 flex group hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-0 flex group hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden">
         {/* Calendar Left Part */}
-        <div className="w-1/2 p-6 flex flex-col items-center justify-center border-r border-gray-100 bg-gray-50/50">
+        <div className="w-1/2 p-6 flex flex-col items-center justify-center border-r border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/50">
           <p className="text-red-500 font-bold uppercase text-sm">{dayName}</p>
-          <p className="text-6xl font-black text-gray-800 my-1">{date}</p>
-          <p className="text-sm font-semibold text-gray-600">{monthName} {year}</p>
+          <p className="text-6xl font-black text-gray-800 dark:text-white my-1">{date}</p>
+          <p className="text-sm font-semibold text-gray-600 dark:text-slate-400">{monthName} {year}</p>
         </div>
         
         {/* Weather Right Part */}
         <div className="w-1/2 p-5 flex flex-col justify-center">
-          <div className="flex items-center text-gray-500 text-xs font-bold uppercase tracking-wider mb-2">
+          <div className="flex items-center text-gray-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
             <CloudSun size={14} className="mr-1.5" /> Info Cuaca
           </div>
           
@@ -151,16 +151,16 @@ export default function DashboardWidgets() {
             </div>
           ) : weather ? (
             <div>
-              <h3 className="text-4xl font-bold text-gray-800 mb-1">{weather.temp}°C</h3>
-              <p className="text-sm font-medium text-blue-600 bg-blue-50 inline-block px-2 py-0.5 rounded-md">
+              <h3 className="text-4xl font-bold text-gray-800 dark:text-white mb-1">{weather.temp}°C</h3>
+              <p className="text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 inline-block px-2 py-0.5 rounded-md">
                 {weather.desc}
               </p>
             </div>
           ) : (
-             <p className="text-xs text-gray-400">Gagal memuat cuaca</p>
+             <p className="text-xs text-gray-400 dark:text-slate-500">Gagal memuat cuaca</p>
           )}
           
-          <div className="mt-4 pt-3 border-t border-gray-100 flex items-center text-[10px] text-gray-400">
+          <div className="mt-4 pt-3 border-t border-gray-100 dark:border-slate-800 flex items-center text-[10px] text-gray-400 dark:text-slate-500">
              <MapPin size={10} className="mr-1" /> Berdasarkan Lokasi Anda
           </div>
         </div>
