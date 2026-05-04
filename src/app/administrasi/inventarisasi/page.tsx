@@ -258,11 +258,11 @@ export default function DaftarInventaris() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-            <img src="/logo_prasordu.png" alt="Logo" className="h-8 w-auto" />
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            <img src="/logo_prasordu.png" alt="Logo" className="h-10 w-auto drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]" />
             Daftar Inventaris
           </h1>
-          <p className="text-gray-500 mt-1">Kelola data inventaris gugus depan.</p>
+          <p className="text-gray-500 dark:text-slate-400 mt-1">Kelola data inventaris gugus depan.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button 

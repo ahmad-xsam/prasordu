@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   description: "Sistem Manajemen Pembelajaran Prasordu",
   icons: {
     icon: "/logo_prasordu.png",
+    shortcut: "/logo_prasordu.png",
+    apple: "/logo_prasordu.png",
   },
 };
 

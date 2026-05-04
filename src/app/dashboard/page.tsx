@@ -10,10 +10,10 @@ export default function Home() {
   const isAdmin = (session?.user as any)?.role === 'ADMIN';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 dark:bg-slate-950 min-h-screen transition-colors">
       {/* Logo in center */}
-      <div className="flex justify-center mb-8">
-        <img src="/logo_prasordu.png" alt="Logo Prasordu" className="h-32 w-auto animate-fade-in" />
+      <div className="flex justify-center mb-10 pt-4">
+        <img src="/logo_prasordu.png" alt="Logo Prasordu" className="h-48 w-auto drop-shadow-[0_0_30px_rgba(16,185,129,0.3)] animate-pulse" />
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

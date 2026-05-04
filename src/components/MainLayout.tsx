@@ -21,7 +21,7 @@ export default function MainLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
       <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
       <div className="sm:ml-64 flex flex-col min-h-screen">
         <Header onMenuClick={toggleSidebar} />

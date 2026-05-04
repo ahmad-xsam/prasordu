@@ -37,14 +37,17 @@ export default function MissionHistory() {
   };
 
   return (
-    <div className="p-8 bg-slate-950 min-h-screen text-white">
-      <div className="flex items-center gap-4 mb-8">
-        <div className="p-3 bg-emerald-500/20 rounded-2xl text-emerald-400">
-          <History size={32} />
-        </div>
-        <div>
-          <h1 className="text-3xl font-black">RIWAYAT MISI</h1>
-          <p className="text-slate-400">Daftar agen yang berhasil menyelesaikan tantangan</p>
+    <div className="p-8 bg-slate-950 dark:bg-black min-h-screen text-white transition-colors">
+      <div className="flex flex-col items-center mb-12">
+        <img src="/logo_prasordu.png" alt="Logo" className="h-32 w-auto mb-6 drop-shadow-[0_0_20px_rgba(16,185,129,0.4)]" />
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-emerald-500/20 rounded-2xl text-emerald-400">
+            <History size={32} />
+          </div>
+          <div>
+            <h1 className="text-3xl font-black uppercase tracking-tighter">RIWAYAT MISI</h1>
+            <p className="text-slate-400">Daftar agen yang berhasil menyelesaikan tantangan</p>
+          </div>
         </div>
       </div>
 

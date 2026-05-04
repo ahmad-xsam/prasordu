@@ -56,7 +56,8 @@ export default function AgendaPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-black text-gray-900 dark:text-white flex items-center gap-3">
-            <CalendarIcon className="text-primary-600" /> AGENDA KEGIATAN
+            <img src="/logo_prasordu.png" alt="Logo" className="h-10 w-auto drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]" />
+            AGENDA KEGIATAN
           </h1>
           <p className="text-gray-500 dark:text-slate-400 font-medium">Kalender Pendidikan & Jadwal Kegiatan Terpadu</p>
         </div>

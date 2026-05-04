@@ -54,10 +54,13 @@ export default function LoginPage() {
           backgroundPosition: "center",
         }}
       />
-      <div className="max-w-5xl w-full bg-[#EBF3D3] rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[650px] border border-white/20 relative z-10">
+      <div className="max-w-5xl w-full bg-[#EBF3D3] dark:bg-slate-900 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[650px] border border-white/20 dark:border-slate-800 relative z-10">
         
         {/* Left Side - Monkey Hero */}
-        <div className="w-full h-[250px] md:h-auto md:w-[45%] relative bg-[#f7eedf] md:min-h-full block">
+        <div className="w-full h-[250px] md:h-auto md:w-[45%] relative bg-[#f7eedf] dark:bg-slate-800 md:min-h-full block">
+          <div className="absolute top-6 left-6 z-20">
+            <img src="/logo_prasordu.png" alt="Logo" className="h-12 w-auto drop-shadow-md" />
+          </div>
           <img
             src={monkeyHero.src}
             alt="Monkey Explorer"
@@ -66,12 +69,12 @@ export default function LoginPage() {
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full md:w-[55%] p-8 md:p-12 flex flex-col justify-center">
+        <div className="w-full md:w-[55%] p-8 md:p-12 flex flex-col justify-center bg-white/30 dark:bg-slate-900/50 backdrop-blur-sm">
           <div className="text-center mb-10">
-            <h1 className="text-4xl font-extrabold text-[#4a2e1b] mb-2" style={{ fontFamily: 'sans-serif' }}>
+            <h1 className="text-4xl font-extrabold text-[#4a2e1b] dark:text-white mb-2" style={{ fontFamily: 'sans-serif' }}>
               Welcome Explorer!
             </h1>
-            <p className="text-[#6d5b4b] text-sm md:text-base font-medium">
+            <p className="text-[#6d5b4b] dark:text-slate-400 text-sm md:text-base font-medium">
               Log in now to continue your exciting journey and<br/>unlock new adventures waiting for you!
             </p>
           </div>
