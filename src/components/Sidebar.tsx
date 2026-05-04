@@ -146,6 +146,22 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     <span className="ms-3">Kelola Materi Belajar</span>
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href="/admin/history"
+                    onClick={onClose}
+                    className={`group flex items-center rounded-lg p-3 transition-all ${
+                      pathname === '/admin/history' 
+                        ? 'bg-primary-50 text-primary-600' 
+                        : 'text-gray-700 hover:bg-gray-50 hover:text-primary-600'
+                    }`}
+                  >
+                    <Activity className={`h-5 w-5 transition-colors ${
+                      pathname === '/admin/history' ? 'text-primary-600' : 'text-gray-400 group-hover:text-primary-600'
+                    }`} />
+                    <span className="ms-3">Riwayat Misi</span>
+                  </Link>
+                </li>
               </ul>
             </div>
           )}

@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Shield, Sword, Swords, Heart, Clock, ArrowLeft, Star, Trophy, Unlock, Lock, Box, SpellCheck, CheckCircle2, XCircle, Award, Medal, Crown, Download, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
+import { getBadgeInfo } from "@/lib/badges";
+import { SQUAD_PUTRA, SQUAD_PUTRI, WEAPONS } from "@/lib/constants";
 
 // ---------------- DEFAULT GAME DATA (Fallback) ----------------
 const defaultLevels = [
@@ -16,10 +18,18 @@ const defaultQuestions = [
 ];
 
 export default function PlayGame() {
-  const [gameState, setGameState] = useState<'MAP' | 'BRIEFING' | 'PLAYING' | 'GAMEOVER' | 'VICTORY'>('MAP');
+  const [gameState, setGameState] = useState<'SETUP' | 'MAP' | 'BRIEFING' | 'PLAYING' | 'GAMEOVER' | 'VICTORY'>('SETUP');
   const [selectedLevel, setSelectedLevel] = useState<number>(1);
   const [unlockedLevels, setUnlockedLevels] = useState<number>(1);
   const [score, setScore] = useState(0);
+
+  // User Profile
+  const [userProfile, setUserProfile] = useState({
+    fullName: "",
+    squadType: 'Putra' as 'Putra' | 'Putri',
+    squad: SQUAD_PUTRA[0],
+    weapon: WEAPONS[0]
+  });
 
   // Gameplay States
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -230,7 +240,7 @@ export default function PlayGame() {
       setHp(0); // Any mistake drops HP to 0 instantly for instant fail!
     }
 
-    setTimeout(() => {
+    setTimeout(async () => {
       if (!correct) {
         playSound('bgm', 'pause');
         playSound('gameover');
@@ -247,6 +257,25 @@ export default function PlayGame() {
         playSound('bgm', 'pause');
         playSound('victory', 'play');
         const activeLevels = dbLevels.length > 0 ? dbLevels : defaultLevels;
+        
+        // Save to DB
+        try {
+          await fetch('/api/mission/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              fullName: userProfile.fullName,
+              squadName: userProfile.squad.name,
+              squadType: userProfile.squadType,
+              weaponName: userProfile.weapon.name,
+              levelNumber: selectedLevel,
+              score: score + 50 + (timeLeft * 2)
+            })
+          });
+        } catch (e) {
+          console.error("Failed to save progress", e);
+        }
+
         if (selectedLevel === unlockedLevels && unlockedLevels < activeLevels.length) {
           setUnlockedLevels(prev => prev + 1);
         }
@@ -481,12 +510,16 @@ export default function PlayGame() {
             </h1>
           </div>
           <div className="flex items-center gap-6 font-bold">
+            <div className="hidden md:flex flex-col items-end border-r border-white/10 pr-6">
+              <span className="text-xs text-slate-400 uppercase tracking-widest">{userProfile.fullName || "GUEST"}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-amber-400 text-sm">{userProfile.squad.icon} {userProfile.squad.name}</span>
+                <span className="text-cyan-400 text-sm">{userProfile.weapon.icon}</span>
+              </div>
+            </div>
             <div className="flex items-center gap-2 text-emerald-400">
               <Trophy size={20} />
               <span className="text-xl">{score}</span>
-            </div>
-            <div className="px-4 py-1.5 rounded-full border border-emerald-500/50 bg-emerald-500/10 text-sm flex items-center gap-2">
-              <Star size={14} className="text-emerald-400" /> SCOUT
             </div>
           </div>
         </header>
@@ -495,63 +528,192 @@ export default function PlayGame() {
         <main className="flex-1 flex flex-col p-3 sm:p-6 overflow-hidden relative z-10 w-full h-full">
           <AnimatePresence mode="wait">
             
-            {/* 1. MAP SELECTION STATE */}
+            {/* 0. SETUP STATE */}
+            {gameState === 'SETUP' && (
+              <motion.div
+                key="setup"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="flex-1 flex items-center justify-center p-4"
+              >
+                <div className="max-w-4xl w-full bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-2xl">
+                  <h2 className="text-4xl font-black text-center mb-8 tracking-tight">SIAPKAN <span className="text-emerald-400">IDENTITASMU</span></h2>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    {/* Left: Basic Info */}
+                    <div className="space-y-6">
+                      <div>
+                        <label className="block text-xs font-black text-slate-400 mb-2 tracking-widest">NAMA LENGKAP</label>
+                        <input 
+                          type="text" 
+                          value={userProfile.fullName}
+                          onChange={e => setUserProfile(prev => ({ ...prev, fullName: e.target.value }))}
+                          placeholder="Masukkan nama..."
+                          className="w-full bg-black/40 border-2 border-white/10 rounded-2xl px-6 py-4 text-xl font-bold focus:border-emerald-500 outline-none transition-all"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-black text-slate-400 mb-2 tracking-widest">PILIH JENIS REGU</label>
+                        <div className="flex gap-3">
+                          {['Putra', 'Putri'].map(t => (
+                            <button 
+                              key={t}
+                              onClick={() => setUserProfile(prev => ({ ...prev, squadType: t as any, squad: (t === 'Putra' ? SQUAD_PUTRA : SQUAD_PUTRI)[0] }))}
+                              className={`flex-1 py-4 rounded-2xl font-black transition-all border-2 ${userProfile.squadType === t ? 'bg-emerald-500 border-emerald-400 text-black shadow-lg shadow-emerald-500/20' : 'bg-black/20 border-white/5 hover:border-white/20'}`}
+                            >
+                              {t.toUpperCase()}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-black text-slate-400 mb-2 tracking-widest">PILIH SENJATA PUSAKA</label>
+                        <div className="grid grid-cols-5 gap-2">
+                          {WEAPONS.map(w => (
+                            <button 
+                              key={w.id}
+                              onClick={() => setUserProfile(prev => ({ ...prev, weapon: w }))}
+                              title={w.name}
+                              className={`aspect-square flex items-center justify-center rounded-xl text-2xl border-2 transition-all ${userProfile.weapon.id === w.id ? 'bg-cyan-500/20 border-cyan-400 shadow-[0_0_15px_#22d3ee44]' : 'bg-black/20 border-white/5 hover:border-white/20'}`}
+                            >
+                              {w.icon}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right: Squad Selection */}
+                    <div className="flex flex-col">
+                      <label className="block text-xs font-black text-slate-400 mb-2 tracking-widest">PILIH LOGO REGU ({userProfile.squadType.toUpperCase()})</label>
+                      <div className="flex-1 grid grid-cols-3 gap-3 overflow-y-auto max-h-[300px] p-2 bg-black/20 rounded-2xl border border-white/5">
+                        {(userProfile.squadType === 'Putra' ? SQUAD_PUTRA : SQUAD_PUTRI).map(s => (
+                          <button 
+                            key={s.id}
+                            onClick={() => setUserProfile(prev => ({ ...prev, squad: s }))}
+                            className={`aspect-square flex flex-col items-center justify-center gap-2 rounded-2xl border-2 transition-all p-2 ${userProfile.squad.id === s.id ? 'bg-amber-500 border-amber-400 text-black shadow-lg shadow-amber-500/20' : 'bg-white/5 border-transparent hover:border-white/10'}`}
+                          >
+                            <span className="text-4xl">{s.icon}</span>
+                            <span className="text-[10px] font-black text-center leading-none">{s.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                      
+                      <button 
+                        disabled={!userProfile.fullName}
+                        onClick={() => setGameState('MAP')}
+                        className="mt-6 w-full py-5 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-black font-black text-2xl rounded-2xl transition-all shadow-xl shadow-emerald-500/20 disabled:opacity-50 disabled:grayscale"
+                      >
+                        MULAI PETUALANGAN
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* 1. MAP SELECTION STATE (SPACE THEME) */}
             {gameState === 'MAP' && (
               <motion.div 
                 key="map"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="flex-1 flex flex-col max-w-6xl mx-auto w-full"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex-1 flex flex-col relative overflow-hidden"
               >
-                <div className="text-center mb-10 mt-6">
-                  <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight uppercase">Peta <span className="text-emerald-400">Petualangan</span></h2>
-                  <p className="text-slate-400 text-lg">Taklukkan misi. Satu kesalahan = Kembali ke Awal!</p>
+                {/* Space Background Elements */}
+                <div className="absolute inset-0 z-0">
+                  <div className="absolute top-10 left-10 w-32 h-32 bg-cyan-500/20 blur-[60px] rounded-full animate-pulse" />
+                  <div className="absolute bottom-20 right-10 w-64 h-64 bg-purple-500/10 blur-[80px] rounded-full animate-pulse" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(30,41,59,1)_0%,rgba(7,11,20,1)_100%)] opacity-50" />
                 </div>
 
-                <div className="flex-1 relative flex items-center justify-center py-10">
-                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 relative z-10 w-full px-4 max-w-5xl mx-auto">
-                    {(dbLevels.length > 0 ? dbLevels : defaultLevels).map((level: any, i: number) => {
-                      const isUnlocked = level.levelNumber ? level.levelNumber <= unlockedLevels : level.id <= unlockedLevels;
-                      const isCurrent = level.levelNumber ? level.levelNumber === unlockedLevels : level.id === unlockedLevels;
-                      const levelId = level.levelNumber || level.id;
-                      
-                      return (
-                        <motion.div 
-                          key={levelId}
-                          whileHover={isUnlocked ? { y: -10, scale: 1.05 } : {}}
-                          className={`flex flex-col items-center gap-4 ${!isUnlocked && 'opacity-50 grayscale'}`}
-                        >
-                          <button
-                            onClick={() => isUnlocked && startGame(levelId)}
-                            disabled={!isUnlocked}
-                            className={`w-32 h-32 rounded-3xl flex items-center justify-center border-4 shadow-2xl relative transition-all overflow-hidden
-                              ${isCurrent ? 'bg-emerald-900 border-emerald-400 shadow-[0_0_40px_rgba(16,185,129,0.5)]' : 
-                                isUnlocked ? 'bg-slate-800 border-emerald-700' : 'bg-slate-900 border-slate-700'}
-                            `}
+                <div className="relative z-10 flex-1 flex flex-col max-w-7xl mx-auto w-full px-6">
+                  <div className="text-center mt-10 mb-16">
+                    <h2 className="text-5xl font-black mb-2 tracking-tighter italic uppercase text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-500">GALAKSI <span className="text-emerald-400">PRAMUKA</span></h2>
+                    <p className="text-slate-400 font-bold tracking-widest uppercase text-sm">Level: {unlockedLevels} / 49 • Region: Nebula</p>
+                  </div>
+
+                  <div className="flex-1 flex items-center justify-center py-10">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-10 gap-y-20 relative w-full">
+                      {(dbLevels.length > 0 ? dbLevels : defaultLevels).map((level: any, i: number) => {
+                        const isUnlocked = level.levelNumber ? level.levelNumber <= unlockedLevels : level.id <= unlockedLevels;
+                        const isCurrent = level.levelNumber ? level.levelNumber === unlockedLevels : level.id === unlockedLevels;
+                        const levelId = level.levelNumber || level.id;
+                        const badge = getBadgeInfo(levelId);
+                        
+                        return (
+                          <motion.div 
+                            key={levelId}
+                            initial={{ y: i % 2 === 0 ? 20 : -20 }}
+                            animate={{ y: i % 2 === 0 ? -10 : 10 }}
+                            transition={{ duration: 3, repeat: Infinity, repeatType: 'mirror', delay: i * 0.2 }}
+                            className="relative"
                           >
-                            <div className="absolute inset-0 opacity-20 bg-[url('https://cdn-icons-png.flaticon.com/512/5260/5260498.png')] bg-cover bg-center" />
-                            
-                            {isUnlocked ? (
-                              <Swords size={48} className={isCurrent ? "text-emerald-400 drop-shadow-[0_0_10px_#10b981] z-10" : "text-emerald-600 z-10"} />
-                            ) : (
-                              <Lock size={48} className="text-slate-600 z-10" />
+                            {/* Connector Line (simplified) */}
+                            {i > 0 && (
+                              <div className="absolute -left-10 top-1/2 w-10 h-0.5 bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent hidden lg:block" />
                             )}
-                            
-                            {isCurrent && <span className="absolute -inset-2 rounded-3xl border-2 border-emerald-400 animate-ping opacity-50" />}
-                            
-                            <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-black border-2 border-slate-700 flex items-center justify-center font-bold">
-                              {levelId}
+
+                            <div className="flex flex-col items-center">
+                              {/* Floating Island Platform */}
+                              <div className="relative mb-4 group">
+                                {/* Stars above platform */}
+                                <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex gap-1">
+                                  {[1, 2, 3].map(s => (
+                                    <Star key={s} size={14} className={isUnlocked ? "text-amber-400 fill-amber-400" : "text-slate-700"} />
+                                  ))}
+                                </div>
+
+                                <button
+                                  onClick={() => isUnlocked && startGame(levelId)}
+                                  disabled={!isUnlocked}
+                                  className={`w-28 h-28 md:w-36 md:h-36 rounded-full relative transition-all duration-500
+                                    ${isUnlocked ? 'cursor-pointer' : 'cursor-not-allowed'}
+                                  `}
+                                >
+                                  {/* Platform Base (Isometric look) */}
+                                  <div className={`absolute inset-0 rounded-full border-b-8 border-slate-900 shadow-2xl transition-all
+                                    ${isCurrent ? 'bg-gradient-to-b from-emerald-400 to-emerald-900 border-emerald-950 scale-110' : 
+                                      isUnlocked ? 'bg-gradient-to-b from-indigo-500 to-indigo-900 border-indigo-950' : 'bg-slate-800 border-slate-900 opacity-40'}
+                                  `} />
+                                  
+                                  {/* Content on platform */}
+                                  <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+                                    {isUnlocked ? (
+                                      <div className="flex flex-col items-center">
+                                        <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full bg-black/40 flex items-center justify-center mb-1 border border-white/10 ${isCurrent && 'animate-bounce'}`}>
+                                          <badge.icon size={24} className={isCurrent ? "text-white" : "text-white/60"} />
+                                        </div>
+                                        <span className="text-[10px] md:text-xs font-black text-white leading-none tracking-tighter text-center px-2">{badge.title}</span>
+                                      </div>
+                                    ) : (
+                                      <Lock size={32} className="text-slate-600" />
+                                    )}
+                                  </div>
+
+                                  {/* Current level indicator rings */}
+                                  {isCurrent && (
+                                    <>
+                                      <div className="absolute -inset-4 rounded-full border-2 border-emerald-400/30 animate-[ping_3s_infinite]" />
+                                      <div className="absolute -inset-8 rounded-full border border-emerald-400/10 animate-[ping_4s_infinite]" />
+                                    </>
+                                  )}
+
+                                  {/* Level Number Bubble */}
+                                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-white text-slate-900 flex items-center justify-center font-black text-sm shadow-xl z-20">
+                                    {levelId}
+                                  </div>
+                                </button>
+                              </div>
                             </div>
-                          </button>
-                          
-                          <div className="text-center bg-slate-900/50 p-3 rounded-xl border border-white/5 w-full">
-                            <h3 className="font-bold text-sm text-slate-200 mb-1">{level.title}</h3>
-                            <span className="text-xs text-emerald-500 font-black px-2 py-1 bg-emerald-500/10 rounded-md block uppercase">{level.questions?.length || 0} Task</span>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
+                          </motion.div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -695,28 +857,26 @@ export default function PlayGame() {
                         
                         {/* DYNAMIC BADGE RENDERER BASED ON LEVEL */}
                         {(() => {
-                          const levelIndex = (dbLevels.length > 0 ? dbLevels : defaultLevels).findIndex(l => (l.levelNumber || l.id) === selectedLevel);
-                          const displayLevel = levelIndex + 1; // 1-indexed
-
-                          let badgeColor = "from-amber-700 to-amber-900 border-amber-600 shadow-amber-700/50 text-amber-500";
-                          let BadgeIcon = Award;
-                          let badgeTitle = "BRONZE SCOUT";
-
-                          if (displayLevel === 2) { badgeColor = "from-slate-300 to-slate-500 border-slate-400 shadow-slate-400/50 text-slate-200"; BadgeIcon = Medal; badgeTitle = "SILVER RANGER"; }
-                          if (displayLevel === 3) { badgeColor = "from-yellow-400 to-yellow-600 border-yellow-500 shadow-yellow-500/50 text-yellow-300"; BadgeIcon = Shield; badgeTitle = "GOLD EAGLE"; }
-                          if (displayLevel === 4) { badgeColor = "from-cyan-300 to-blue-500 border-cyan-400 shadow-cyan-400/50 text-cyan-200"; BadgeIcon = Star; badgeTitle = "PLATINUM MASTER"; }
-                          if (displayLevel >= 5) { badgeColor = "from-fuchsia-500 to-purple-700 border-fuchsia-400 shadow-fuchsia-500/50 text-fuchsia-300"; BadgeIcon = Crown; badgeTitle = "DIAMOND LEGEND"; }
+                          const badge = getBadgeInfo(selectedLevel);
+                          const BadgeIcon = badge.icon;
 
                           return (
                             <div className="relative mb-6 sm:mb-8 pt-2 sm:pt-4">
                               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-48 sm:h-48 bg-white/5 rounded-full animate-ping" />
-                              <div className={`mx-auto w-24 h-24 sm:w-32 sm:h-32 rounded-2xl sm:rounded-3xl rotate-45 bg-gradient-to-br border-4 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center relative z-10 ${badgeColor}`}>
+                              <div className={`mx-auto w-24 h-24 sm:w-32 sm:h-32 rounded-2xl sm:rounded-3xl rotate-45 bg-gradient-to-br border-4 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center relative z-10 ${badge.color}`}>
                                 <div className="-rotate-45 text-white drop-shadow-lg flex items-center justify-center w-full h-full">
                                   <BadgeIcon className="w-12 h-12 sm:w-16 sm:h-16" />
                                 </div>
                               </div>
-                              <div className="mt-6 sm:mt-8">
-                                <span className={`px-3 py-1 sm:px-4 sm:py-1 rounded-full text-[10px] sm:text-xs font-black tracking-widest border bg-black/50 ${badgeColor.split(' ')[4] /* text color */}`}>BADGE LEVEL {displayLevel}: {badgeTitle}</span>
+                              <div className="mt-6 sm:mt-8 flex flex-col items-center gap-2">
+                                <span className={`px-3 py-1 sm:px-4 sm:py-1 rounded-full text-[10px] sm:text-xs font-black tracking-widest border bg-black/50 ${badge.color.includes('text-') ? '' : 'text-white'}`}>
+                                  LEVEL BADGE: {badge.title}
+                                </span>
+                                {badge.special && (
+                                  <span className="text-[10px] text-amber-400 font-bold animate-pulse max-w-[200px] leading-tight">
+                                    {badge.special}
+                                  </span>
+                                )}
                               </div>
                             </div>
                           );
@@ -724,6 +884,17 @@ export default function PlayGame() {
 
                         <h2 className="text-2xl sm:text-4xl font-black text-white mb-2 uppercase tracking-widest mt-2 sm:mt-4">MISSION CLEARED</h2>
                         
+                        <div className="flex items-center justify-center gap-4 mb-4 bg-white/5 p-4 rounded-2xl border border-white/10">
+                          <div className="text-4xl bg-black/40 w-16 h-16 rounded-full flex items-center justify-center border border-amber-500/50">
+                            {userProfile.squad.icon}
+                          </div>
+                          <div className="text-left">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">AGENT IDENTIFIED</p>
+                            <p className="text-xl font-black text-white">{userProfile.fullName}</p>
+                            <p className="text-xs font-bold text-amber-400">REGU {userProfile.squad.name} • {userProfile.weapon.name}</p>
+                          </div>
+                        </div>
+
                         <div className="flex justify-center gap-1 sm:gap-2 mb-4 text-amber-400">
                           <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24] w-6 h-6 sm:w-8 sm:h-8" />
                           <Star className="fill-amber-400 drop-shadow-[0_0_10px_#fbbf24] w-6 h-6 sm:w-8 sm:h-8" />
