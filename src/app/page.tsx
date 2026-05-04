@@ -61,14 +61,7 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#050B14]/40 via-transparent to-[#050B14] z-10" />
 
         <div className="relative z-20 text-center px-4 max-w-5xl mx-auto flex flex-col items-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, type: "spring" }}
-            className="mb-8"
-          >
-            <img src="/logo_prasordu.png?v=2" alt="Logo Prasordu" className="h-24 md:h-32 w-auto" />
-          </motion.div>
+
 
           <motion.div
             initial={{ opacity: 0, y: -50 }}

@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 import jungleBg from "../../../public/cave_bg.jpg";
-import monkeyHero from "../../../public/monkey_hero.png";
+import exploreHero from "../../../public/explore_hero.jpg";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -59,8 +59,8 @@ export default function LoginPage() {
         {/* Left Side - Monkey Hero */}
         <div className="w-full h-[250px] md:h-auto md:w-[45%] relative bg-[#f7eedf] dark:bg-slate-800 md:min-h-full block">
           <img
-            src={monkeyHero.src}
-            alt="Monkey Explorer"
+            src={exploreHero.src}
+            alt="Explorer Hero"
             className="w-full h-full object-cover object-center absolute inset-0"
           />
         </div>
@@ -126,23 +126,6 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-8 text-center">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="h-px bg-[#c9d4b6] flex-1"></div>
-              <span className="text-xs text-[#8a8174] uppercase tracking-wider font-semibold">or continue with</span>
-              <div className="h-px bg-[#c9d4b6] flex-1"></div>
-            </div>
-
-            <div className="flex gap-4 mb-6">
-              <button className="flex-1 flex items-center justify-center gap-2 bg-white px-4 py-3 rounded-xl shadow-sm hover:shadow-md transition-shadow font-semibold text-gray-700">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
-                Google
-              </button>
-              <button className="flex-1 flex items-center justify-center gap-2 bg-white px-4 py-3 rounded-xl shadow-sm hover:shadow-md transition-shadow font-semibold text-gray-700">
-                <img src="https://www.svgrepo.com/show/511330/apple-173.svg" alt="Apple" className="w-5 h-5" />
-                Apple
-              </button>
-            </div>
-
             <p className="text-[#6d5b4b] text-sm font-medium">
               Don't have an account? <Link href="/register" className="font-bold text-[#4a2e1b] hover:underline">Register</Link>
             </p>
