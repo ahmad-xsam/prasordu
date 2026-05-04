@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { History, Trophy, User, Shield, Swords, Calendar, Trash2 } from "lucide-react";
 

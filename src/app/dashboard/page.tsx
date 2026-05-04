@@ -1,3 +1,5 @@
+"use client";
+
 import { BookOpen, Users, Award, Clock } from 'lucide-react';
 import DashboardWidgets from '@/components/DashboardWidgets';
 import { useSession } from 'next-auth/react';
