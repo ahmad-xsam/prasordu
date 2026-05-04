@@ -39,7 +39,6 @@ export default function MissionHistory() {
   return (
     <div className="p-8 bg-gray-50 dark:bg-slate-950 min-h-screen text-gray-900 dark:text-white transition-colors">
       <div className="flex flex-col items-center mb-12">
-        <img src="/logo_prasordu.png?v=2" alt="Logo" className="h-32 w-auto mb-6" />
         <div className="flex items-center gap-4">
           <div className="p-3 bg-emerald-500/20 rounded-2xl text-emerald-400">
             <History size={32} />

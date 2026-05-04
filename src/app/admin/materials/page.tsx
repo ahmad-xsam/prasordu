@@ -71,14 +71,14 @@ export default function AdminMaterialManager() {
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto min-h-screen text-gray-900 dark:text-white transition-colors">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-black text-gray-800 flex items-center gap-3">
+          <h1 className="text-3xl font-black text-gray-800 dark:text-white flex items-center gap-3">
             <BookOpen className="text-amber-500" size={36} />
             Kelola Materi Belajar
           </h1>
-          <p className="text-gray-500 mt-2">Tambahkan modul bacaan dan ilustrasi gambar materi.</p>
+          <p className="text-gray-500 dark:text-slate-400 mt-2">Tambahkan modul bacaan dan ilustrasi gambar materi.</p>
         </div>
         <button 
           onClick={addNewMaterial}
@@ -89,31 +89,31 @@ export default function AdminMaterialManager() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h2 className="font-bold text-xl mb-4 border-b pb-2">Daftar Materi</h2>
-          {loading ? <p>Loading...</p> : (
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
+          <h2 className="font-bold text-xl mb-4 border-b dark:border-slate-800 pb-2 text-gray-900 dark:text-white">Daftar Materi</h2>
+          {loading ? <p className="text-gray-500 dark:text-slate-400">Loading...</p> : (
             <div className="space-y-3">
               {materials.map((mat, i) => (
-                <div key={mat._id || i} className="p-4 border-2 border-gray-100 hover:border-amber-200 rounded-xl transition-all cursor-pointer group relative" onClick={() => setCurrentMaterial(mat)}>
-                  <div className="font-bold">{mat.title}</div>
-                  <div className="text-xs text-gray-500">{mat.category}</div>
+                <div key={mat._id || i} className="p-4 border-2 border-gray-100 dark:border-slate-700 hover:border-amber-200 dark:hover:border-amber-500 rounded-xl transition-all cursor-pointer group relative" onClick={() => setCurrentMaterial(mat)}>
+                  <div className="font-bold text-gray-900 dark:text-white">{mat.title}</div>
+                  <div className="text-xs text-gray-500 dark:text-slate-400">{mat.category}</div>
                   <button 
                     onClick={(e) => { e.stopPropagation(); handleDelete(mat._id); }}
-                    className="absolute top-4 right-4 text-red-400 hover:text-red-600 p-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-50 rounded-lg"
+                    className="absolute top-4 right-4 text-red-400 hover:text-red-600 p-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-50 dark:bg-red-500/10 rounded-lg"
                   >
                     <Trash size={16} />
                   </button>
                 </div>
               ))}
-              {materials.length === 0 && <p className="text-gray-500 italic">Belum ada materi.</p>}
+              {materials.length === 0 && <p className="text-gray-500 dark:text-slate-400 italic">Belum ada materi.</p>}
             </div>
           )}
         </div>
 
         {currentMaterial && (
-          <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 p-6">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="font-bold text-2xl">Edit Materi</h2>
+              <h2 className="font-bold text-2xl text-gray-900 dark:text-white">Edit Materi</h2>
               <button onClick={handleSave} className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2">
                 <Save size={18} /> Simpan
               </button>
@@ -121,29 +121,29 @@ export default function AdminMaterialManager() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">Judul Materi</label>
+                <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1">Judul Materi</label>
                 <input 
                   type="text" 
                   value={currentMaterial.title}
                   onChange={(e) => setCurrentMaterial({...currentMaterial, title: e.target.value})}
-                  className="w-full p-3 border rounded-xl"
+                  className="w-full p-3 border border-gray-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
                   placeholder="Contoh: Sejarah Baden Powell"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">Kategori Materi (Ketik Bebas)</label>
+                <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1">Kategori Materi (Ketik Bebas)</label>
                 <input 
                   type="text"
                   value={currentMaterial.category}
                   onChange={(e) => setCurrentMaterial({...currentMaterial, category: e.target.value})}
-                  className="w-full p-3 border rounded-xl bg-white"
+                  className="w-full p-3 border border-gray-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
                   placeholder="Contoh: Sejarah Dunia, P3K, Sandi"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
+                <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1 flex items-center gap-2">
                   <ImageIcon size={18} /> URL Gambar Ilustrasi (Opsional)
                 </label>
                 <input 
@@ -151,12 +151,12 @@ export default function AdminMaterialManager() {
                   placeholder="https://link-gambar.com/ilustrasi.png"
                   value={currentMaterial.imageUrl || ''}
                   onChange={(e) => setCurrentMaterial({...currentMaterial, imageUrl: e.target.value})}
-                  className="w-full p-3 border rounded-xl bg-amber-50 focus:border-amber-500 outline-none"
+                  className="w-full p-3 border border-amber-200 dark:border-amber-900/50 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-gray-900 dark:text-white focus:border-amber-500 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
+                <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1 flex items-center gap-2">
                   URL Video YouTube / TikTok (Opsional)
                 </label>
                 <input 
@@ -164,17 +164,17 @@ export default function AdminMaterialManager() {
                   placeholder="https://www.youtube.com/watch?v=..."
                   value={currentMaterial.videoUrl || ''}
                   onChange={(e) => setCurrentMaterial({...currentMaterial, videoUrl: e.target.value})}
-                  className="w-full p-3 border rounded-xl bg-red-50 focus:border-red-500 outline-none"
+                  className="w-full p-3 border border-red-200 dark:border-red-900/50 rounded-xl bg-red-50 dark:bg-red-900/20 text-gray-900 dark:text-white focus:border-red-500 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">Isi Materi</label>
+                <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-1">Isi Materi</label>
                 <textarea 
                   rows={15}
                   value={currentMaterial.content}
                   onChange={(e) => setCurrentMaterial({...currentMaterial, content: e.target.value})}
-                  className="w-full p-3 border rounded-xl outline-none"
+                  className="w-full p-3 border border-gray-300 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-gray-900 dark:text-white outline-none"
                   placeholder="Tuliskan isi materi pramuka di sini..."
                 />
               </div>
