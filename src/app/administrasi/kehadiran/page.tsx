@@ -285,7 +285,7 @@ export default function DaftarHadir() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-            <img src="/logo_prasordu.png" alt="Logo" className="h-10 w-auto drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]" />
+            <img src="/logo_prasordu.png?v=2" alt="Logo" className="h-10 w-auto" />
             Daftar Hadir
           </h1>
           <p className="text-gray-500 dark:text-slate-400 mt-1">Kelola presensi anggota per semester.</p>
@@ -338,10 +338,10 @@ export default function DaftarHadir() {
         </ul>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-gray-500">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-slate-400">
+            <thead className="text-xs text-gray-700 dark:text-slate-300 uppercase bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
               <tr>
                 <th scope="col" className="px-6 py-4">Tanggal</th>
                 <th scope="col" className="px-6 py-4">Nama Anggota</th>
@@ -369,8 +369,8 @@ export default function DaftarHadir() {
                 </tr>
               ) : (
                 dataKehadiran.map((item) => (
-                  <tr key={item._id} className="bg-white border-b hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900">
+                  <tr key={item._id} className="bg-white dark:bg-slate-900 border-b dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
                       {new Date(item.tanggal).toLocaleDateString('id-ID', {
                         weekday: 'long',
                         day: 'numeric',
@@ -378,7 +378,7 @@ export default function DaftarHadir() {
                         year: 'numeric'
                       })}
                     </td>
-                    <td className="px-6 py-4 font-medium text-gray-900">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
                       {item.anggotaId ? item.anggotaId.nama : "Anggota Dihapus"}
                     </td>
                     <td className="px-6 py-4">
@@ -410,9 +410,9 @@ export default function DaftarHadir() {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
-            <div className="flex justify-between items-center p-5 border-b border-gray-100">
-              <h3 className="text-lg font-bold text-gray-900">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+            <div className="flex justify-between items-center p-5 border-b border-gray-100 dark:border-slate-800">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                 {isEditMode ? "Edit Presensi" : "Input Kehadiran"}
               </h3>
               <button 
@@ -425,12 +425,12 @@ export default function DaftarHadir() {
             
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900">Semester</label>
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Semester</label>
                 <select 
                   name="semester" 
                   value={formData.semester} 
                   onChange={handleInputChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
+                  className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
                 >
                   <option value={1}>Semester 1</option>
                   <option value={2}>Semester 2</option>
@@ -438,24 +438,24 @@ export default function DaftarHadir() {
               </div>
               
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900">Tanggal Kehadiran</label>
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Tanggal Kehadiran</label>
                 <input 
                   type="date" 
                   name="tanggal" 
                   value={formData.tanggal} 
                   onChange={handleInputChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
+                  className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
                   required 
                 />
               </div>
 
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900">Nama Anggota</label>
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Nama Anggota</label>
                 <select 
                   name="anggotaId" 
                   value={formData.anggotaId} 
                   onChange={handleInputChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
+                  className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
                   required
                 >
                   <option value="" disabled>-- Pilih Anggota --</option>
@@ -471,12 +471,12 @@ export default function DaftarHadir() {
               </div>
 
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900">Presensi</label>
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Presensi</label>
                 <select 
                   name="status" 
                   value={formData.status} 
                   onChange={handleInputChange}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none font-medium" 
+                  className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none font-medium" 
                 >
                   <option value="HADIR">HADIR</option>
                   <option value="SAKIT">SAKIT</option>
@@ -489,7 +489,7 @@ export default function DaftarHadir() {
                 <button 
                   type="button" 
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700"
                 >
                   Batal
                 </button>

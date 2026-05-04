@@ -51,7 +51,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="flex h-full flex-col overflow-y-auto px-3 py-4">
           <div className="flex items-center justify-between mb-8 px-2">
             <Link href="/dashboard" className="flex items-center" onClick={onClose}>
-              <img src="/logo_prasordu.png?v=2" alt="Logo" className="h-10 w-auto mr-3 drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]" />
+              <img src="/logo_prasordu.png?v=2" alt="Logo" className="h-10 w-auto mr-3" />
               <span className="self-center whitespace-nowrap text-2xl font-bold text-gray-800 dark:text-white">
                 Prasordu
               </span>

@@ -58,9 +58,6 @@ export default function LoginPage() {
         
         {/* Left Side - Monkey Hero */}
         <div className="w-full h-[250px] md:h-auto md:w-[45%] relative bg-[#f7eedf] dark:bg-slate-800 md:min-h-full block">
-          <div className="absolute top-6 left-6 z-20">
-            <img src="/logo_prasordu.png" alt="Logo" className="h-12 w-auto drop-shadow-md" />
-          </div>
           <img
             src={monkeyHero.src}
             alt="Monkey Explorer"

@@ -41,17 +41,6 @@ export default function LandingPage() {
     <div className="bg-[#050B14] min-h-screen text-slate-200 overflow-x-hidden selection:bg-emerald-500/30">
       <audio ref={audioRef} src="https://actions.google.com/sounds/v1/ambiences/fire.ogg" loop muted={isMuted} />
       
-      {/* Top Floating Logo */}
-      <div className="absolute top-8 left-0 right-0 z-50 flex justify-center pointer-events-none">
-        <motion.img 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          src="/logo_prasordu.png?v=2" 
-          alt="Logo" 
-          className="h-16 w-auto drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]" 
-        />
-      </div>
-
       {/* Fixed Sound Toggle */}
       <button 
         onClick={toggleSound}
@@ -78,7 +67,7 @@ export default function LandingPage() {
             transition={{ duration: 1, type: "spring" }}
             className="mb-8"
           >
-            <img src="/logo_prasordu.png" alt="Logo Prasordu" className="h-40 w-auto drop-shadow-[0_0_20px_rgba(16,185,129,0.5)]" />
+            <img src="/logo_prasordu.png?v=2" alt="Logo Prasordu" className="h-24 md:h-32 w-auto" />
           </motion.div>
 
           <motion.div

@@ -259,7 +259,7 @@ export default function DaftarInventaris() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-            <img src="/logo_prasordu.png" alt="Logo" className="h-10 w-auto drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]" />
+            <img src="/logo_prasordu.png?v=2" alt="Logo" className="h-10 w-auto" />
             Daftar Inventaris
           </h1>
           <p className="text-gray-500 dark:text-slate-400 mt-1">Kelola data inventaris gugus depan.</p>
@@ -282,10 +282,10 @@ export default function DaftarInventaris() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-gray-500">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-slate-400">
+            <thead className="text-xs text-gray-700 dark:text-slate-300 uppercase bg-gray-50 dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
               <tr>
                 <th scope="col" className="px-6 py-4">No</th>
                 <th scope="col" className="px-6 py-4">Nama Barang</th>
@@ -321,9 +321,9 @@ export default function DaftarInventaris() {
                 </tr>
               ) : (
                 dataInventaris.map((item, index) => (
-                  <tr key={item._id} className="bg-white border-b hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900">{index + 1}</td>
-                    <td className="px-6 py-4 font-medium text-gray-900">{item.namaBarang}</td>
+                  <tr key={item._id} className="bg-white dark:bg-slate-900 border-b dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{index + 1}</td>
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{item.namaBarang}</td>
                     <td className="px-6 py-4">{item.merkType}</td>
                     <td className="px-6 py-4 font-mono">{item.kodeBarang}</td>
                     <td className="px-6 py-4">{item.jumlah}</td>
@@ -350,9 +350,9 @@ export default function DaftarInventaris() {
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-sm overflow-y-auto pt-20 pb-20">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden my-auto">
-            <div className="flex justify-between items-center p-5 border-b border-gray-100">
-              <h3 className="text-lg font-bold text-gray-900">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-2xl overflow-hidden my-auto">
+            <div className="flex justify-between items-center p-5 border-b border-gray-100 dark:border-slate-800">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                 {isEditMode ? "Edit Inventaris" : "Input Inventaris"}
               </h3>
               <button 
@@ -366,85 +366,85 @@ export default function DaftarInventaris() {
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900">Nama Barang</label>
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Nama Barang</label>
                   <input 
                     type="text" 
                     name="namaBarang" 
                     value={formData.namaBarang} 
                     onChange={handleInputChange}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
+                    className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
                     required 
                   />
                 </div>
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900">Merk / Type</label>
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Merk / Type</label>
                   <input 
                     type="text" 
                     name="merkType" 
                     value={formData.merkType} 
                     onChange={handleInputChange}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
+                    className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
                     required 
                   />
                 </div>
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900">Kode Barang</label>
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Kode Barang</label>
                   <input 
                     type="text" 
                     name="kodeBarang" 
                     value={formData.kodeBarang} 
                     onChange={handleInputChange}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
+                    className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
                     required 
                   />
                 </div>
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900">Jumlah Barang</label>
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Jumlah Barang</label>
                   <input 
                     type="number" 
                     name="jumlah" 
                     value={formData.jumlah} 
                     onChange={handleInputChange}
                     min="0"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
+                    className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
                     required 
                   />
                 </div>
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900">Harga (Rp)</label>
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Harga (Rp)</label>
                   <input 
                     type="number" 
                     name="harga" 
                     value={formData.harga} 
                     onChange={handleInputChange}
                     min="0"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
+                    className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
                     required 
                   />
                 </div>
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900">Kondisi / Keterangan</label>
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Kondisi / Keterangan</label>
                   <input 
                     type="text" 
                     name="kondisi" 
                     value={formData.kondisi} 
                     onChange={handleInputChange}
                     placeholder="Baik / Rusak / Hilang"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
+                    className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
                     required 
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900">Cara / Tanggal Pengadaan</label>
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Cara / Tanggal Pengadaan</label>
                 <input 
                   type="text" 
                   name="pengadaan" 
                   value={formData.pengadaan} 
                   onChange={handleInputChange}
                   placeholder="Misal: Beli Sendiri / 12-08-2023"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
+                  className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none" 
                   required 
                 />
               </div>
@@ -453,7 +453,7 @@ export default function DaftarInventaris() {
                 <button 
                   type="button" 
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700"
                 >
                   Batal
                 </button>
