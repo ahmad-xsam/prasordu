@@ -1,13 +1,11 @@
-"use client";
-
 import { useEffect, useState } from "react";
-import { History, Trophy, User, Shield, Swords, Calendar } from "lucide-react";
+import { History, Trophy, User, Shield, Swords, Calendar, Trash2 } from "lucide-react";
 
 export default function MissionHistory() {
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchHistory = () => {
     fetch('/api/admin/history')
       .then(res => res.json())
       .then(data => {
@@ -18,7 +16,23 @@ export default function MissionHistory() {
         console.error(e);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchHistory();
   }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Hapus riwayat misi ini?")) return;
+    try {
+      const res = await fetch(`/api/admin/history?id=${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setHistory(prev => prev.filter(h => h._id !== id));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <div className="p-8 bg-slate-950 min-h-screen text-white">
@@ -48,6 +62,7 @@ export default function MissionHistory() {
               <th className="px-6 py-4">Regu</th>
               <th className="px-6 py-4">Level</th>
               <th className="px-6 py-4">Score</th>
+              <th className="px-6 py-4 text-right">Aksi</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
@@ -74,6 +89,14 @@ export default function MissionHistory() {
                 </td>
                 <td className="px-6 py-4 font-black">
                   {h.score}
+                </td>
+                <td className="px-6 py-4 text-right">
+                  <button 
+                    onClick={() => handleDelete(h._id)}
+                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                  >
+                    <Trash2 size={18} />
+                  </button>
                 </td>
               </tr>
             ))}

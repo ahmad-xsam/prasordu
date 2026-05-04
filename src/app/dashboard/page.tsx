@@ -1,17 +1,33 @@
 import { BookOpen, Users, Award, Clock } from 'lucide-react';
 import DashboardWidgets from '@/components/DashboardWidgets';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 
 export default function Home() {
+  const { data: session } = useSession();
+  const isAdmin = (session?.user as any)?.role === 'ADMIN';
+
   return (
     <div className="space-y-6">
+      {/* Logo in center */}
+      <div className="flex justify-center mb-8">
+        <img src="/logo_prasordu.png" alt="Logo Prasordu" className="h-32 w-auto animate-fade-in" />
+      </div>
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Selamat datang kembali, Siswa! ≡ƒæï</h1>
-          <p className="text-gray-500 mt-1">Berikut adalah ringkasan aktivitas belajarmu hari ini.</p>
+          <h1 className="text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tight">
+            {isAdmin ? "Selamat Datang di Admin" : "Selamat Datang User"} ≡ƒæï
+          </h1>
+          <p className="text-gray-500 dark:text-slate-400 mt-1">
+            {isAdmin ? "Panel kontrol sistem manajemen Prasordu." : "Berikut adalah ringkasan aktivitas belajarmu hari ini."}
+          </p>
         </div>
-        <button className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium">
-          Mulai Belajar
-        </button>
+        {!isAdmin && (
+          <button className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium">
+            Mulai Belajar
+          </button>
+        )}
       </div>
 
       <DashboardWidgets />

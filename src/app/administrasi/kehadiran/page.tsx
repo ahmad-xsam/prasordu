@@ -284,7 +284,10 @@ export default function DaftarHadir() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Daftar Hadir</h1>
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+            <img src="/logo_prasordu.png" alt="Logo" className="h-8 w-auto" />
+            Daftar Hadir
+          </h1>
           <p className="text-gray-500 mt-1">Kelola presensi anggota per semester.</p>
         </div>
         <div className="flex flex-wrap gap-2">

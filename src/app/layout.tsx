@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Prasordu LMS",
   description: "Sistem Manajemen Pembelajaran Prasordu",
+  icons: {
+    icon: "/logo_prasordu.png",
+  },
 };
 
 export default function RootLayout({

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Plus, Edit, Trash2, X } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 type Anggota = {
   _id: string;
@@ -12,6 +12,9 @@ type Anggota = {
 };
 
 export default function Keanggotaan() {
+  const { data: session } = useSession();
+  const isAdmin = (session?.user as any)?.role === 'ADMIN';
+
   const [data, setData] = useState<Anggota[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -112,16 +115,21 @@ export default function Keanggotaan() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Data Keanggotaan</h1>
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+            <img src="/logo_prasordu.png" alt="Logo" className="h-8 w-auto" />
+            Data Keanggotaan
+          </h1>
           <p className="text-gray-500 mt-1">Kelola daftar anggota, kelas, dan jabatan.</p>
         </div>
-        <button 
-          onClick={openAddModal}
-          className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium"
-        >
-          <Plus className="h-5 w-5" />
-          Tambah Anggota
-        </button>
+        {isAdmin && (
+          <button 
+            onClick={openAddModal}
+            className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium"
+          >
+            <Plus className="h-5 w-5" />
+            Tambah Anggota
+          </button>
+        )}
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
@@ -134,7 +142,7 @@ export default function Keanggotaan() {
                 <th scope="col" className="px-6 py-4">Tanggal Lahir</th>
                 <th scope="col" className="px-6 py-4">Kelas</th>
                 <th scope="col" className="px-6 py-4">Jabatan</th>
-                <th scope="col" className="px-6 py-4 text-center">Aksi</th>
+                {isAdmin && <th scope="col" className="px-6 py-4 text-center">Aksi</th>}
               </tr>
             </thead>
             <tbody>
@@ -151,7 +159,7 @@ export default function Keanggotaan() {
                 ))
               ) : data.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={isAdmin ? 6 : 5} className="px-6 py-8 text-center text-gray-500">
                     Belum ada data anggota.
                   </td>
                 </tr>
@@ -173,16 +181,18 @@ export default function Keanggotaan() {
                       </span>
                     </td>
                     <td className="px-6 py-4">{item.jabatan}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-center gap-3">
-                        <button onClick={() => openEditModal(item)} className="text-amber-500 hover:text-amber-600 transition-colors" title="Edit">
-                          <Edit className="h-5 w-5" />
-                        </button>
-                        <button onClick={() => handleDelete(item._id)} className="text-red-500 hover:text-red-600 transition-colors" title="Hapus">
-                          <Trash2 className="h-5 w-5" />
-                        </button>
-                      </div>
-                    </td>
+                    {isAdmin && (
+                      <td className="px-6 py-4">
+                        <div className="flex items-center justify-center gap-3">
+                          <button onClick={() => openEditModal(item)} className="text-amber-500 hover:text-amber-600 transition-colors" title="Edit">
+                            <Edit className="h-5 w-5" />
+                          </button>
+                          <button onClick={() => handleDelete(item._id)} className="text-red-500 hover:text-red-600 transition-colors" title="Hapus">
+                            <Trash2 className="h-5 w-5" />
+                          </button>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))
               )}

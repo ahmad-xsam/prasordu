@@ -20,8 +20,6 @@ const menuItems = [
   { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
   { name: 'Administrasi', icon: Settings, path: '/administrasi' },
   { name: 'Materi', icon: BookOpen, path: '/materi' },
-  { name: 'Kegiatan', icon: Activity, path: '/kegiatan' },
-  { name: 'Buku', icon: Library, path: '/buku' },
   { name: 'Presensi', icon: UserCheck, path: '/presensi' },
   { name: 'Agenda', icon: Calendar, path: '/agenda' },
 ];
