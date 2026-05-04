@@ -51,7 +51,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="flex h-full flex-col overflow-y-auto px-3 py-4">
           <div className="flex items-center justify-between mb-8 px-2">
             <Link href="/dashboard" className="flex items-center" onClick={onClose}>
-              <img src="/logo_prasordu.png" alt="Logo" className="h-10 w-auto mr-3" />
+              <img src="/logo_prasordu.png?v=2" alt="Logo" className="h-10 w-auto mr-3 drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]" />
               <span className="self-center whitespace-nowrap text-2xl font-bold text-gray-800 dark:text-white">
                 Prasordu
               </span>
@@ -89,8 +89,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           </ul>
 
           {isAdmin && (
-            <div className="mt-4 pt-4 border-t border-gray-100">
-              <div className="px-3 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            <div className="mt-4 pt-4 border-t border-gray-100 dark:border-slate-800">
+              <div className="px-3 mb-2 text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
                 Admin
               </div>
               <ul className="space-y-2">
@@ -162,10 +162,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
           )}
 
-          <div className="mt-auto pt-4 border-t border-gray-100">
+          <div className="mt-auto pt-4 border-t border-gray-100 dark:border-slate-800">
             <button 
               onClick={() => signOut()}
-              className="w-full group flex items-center rounded-lg p-3 text-red-600 hover:bg-red-50 transition-colors"
+              className="w-full group flex items-center rounded-lg p-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
             >
               <LogOut className="h-5 w-5" />
               <span className="ms-3 font-medium">Keluar</span>

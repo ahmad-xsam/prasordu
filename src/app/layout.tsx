@@ -10,9 +10,9 @@ export const metadata: Metadata = {
   title: "Prasordu LMS",
   description: "Sistem Manajemen Pembelajaran Prasordu",
   icons: {
-    icon: "/logo_prasordu.png",
-    shortcut: "/logo_prasordu.png",
-    apple: "/logo_prasordu.png",
+    icon: "/logo_prasordu.png?v=2",
+    shortcut: "/logo_prasordu.png?v=2",
+    apple: "/logo_prasordu.png?v=2",
   },
 };
 

@@ -64,7 +64,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
         </button>
         <div className="flex items-center gap-2 border-l border-gray-200 dark:border-slate-700 pl-4">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-100 text-primary-700 overflow-hidden">
-            <img src="/logo_prasordu.png" alt="Logo" className="w-full h-full object-contain" />
+            <img src="/logo_prasordu.png?v=2" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <div className="hidden flex-col md:flex">
             <span className="text-sm font-semibold text-gray-700 dark:text-slate-200">Prasordu Agent</span>

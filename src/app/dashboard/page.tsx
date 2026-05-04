@@ -13,7 +13,7 @@ export default function Home() {
     <div className="space-y-6 dark:bg-slate-950 min-h-screen transition-colors">
       {/* Logo in center */}
       <div className="flex justify-center mb-10 pt-4">
-        <img src="/logo_prasordu.png" alt="Logo Prasordu" className="h-48 w-auto drop-shadow-[0_0_30px_rgba(16,185,129,0.3)] animate-pulse" />
+        <img src="/logo_prasordu.png?v=2" alt="Logo Prasordu" className="h-48 w-auto drop-shadow-[0_0_30px_rgba(16,185,129,0.3)] animate-pulse" />
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

@@ -46,7 +46,7 @@ export default function LandingPage() {
         <motion.img 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          src="/logo_prasordu.png" 
+          src="/logo_prasordu.png?v=2" 
           alt="Logo" 
           className="h-16 w-auto drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]" 
         />
