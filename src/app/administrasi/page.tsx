@@ -53,23 +53,23 @@ export default function Administrasi() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Menu Administrasi</h1>
-        <p className="text-gray-500 mt-1">Pilih kategori administrasi yang ingin Anda kelola.</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Menu Administrasi</h1>
+        <p className="text-gray-500 dark:text-slate-400 mt-1">Pilih kategori administrasi yang ingin Anda kelola.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {adminMenus.map((menu, index) => (
           <Link href={menu.href} key={index} className="block group">
-            <div className={`bg-white rounded-xl border border-gray-200 shadow-sm p-6 h-full transition-all duration-200 ease-in-out hover:shadow-md ${menu.borderColor}`}>
+            <div className={`bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm p-6 h-full transition-all duration-200 ease-in-out hover:shadow-md ${menu.borderColor} dark:hover:border-primary-500`}>
               <div className="flex items-start space-x-4">
-                <div className={`p-3 rounded-lg ${menu.bgColor} ${menu.color} transition-colors`}>
+                <div className={`p-3 rounded-lg ${menu.bgColor} dark:bg-opacity-10 ${menu.color} transition-colors`}>
                   <menu.icon className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                     {menu.title}
                   </h3>
-                  <p className="text-sm text-gray-500 mt-1 leading-relaxed">
+                  <p className="text-sm text-gray-500 dark:text-slate-400 mt-1 leading-relaxed">
                     {menu.description}
                   </p>
                 </div>

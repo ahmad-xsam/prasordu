@@ -17,7 +17,7 @@ import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 
 const menuItems = [
-  { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
+  { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
   { name: 'Administrasi', icon: Settings, path: '/administrasi' },
   { name: 'Materi', icon: BookOpen, path: '/materi' },
   { name: 'Presensi', icon: UserCheck, path: '/presensi' },
@@ -45,16 +45,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         />
       )}
 
-      <aside className={`fixed left-0 top-0 z-40 h-screen w-64 transition-transform duration-300 ease-in-out bg-white border-r border-gray-200 ${
+      <aside className={`fixed left-0 top-0 z-40 h-screen w-64 transition-transform duration-300 ease-in-out bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 ${
         isOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
       }`}>
         <div className="flex h-full flex-col overflow-y-auto px-3 py-4">
           <div className="flex items-center justify-between mb-8 px-2">
             <Link href="/dashboard" className="flex items-center" onClick={onClose}>
-              <div className="h-8 w-8 bg-primary-600 rounded-lg flex items-center justify-center mr-3">
-                <span className="text-white font-bold text-xl">P</span>
-              </div>
-              <span className="self-center whitespace-nowrap text-2xl font-bold text-gray-800">
+              <img src="/logo_prasordu.png" alt="Logo" className="h-10 w-auto mr-3" />
+              <span className="self-center whitespace-nowrap text-2xl font-bold text-gray-800 dark:text-white">
                 Prasordu
               </span>
             </Link>
@@ -76,8 +74,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     onClick={onClose}
                     className={`group flex items-center rounded-lg p-3 transition-all ${
                       isActive 
-                        ? 'bg-primary-50 text-primary-600' 
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-primary-600'
+                        ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600' 
+                        : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-900 hover:text-primary-600'
                     }`}
                   >
                     <item.icon className={`h-5 w-5 transition-colors ${
@@ -102,8 +100,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     onClick={onClose}
                     className={`group flex items-center rounded-lg p-3 transition-all ${
                       pathname === '/admin/users' 
-                        ? 'bg-primary-50 text-primary-600' 
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-primary-600'
+                        ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600' 
+                        : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-900 hover:text-primary-600'
                     }`}
                   >
                     <UserCheck className={`h-5 w-5 transition-colors ${
@@ -118,8 +116,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     onClick={onClose}
                     className={`group flex items-center rounded-lg p-3 transition-all ${
                       pathname === '/admin/games' 
-                        ? 'bg-primary-50 text-primary-600' 
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-primary-600'
+                        ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600' 
+                        : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-900 hover:text-primary-600'
                     }`}
                   >
                     <Gamepad2 className={`h-5 w-5 transition-colors ${
@@ -134,8 +132,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     onClick={onClose}
                     className={`group flex items-center rounded-lg p-3 transition-all ${
                       pathname === '/admin/materials' 
-                        ? 'bg-primary-50 text-primary-600' 
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-primary-600'
+                        ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600' 
+                        : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-900 hover:text-primary-600'
                     }`}
                   >
                     <BookOpen className={`h-5 w-5 transition-colors ${
@@ -150,8 +148,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     onClick={onClose}
                     className={`group flex items-center rounded-lg p-3 transition-all ${
                       pathname === '/admin/history' 
-                        ? 'bg-primary-50 text-primary-600' 
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-primary-600'
+                        ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600' 
+                        : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-900 hover:text-primary-600'
                     }`}
                   >
                     <Activity className={`h-5 w-5 transition-colors ${
