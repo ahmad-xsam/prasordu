@@ -123,7 +123,7 @@ export default function LandingPage() {
         <motion.div 
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
-          className="absolute bottom-4 z-20 text-emerald-500 opacity-70"
+          className="absolute bottom-2 z-20 text-emerald-500 opacity-70"
         >
           <div className="w-6 h-10 border-2 border-emerald-500 rounded-full flex justify-center p-1">
             <div className="w-1.5 h-3 bg-emerald-500 rounded-full" />

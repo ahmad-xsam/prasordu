@@ -122,15 +122,13 @@ export default function Keanggotaan() {
           </h1>
           <p className="text-gray-500 dark:text-slate-400 mt-1">Kelola daftar anggota, kelas, dan jabatan.</p>
         </div>
-        {isAdmin && (
-          <button 
-            onClick={openAddModal}
-            className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium"
-          >
-            <Plus className="h-5 w-5" />
-            Tambah Anggota
-          </button>
-        )}
+        <button 
+          onClick={openAddModal}
+          className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg shadow-sm transition-colors font-medium"
+        >
+          <Plus className="h-5 w-5" />
+          Tambah Anggota
+        </button>
       </div>
 
       <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800 shadow-sm overflow-hidden">
@@ -143,7 +141,7 @@ export default function Keanggotaan() {
                 <th scope="col" className="px-6 py-4">Tanggal Lahir</th>
                 <th scope="col" className="px-6 py-4">Kelas</th>
                 <th scope="col" className="px-6 py-4">Jabatan</th>
-                {isAdmin && <th scope="col" className="px-6 py-4 text-center">Aksi</th>}
+                <th scope="col" className="px-6 py-4 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -160,7 +158,7 @@ export default function Keanggotaan() {
                 ))
               ) : data.length === 0 ? (
                 <tr>
-                  <td colSpan={isAdmin ? 6 : 5} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                     Belum ada data anggota.
                   </td>
                 </tr>
@@ -182,18 +180,16 @@ export default function Keanggotaan() {
                       </span>
                     </td>
                     <td className="px-6 py-4">{item.jabatan}</td>
-                    {isAdmin && (
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-center gap-3">
-                          <button onClick={() => openEditModal(item)} className="text-amber-500 hover:text-amber-600 transition-colors" title="Edit">
-                            <Edit className="h-5 w-5" />
-                          </button>
-                          <button onClick={() => handleDelete(item._id)} className="text-red-500 hover:text-red-600 transition-colors" title="Hapus">
-                            <Trash2 className="h-5 w-5" />
-                          </button>
-                        </div>
-                      </td>
-                    )}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-center gap-3">
+                        <button onClick={() => openEditModal(item)} className="text-amber-500 hover:text-amber-600 transition-colors" title="Edit">
+                          <Edit className="h-5 w-5" />
+                        </button>
+                        <button onClick={() => handleDelete(item._id)} className="text-red-500 hover:text-red-600 transition-colors" title="Hapus">
+                          <Trash2 className="h-5 w-5" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))
               )}

@@ -20,7 +20,7 @@ export default withAuth(
     }
 
     // Protect admin routes
-    if (req.nextUrl.pathname.startsWith('/admin') && role !== 'ADMIN') {
+    if ((req.nextUrl.pathname === '/admin' || req.nextUrl.pathname.startsWith('/admin/')) && role !== 'ADMIN') {
       return NextResponse.redirect(new URL('/', req.url));
     }
   },
