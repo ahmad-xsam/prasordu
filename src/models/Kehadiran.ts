@@ -5,6 +5,7 @@ export interface IKehadiran extends Document {
   anggotaId: mongoose.Types.ObjectId;
   status: string;
   semester: number;
+  jumlahNabung: number;
 }
 
 const KehadiranSchema: Schema = new Schema({
@@ -12,6 +13,7 @@ const KehadiranSchema: Schema = new Schema({
   anggotaId: { type: Schema.Types.ObjectId, ref: 'Anggota', required: true, index: true },
   status: { type: String, required: true, enum: ['HADIR', 'SAKIT', 'IZIN', 'ALPA'] },
   semester: { type: Number, required: true, index: true },
+  jumlahNabung: { type: Number, default: 0 },
 }, {
   timestamps: true,
 });
