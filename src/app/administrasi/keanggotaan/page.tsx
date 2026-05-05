@@ -453,7 +453,7 @@ export default function Keanggotaan() {
               </button>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-5 max-h-[70vh] overflow-y-auto custom-scrollbar">
+            <form id="anggotaForm" onSubmit={handleSubmit} className="p-5 max-h-[70vh] overflow-y-auto custom-scrollbar">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Informasi Dasar */}
                 <div className="space-y-4 md:col-span-2">
@@ -555,6 +555,7 @@ export default function Keanggotaan() {
               </button>
               <button 
                 type="submit" 
+                form="anggotaForm"
                 className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-xl hover:bg-primary-700 transition-colors shadow-sm"
               >
                 {isEditMode ? "Simpan Perubahan" : "Tambah Data"}
