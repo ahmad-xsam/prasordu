@@ -100,7 +100,10 @@ export default function DaftarAnggotaRegu() {
 
   // Derived data
   const currentReguList = activeTab === 'Putra' ? REGU_PUTRA : REGU_PUTRI;
-  const filteredAnggota = dataAnggota.filter(a => a.jenisKelamin === activeTab);
+  const filteredAnggota = dataAnggota.filter(a => {
+    const gender = a.jenisKelamin || 'Putri'; // fallback for legacy data
+    return gender === activeTab;
+  });
   
   // Available members to be added (must be same gender and not currently in any regu)
   const availableMembers = filteredAnggota.filter(a => !a.namaRegu || a.namaRegu === '-');
