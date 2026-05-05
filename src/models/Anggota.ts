@@ -14,6 +14,7 @@ export interface IAnggota extends Document {
   alamat: string;
   tanggalMasuk: Date;
   keterangan?: string;
+  namaRegu: string;
 }
 
 const AnggotaSchema: Schema = new Schema({
@@ -30,6 +31,7 @@ const AnggotaSchema: Schema = new Schema({
   alamat: { type: String, required: true, default: '-' },
   tanggalMasuk: { type: Date, required: true, default: Date.now },
   keterangan: { type: String },
+  namaRegu: { type: String, default: '-' },
 }, {
   timestamps: true,
 });
