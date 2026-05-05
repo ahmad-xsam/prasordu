@@ -120,7 +120,7 @@ export default function Keanggotaan() {
         setIsModalOpen(false);
         fetchData();
       } else {
-        alert("Gagal menyimpan data");
+        alert(`Gagal menyimpan data: ${result.error || "Unknown error"}`);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -453,114 +453,114 @@ export default function Keanggotaan() {
               </button>
             </div>
             
-            <form id="anggotaForm" onSubmit={handleSubmit} className="p-5 max-h-[70vh] overflow-y-auto custom-scrollbar">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Informasi Dasar */}
-                <div className="space-y-4 md:col-span-2">
-                  <h4 className="font-semibold text-gray-700 dark:text-slate-300 border-b dark:border-slate-800 pb-2">Informasi Dasar</h4>
+            <form onSubmit={handleSubmit}>
+              <div className="p-5 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Informasi Dasar */}
+                  <div className="space-y-4 md:col-span-2">
+                    <h4 className="font-semibold text-gray-700 dark:text-slate-300 border-b dark:border-slate-800 pb-2">Informasi Dasar</h4>
+                  </div>
+                  
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">NTA (Nomor Tanda Anggota)</label>
+                    <input type="text" name="nta" value={formData.nta} onChange={handleInputChange} className="input-field" placeholder="Opsional" />
+                  </div>
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Nama Lengkap *</label>
+                    <input type="text" name="nama" value={formData.nama} onChange={handleInputChange} className="input-field" required placeholder="Masukkan nama lengkap" />
+                  </div>
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Jenis Kelamin *</label>
+                    <select name="jenisKelamin" value={formData.jenisKelamin} onChange={handleInputChange} className="input-field" required>
+                      <option value="Putra">Putra</option>
+                      <option value="Putri">Putri</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Agama *</label>
+                    <select name="agama" value={formData.agama} onChange={handleInputChange} className="input-field" required>
+                      <option value="Islam">Islam</option>
+                      <option value="Kristen Protestan">Kristen Protestan</option>
+                      <option value="Katolik">Katolik</option>
+                      <option value="Hindu">Hindu</option>
+                      <option value="Buddha">Buddha</option>
+                      <option value="Konghucu">Konghucu</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Tempat Lahir *</label>
+                    <input type="text" name="tempatLahir" value={formData.tempatLahir} onChange={handleInputChange} className="input-field" required placeholder="Kota tempat lahir" />
+                  </div>
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Tanggal Lahir *</label>
+                    <input type="date" name="tanggalLahir" value={formData.tanggalLahir} onChange={handleInputChange} className="input-field" required />
+                  </div>
+
+                  {/* Kepramukaan */}
+                  <div className="space-y-4 md:col-span-2 mt-4">
+                    <h4 className="font-semibold text-gray-700 dark:text-slate-300 border-b dark:border-slate-800 pb-2">Data Kepramukaan</h4>
+                  </div>
+
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Kelas *</label>
+                    <input type="text" name="kelas" value={formData.kelas} onChange={handleInputChange} className="input-field" required placeholder="Contoh: VII A" />
+                  </div>
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Jabatan *</label>
+                    <input type="text" name="jabatan" value={formData.jabatan} onChange={handleInputChange} className="input-field" required placeholder="Contoh: Ketua Regu, Anggota" />
+                  </div>
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Tanggal Masuk *</label>
+                    <input type="date" name="tanggalMasuk" value={formData.tanggalMasuk} onChange={handleInputChange} className="input-field" required />
+                  </div>
+
+                  {/* Informasi Tambahan */}
+                  <div className="space-y-4 md:col-span-2 mt-4">
+                    <h4 className="font-semibold text-gray-700 dark:text-slate-300 border-b dark:border-slate-800 pb-2">Informasi Tambahan</h4>
+                  </div>
+
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Nama Orangtua / Wali *</label>
+                    <input type="text" name="namaOrangtua" value={formData.namaOrangtua} onChange={handleInputChange} className="input-field" required placeholder="Nama Ayah/Ibu/Wali" />
+                  </div>
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Pekerjaan Orangtua / Wali *</label>
+                    <input type="text" name="pekerjaanOrangtua" value={formData.pekerjaanOrangtua} onChange={handleInputChange} className="input-field" required placeholder="Pekerjaan" />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Alamat Lengkap *</label>
+                    <textarea name="alamat" value={formData.alamat} onChange={handleInputChange} className="input-field min-h-[80px]" required placeholder="Alamat tempat tinggal"></textarea>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Keterangan Tambahan</label>
+                    <textarea name="keterangan" value={formData.keterangan} onChange={handleInputChange} className="input-field min-h-[60px]" placeholder="Opsional"></textarea>
+                  </div>
                 </div>
                 
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">NTA (Nomor Tanda Anggota)</label>
-                  <input type="text" name="nta" value={formData.nta} onChange={handleInputChange} className="input-field" placeholder="Opsional" />
-                </div>
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Nama Lengkap *</label>
-                  <input type="text" name="nama" value={formData.nama} onChange={handleInputChange} className="input-field" required placeholder="Masukkan nama lengkap" />
-                </div>
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Jenis Kelamin *</label>
-                  <select name="jenisKelamin" value={formData.jenisKelamin} onChange={handleInputChange} className="input-field" required>
-                    <option value="Putra">Putra</option>
-                    <option value="Putri">Putri</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Agama *</label>
-                  <select name="agama" value={formData.agama} onChange={handleInputChange} className="input-field" required>
-                    <option value="Islam">Islam</option>
-                    <option value="Kristen Protestan">Kristen Protestan</option>
-                    <option value="Katolik">Katolik</option>
-                    <option value="Hindu">Hindu</option>
-                    <option value="Buddha">Buddha</option>
-                    <option value="Konghucu">Konghucu</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Tempat Lahir *</label>
-                  <input type="text" name="tempatLahir" value={formData.tempatLahir} onChange={handleInputChange} className="input-field" required placeholder="Kota tempat lahir" />
-                </div>
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Tanggal Lahir *</label>
-                  <input type="date" name="tanggalLahir" value={formData.tanggalLahir} onChange={handleInputChange} className="input-field" required />
-                </div>
-
-                {/* Kepramukaan */}
-                <div className="space-y-4 md:col-span-2 mt-4">
-                  <h4 className="font-semibold text-gray-700 dark:text-slate-300 border-b dark:border-slate-800 pb-2">Data Kepramukaan</h4>
-                </div>
-
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Kelas *</label>
-                  <input type="text" name="kelas" value={formData.kelas} onChange={handleInputChange} className="input-field" required placeholder="Contoh: VII A" />
-                </div>
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Jabatan *</label>
-                  <input type="text" name="jabatan" value={formData.jabatan} onChange={handleInputChange} className="input-field" required placeholder="Contoh: Ketua Regu, Anggota" />
-                </div>
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Tanggal Masuk *</label>
-                  <input type="date" name="tanggalMasuk" value={formData.tanggalMasuk} onChange={handleInputChange} className="input-field" required />
-                </div>
-
-                {/* Informasi Tambahan */}
-                <div className="space-y-4 md:col-span-2 mt-4">
-                  <h4 className="font-semibold text-gray-700 dark:text-slate-300 border-b dark:border-slate-800 pb-2">Informasi Tambahan</h4>
-                </div>
-
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Nama Orangtua / Wali *</label>
-                  <input type="text" name="namaOrangtua" value={formData.namaOrangtua} onChange={handleInputChange} className="input-field" required placeholder="Nama Ayah/Ibu/Wali" />
-                </div>
-                <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Pekerjaan Orangtua / Wali *</label>
-                  <input type="text" name="pekerjaanOrangtua" value={formData.pekerjaanOrangtua} onChange={handleInputChange} className="input-field" required placeholder="Pekerjaan" />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Alamat Lengkap *</label>
-                  <textarea name="alamat" value={formData.alamat} onChange={handleInputChange} className="input-field min-h-[80px]" required placeholder="Alamat tempat tinggal"></textarea>
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-300">Keterangan Tambahan</label>
-                  <textarea name="keterangan" value={formData.keterangan} onChange={handleInputChange} className="input-field min-h-[60px]" placeholder="Opsional"></textarea>
-                </div>
+                {/* CSS Class helper for inputs inside this component */}
+                <style jsx>{`
+                  .input-field {
+                    @apply bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none transition-shadow;
+                  }
+                `}</style>
               </div>
               
-              {/* CSS Class helper for inputs inside this component */}
-              <style jsx>{`
-                .input-field {
-                  @apply bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none transition-shadow;
-                }
-              `}</style>
-              
+              <div className="p-4 border-t dark:border-slate-800 bg-gray-50 dark:bg-slate-800/50 flex justify-end gap-3 sticky bottom-0">
+                <button 
+                  type="button" 
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+                >
+                  Batal
+                </button>
+                <button 
+                  type="submit" 
+                  className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-xl hover:bg-primary-700 transition-colors shadow-sm"
+                >
+                  {isEditMode ? "Simpan Perubahan" : "Tambah Data"}
+                </button>
+              </div>
             </form>
-            
-            <div className="p-4 border-t dark:border-slate-800 bg-gray-50 dark:bg-slate-800/50 flex justify-end gap-3 sticky bottom-0">
-              <button 
-                type="button" 
-                onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
-              >
-                Batal
-              </button>
-              <button 
-                type="submit" 
-                form="anggotaForm"
-                className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-xl hover:bg-primary-700 transition-colors shadow-sm"
-              >
-                {isEditMode ? "Simpan Perubahan" : "Tambah Data"}
-              </button>
-            </div>
           </div>
         </div>
       )}
