@@ -148,7 +148,7 @@ export default function Keanggotaan() {
 
     // 1. Create headers
     // Title rows
-    const wsData = [
+    const wsData: any[][] = [
       [{ v: "DAFTAR INDUK ANGGOTA GUGUS DEPAN", s: { font: { bold: true }, alignment: { horizontal: "center" } } }],
       [{ v: "GERAKAN PRAMUKA SMPN 2 SOREANG", s: { font: { bold: true }, alignment: { horizontal: "center" } } }],
       [],
