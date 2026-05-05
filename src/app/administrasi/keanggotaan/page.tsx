@@ -86,7 +86,7 @@ export default function Keanggotaan() {
       _id: anggota._id,
       nta: anggota.nta || "",
       nama: anggota.nama,
-      jenisKelamin: anggota.jenisKelamin || "Putra",
+      jenisKelamin: anggota.jenisKelamin || "Putri",
       tempatLahir: anggota.tempatLahir || "",
       tanggalLahir: anggota.tanggalLahir ? new Date(anggota.tanggalLahir).toISOString().split('T')[0] : "",
       agama: anggota.agama || "Islam",
@@ -307,8 +307,8 @@ export default function Keanggotaan() {
     item.nama.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const anggotaPutra = filteredData.filter(item => item.jenisKelamin === 'Putra' || !item.jenisKelamin); // fallback default Putra if undefined
-  const anggotaPutri = filteredData.filter(item => item.jenisKelamin === 'Putri');
+  const anggotaPutra = filteredData.filter(item => item.jenisKelamin === 'Putra');
+  const anggotaPutri = filteredData.filter(item => item.jenisKelamin === 'Putri' || !item.jenisKelamin); // fallback default Putri if undefined
 
   const TableAnggota = ({ title, anggotaList }: { title: string, anggotaList: Anggota[] }) => (
     <div className="mb-8">
@@ -539,7 +539,7 @@ export default function Keanggotaan() {
               {/* CSS Class helper for inputs inside this component */}
               <style jsx>{`
                 .input-field {
-                  @apply bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none;
+                  @apply bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-xl focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 outline-none transition-shadow;
                 }
               `}</style>
               
@@ -549,14 +549,13 @@ export default function Keanggotaan() {
               <button 
                 type="button" 
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
               >
                 Batal
               </button>
               <button 
-                onClick={handleSubmit}
                 type="submit" 
-                className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700"
+                className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-xl hover:bg-primary-700 transition-colors shadow-sm"
               >
                 {isEditMode ? "Simpan Perubahan" : "Tambah Data"}
               </button>
