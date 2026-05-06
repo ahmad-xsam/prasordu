@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -66,8 +66,16 @@ export default function LoginPage() {
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full md:w-[55%] p-8 md:p-12 flex flex-col justify-center bg-white/30 dark:bg-slate-900/50 backdrop-blur-sm">
-          <div className="text-center mb-10">
+        <div className="w-full md:w-[55%] p-8 md:p-12 flex flex-col justify-center bg-white/30 dark:bg-slate-900/50 backdrop-blur-sm relative">
+          <Link 
+            href="/" 
+            className="absolute top-6 left-6 md:top-8 md:left-8 flex items-center gap-2 text-[#4a2e1b] dark:text-slate-300 hover:text-[#f4853b] dark:hover:text-[#f4853b] transition-colors font-bold text-sm z-10"
+          >
+            <ArrowLeft size={18} />
+            Kembali
+          </Link>
+          
+          <div className="text-center mb-10 mt-6 md:mt-0">
             <h1 className="text-4xl font-extrabold text-[#4a2e1b] dark:text-white mb-2" style={{ fontFamily: 'sans-serif' }}>
               Welcome Explorer!
             </h1>
