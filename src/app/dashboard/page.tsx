@@ -60,20 +60,29 @@ export default function Home() {
 
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [stats, setStats] = useState({ percentage: 0, playersCount: 0, totalUsers: 0 });
+  const [agenda, setAgenda] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [lbRes, statsRes] = await Promise.all([
+        const [lbRes, statsRes, agendaRes] = await Promise.all([
           fetch('/api/mission/leaderboard'),
-          fetch('/api/mission/stats')
+          fetch('/api/mission/stats'),
+          fetch('/api/activities')
         ]);
         const lbData = await lbRes.json();
         const stData = await statsRes.json();
+        const agendaData = await agendaRes.json();
         
         if (lbData.success) setLeaderboard(lbData.data);
         if (stData.success) setStats(stData.data);
+        
+        if (agendaData.activities) {
+          const today = new Date().toDateString();
+          const todayAgenda = agendaData.activities.filter((act: any) => new Date(act.date).toDateString() === today);
+          setAgenda(todayAgenda);
+        }
       } catch (err) {
         console.error("Failed to fetch dashboard data");
       } finally {
@@ -172,18 +181,22 @@ export default function Home() {
         <div className="bg-white/80 dark:bg-[#1a0b2e]/80 rounded-2xl border border-purple-200 dark:border-purple-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-6">
           <h2 className="text-xl font-bold text-purple-900 dark:text-white mb-4">Agenda Hari Ini</h2>
           <div className="space-y-4 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-purple-300 dark:before:via-purple-800 before:to-transparent">
-            {['08:00', '10:30', '13:00'].map((time, i) => (
+            {agenda.length > 0 ? agenda.map((item, i) => (
               <div key={i} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                 <div className="flex items-center justify-center w-4 h-4 rounded-full border border-white dark:border-[#0a0014] bg-purple-300 dark:bg-purple-800 group-[.is-active]:bg-purple-500 dark:group-[.is-active]:bg-[#ccff00] group-[.is-active]:shadow-[0_0_10px_rgba(204,255,0,0.8)] shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 transition-all" />
                 <div className="w-[calc(100%-2rem)] md:w-[calc(50%-1.5rem)] p-3 rounded-xl border border-purple-200 dark:border-purple-800/50 shadow-sm ml-4 md:ml-0 bg-white dark:bg-purple-900/20 group-hover:border-purple-400 dark:group-hover:border-[#ccff00]/50 transition-colors">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-sm text-purple-900 dark:text-slate-100">Kelas Online</span>
-                    <span className="text-xs font-bold text-purple-700 dark:text-[#ccff00] bg-purple-100 dark:bg-[#0a0014] px-2 py-0.5 rounded-md">{time}</span>
+                    <span className="font-bold text-sm text-purple-900 dark:text-slate-100">{item.title}</span>
+                    <span className="text-[10px] font-bold text-purple-700 dark:text-[#ccff00] bg-purple-100 dark:bg-[#0a0014] px-2 py-0.5 rounded-md">{item.type}</span>
                   </div>
-                  <div className="text-purple-600 dark:text-purple-400 text-xs font-medium">Materi {i+1}</div>
+                  <div className="text-purple-600 dark:text-purple-400 text-xs font-medium line-clamp-2">{item.description || "Tidak ada deskripsi"}</div>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div className="text-center py-8 text-purple-600 dark:text-purple-400 text-sm font-medium relative z-10">
+                Tidak ada agenda untuk hari ini.<br/>Selamat beristirahat!
+              </div>
+            )}
           </div>
         </div>
       </div>

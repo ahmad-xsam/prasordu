@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     
     const activity = await Activity.create({
       ...body,
-      createdBy: session.user?.email
+      createdBy: (session.user as any)?.username || session.user?.name || "Admin"
     });
 
     return NextResponse.json({ message: "Activity created", activity });
