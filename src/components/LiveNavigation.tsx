@@ -27,7 +27,7 @@ export default function LiveNavigation() {
     } else {
       // Non iOS 13+ devices
       setNeedPermission(false);
-      window.addEventListener('deviceorientationabsolute', handleOrientation, true) || 
+      window.addEventListener('deviceorientationabsolute', handleOrientation, true);
       window.addEventListener('deviceorientation', handleOrientation, true);
     }
   };
