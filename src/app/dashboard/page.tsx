@@ -79,9 +79,16 @@ export default function Home() {
         if (stData.success) setStats(stData.data);
         
         if (agendaData.activities) {
-          const today = new Date().toDateString();
-          const todayAgenda = agendaData.activities.filter((act: any) => new Date(act.date).toDateString() === today);
-          setAgenda(todayAgenda);
+          const now = new Date();
+          now.setHours(0, 0, 0, 0); // Start of today
+          const nextMonth = new Date(now);
+          nextMonth.setMonth(nextMonth.getMonth() + 1); // 1 month ahead
+          
+          const monthAgenda = agendaData.activities.filter((act: any) => {
+            const actDate = new Date(act.date);
+            return actDate >= now && actDate <= nextMonth;
+          });
+          setAgenda(monthAgenda);
         }
       } catch (err) {
         console.error("Failed to fetch dashboard data");
@@ -179,7 +186,7 @@ export default function Home() {
         </div>
 
         <div className="bg-white/80 dark:bg-[#1a0b2e]/80 rounded-2xl border border-purple-200 dark:border-purple-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-6">
-          <h2 className="text-xl font-bold text-purple-900 dark:text-white mb-4">Agenda Hari Ini</h2>
+          <h2 className="text-xl font-bold text-purple-900 dark:text-white mb-4">Agenda Bulan Ini</h2>
           <div className="space-y-4 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-purple-300 dark:before:via-purple-800 before:to-transparent">
             {agenda.length > 0 ? agenda.map((item, i) => (
               <div key={i} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
@@ -187,14 +194,17 @@ export default function Home() {
                 <div className="w-[calc(100%-2rem)] md:w-[calc(50%-1.5rem)] p-3 rounded-xl border border-purple-200 dark:border-purple-800/50 shadow-sm ml-4 md:ml-0 bg-white dark:bg-purple-900/20 group-hover:border-purple-400 dark:group-hover:border-[#ccff00]/50 transition-colors">
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-bold text-sm text-purple-900 dark:text-slate-100">{item.title}</span>
-                    <span className="text-[10px] font-bold text-purple-700 dark:text-[#ccff00] bg-purple-100 dark:bg-[#0a0014] px-2 py-0.5 rounded-md">{item.type}</span>
+                    <div className="flex gap-2 items-center">
+                      <span className="text-[10px] font-bold text-purple-600 dark:text-purple-300">{new Date(item.date).toLocaleDateString()}</span>
+                      <span className="text-[10px] font-bold text-purple-700 dark:text-[#ccff00] bg-purple-100 dark:bg-[#0a0014] px-2 py-0.5 rounded-md">{item.type}</span>
+                    </div>
                   </div>
                   <div className="text-purple-600 dark:text-purple-400 text-xs font-medium line-clamp-2">{item.description || "Tidak ada deskripsi"}</div>
                 </div>
               </div>
             )) : (
               <div className="text-center py-8 text-purple-600 dark:text-purple-400 text-sm font-medium relative z-10">
-                Tidak ada agenda untuk hari ini.<br/>Selamat beristirahat!
+                Tidak ada agenda untuk bulan ini.<br/>Selamat beristirahat!
               </div>
             )}
           </div>
