@@ -61,22 +61,26 @@ export default function Home() {
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [stats, setStats] = useState({ percentage: 0, playersCount: 0, totalUsers: 0 });
   const [agenda, setAgenda] = useState<any[]>([]);
+  const [tabunganLeaderboard, setTabunganLeaderboard] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [lbRes, statsRes, agendaRes] = await Promise.all([
+        const [lbRes, statsRes, agendaRes, tabunganRes] = await Promise.all([
           fetch('/api/mission/leaderboard'),
           fetch('/api/mission/stats'),
-          fetch('/api/activities')
+          fetch('/api/activities'),
+          fetch('/api/tabungan/leaderboard')
         ]);
         const lbData = await lbRes.json();
         const stData = await statsRes.json();
         const agendaData = await agendaRes.json();
+        const tabunganData = await tabunganRes.json();
         
         if (lbData.success) setLeaderboard(lbData.data);
         if (stData.success) setStats(stData.data);
+        if (tabunganData.success) setTabunganLeaderboard(tabunganData.data);
         
         if (agendaData.activities) {
           const now = new Date();
@@ -166,22 +170,27 @@ export default function Home() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-white/80 dark:bg-[#1a0b2e]/80 rounded-2xl border border-purple-200 dark:border-purple-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-6">
-          <h2 className="text-xl font-bold text-purple-900 dark:text-white mb-4">Materi Terbaru</h2>
+          <h2 className="text-xl font-bold text-purple-900 dark:text-white mb-4 flex items-center gap-2">
+            🏆 Top 3 Sultan Tabungan
+          </h2>
           <div className="space-y-4">
-            {[1, 2, 3].map((item) => (
-              <div key={item} className="flex items-center p-4 border border-purple-100 dark:border-purple-800/50 rounded-xl hover:border-[#ccff00] dark:hover:border-[#ccff00] transition-colors cursor-pointer group bg-purple-50 dark:bg-purple-900/10">
-                <div className="h-12 w-12 bg-white dark:bg-[#0a0014] rounded-lg flex items-center justify-center mr-4 shadow-sm group-hover:shadow-[0_0_10px_rgba(204,255,0,0.3)] transition-shadow">
-                  <BookOpen className="h-6 w-6 text-purple-500 dark:text-purple-400 group-hover:text-[#ccff00]" />
+            {tabunganLeaderboard.length > 0 ? tabunganLeaderboard.map((item, idx) => (
+              <div key={idx} className="flex items-center p-4 border border-purple-100 dark:border-purple-800/50 rounded-xl hover:border-[#ccff00] dark:hover:border-[#ccff00] transition-all duration-300 group bg-purple-50 dark:bg-purple-900/10 hover:shadow-[0_0_15px_rgba(204,255,0,0.2)] hover:-translate-y-1 cursor-default">
+                <div className="font-black text-xl w-8 text-purple-400 dark:text-purple-600 drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]">#{idx + 1}</div>
+                <div className="flex-1 ml-2">
+                  <h4 className="text-md font-bold text-purple-900 dark:text-white group-hover:text-[#ccff00] transition-colors">{item.nama}</h4>
+                  <p className="text-xs text-purple-600 dark:text-purple-400 font-medium">Kelas {item.kelas}</p>
                 </div>
-                <div className="flex-1">
-                  <h4 className="text-md font-semibold text-purple-900 dark:text-slate-200 group-hover:text-purple-600 dark:group-hover:text-[#ccff00] transition-colors">Pemrograman Web Lanjut</h4>
-                  <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">Pertemuan ke-{item + 4}: React Hooks</p>
+                <div className="text-right">
+                  <p className="text-xs text-purple-500 mb-1 font-bold">Total Tabungan</p>
+                  <p className="text-md font-black text-[#ccff00]">
+                    Rp {item.totalNabung.toLocaleString('id-ID')}
+                  </p>
                 </div>
-                <button className="text-purple-600 dark:text-[#ccff00] text-sm font-bold hover:underline">
-                  Lihat
-                </button>
               </div>
-            ))}
+            )) : (
+              <div className="text-center py-8 text-purple-500 font-medium">Belum ada data tabungan yang tercatat.</div>
+            )}
           </div>
         </div>
 
