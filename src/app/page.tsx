@@ -40,9 +40,9 @@ export default function LandingPage() {
   return (
     <div className="bg-[#050B14] min-h-screen text-slate-200 overflow-x-hidden selection:bg-emerald-500/30">
       <audio ref={audioRef} src="https://actions.google.com/sounds/v1/ambiences/fire.ogg" loop muted={isMuted} />
-      
+
       {/* Fixed Sound Toggle */}
-      <button 
+      <button
         onClick={toggleSound}
         className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-emerald-900/50 backdrop-blur-md border border-emerald-500/30 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-800/60 transition-all hover:scale-110 shadow-[0_0_15px_rgba(16,185,129,0.3)]"
       >
@@ -54,7 +54,7 @@ export default function LandingPage() {
         <motion.div style={{ y: yBg }} className="absolute inset-0 z-0 opacity-40">
           <img src={jungleBg.src} alt="Jungle" className="w-full h-full object-cover" />
         </motion.div>
-        
+
         {/* 3D Canvas Background Element */}
         <ThreeCanvas />
 
@@ -74,7 +74,7 @@ export default function LandingPage() {
             </span>
           </motion.div>
 
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2, type: "spring" }}
@@ -83,7 +83,7 @@ export default function LandingPage() {
             PRASORDU ADVENTURE
           </motion.h1>
 
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
@@ -92,7 +92,7 @@ export default function LandingPage() {
             Pilih senjatamu, gabung dengan regu, dan taklukkan misteri hutan kuno bersama kawan-kawanmu.
           </motion.p>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8 }}
@@ -113,7 +113,7 @@ export default function LandingPage() {
         </div>
 
         {/* Scroll indicator */}
-        <motion.div 
+        <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
           className="absolute bottom-2 z-20 text-emerald-500 opacity-70"
@@ -127,7 +127,7 @@ export default function LandingPage() {
       {/* Story Section */}
       <section className="py-32 px-4 relative">
         <div className="max-w-6xl mx-auto">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -150,10 +150,10 @@ export default function LandingPage() {
           <h2 className="text-3xl md:text-5xl font-black text-center mb-20 text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]">
             ANGGOTA REGU
           </h2>
-          
+
           <div className="grid md:grid-cols-2 gap-12">
             {/* Character 1 */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -165,8 +165,8 @@ export default function LandingPage() {
                 <img src={scoutBoy.src} alt="Boy Scout with Bow" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f1c2e] via-transparent to-transparent" />
               </div>
-              <h3 className="text-3xl font-black text-white mb-2 group-hover:text-emerald-400 transition-colors">Archer Scout</h3>
-              <p className="text-slate-400 mb-6">Penembak jitu regu. Bersenjatakan Panah Magis yang dapat menembus kegelapan dan mengaktifkan saklar jarak jauh.</p>
+              <h3 className="text-3xl font-black text-white mb-2 group-hover:text-emerald-400 transition-colors">Kujang Master</h3>
+              <p className="text-slate-400 mb-6">Petarung jarak dekat. Membawa Kujang Suci yang bersinar terang, mampu membelah ilusi misteri hutan dan melindungi rekan setim</p>
               <div className="flex gap-2">
                 <span className="px-3 py-1 rounded-full bg-emerald-900/50 text-emerald-400 text-sm font-bold border border-emerald-500/30">Ranged Attack</span>
                 <span className="px-3 py-1 rounded-full bg-blue-900/50 text-blue-400 text-sm font-bold border border-blue-500/30">Agility</span>
@@ -174,7 +174,7 @@ export default function LandingPage() {
             </motion.div>
 
             {/* Character 2 */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -186,8 +186,8 @@ export default function LandingPage() {
                 <img src={scoutGirl.src} alt="Girl Scout with Kujang" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f1c2e] via-transparent to-transparent" />
               </div>
-              <h3 className="text-3xl font-black text-white mb-2 group-hover:text-amber-400 transition-colors">Kujang Master</h3>
-              <p className="text-slate-400 mb-6">Petarung jarak dekat. Membawa Kujang Suci yang bersinar terang, mampu membelah ilusi misteri hutan dan melindungi rekan setim.</p>
+              <h3 className="text-3xl font-black text-white mb-2 group-hover:text-amber-400 transition-colors">Archer Scout</h3>
+              <p className="text-slate-400 mb-6">Penembak jitu regu. Bersenjatakan Panah Magis yang dapat menembus kegelapan dan mengaktifkan saklar jarak jauh.</p>
               <div className="flex gap-2">
                 <span className="px-3 py-1 rounded-full bg-amber-900/50 text-amber-400 text-sm font-bold border border-amber-500/30">Melee Combat</span>
                 <span className="px-3 py-1 rounded-full bg-red-900/50 text-red-400 text-sm font-bold border border-red-500/30">Defense</span>
@@ -201,8 +201,8 @@ export default function LandingPage() {
       <section className="py-32 px-4 relative">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -211,7 +211,7 @@ export default function LandingPage() {
               <h2 className="text-4xl md:text-5xl font-black text-white mb-8">
                 FITUR <span className="text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]">GAMEPLAY</span>
               </h2>
-              
+
               <div className="space-y-8">
                 <div className="flex items-start gap-4 group">
                   <div className="p-3 rounded-xl bg-emerald-900/50 text-emerald-400 border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
@@ -219,10 +219,10 @@ export default function LandingPage() {
                   </div>
                   <div>
                     <h4 className="text-xl font-bold text-white mb-2">Live Multiplayer</h4>
-                    <p className="text-slate-400">Main langsung di browsermu bersama teman. Saling bantu menyelesaikan misi dan mengalahkan monster.</p>
+                    <p className="text-slate-400">Main langsung di browsermu bersama teman-teman. Saling bantu menyelesaikan misi untuk mendapatkan  point.</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-4 group">
                   <div className="p-3 rounded-xl bg-blue-900/50 text-blue-400 border border-blue-500/30 group-hover:bg-blue-500 group-hover:text-white transition-colors">
                     <MapIcon size={28} />
@@ -239,14 +239,14 @@ export default function LandingPage() {
                   </div>
                   <div>
                     <h4 className="text-xl font-bold text-white mb-2">Animasi Combat Pro</h4>
-                    <p className="text-slate-400">Rasakan efek memukau saat mengayunkan Kujang atau melepaskan Panah magis dengan efek partikel GSAP & Three.js.</p>
+                    <p className="text-slate-400">Rasakan efek memukau saat memilih regu dan memilih senjata yang di inginkan untuk menaklukkan tantangan</p>
                   </div>
                 </div>
               </div>
             </motion.div>
 
             {/* Minimap Container */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
