@@ -4,6 +4,7 @@ import { BookOpen, Trophy, Medal, Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import LiveNavigation from '@/components/LiveNavigation';
 
 // Icons for Ranks
 const RankIcon = ({ rank }: { rank: number }) => {
@@ -143,24 +144,7 @@ export default function Home() {
             <CircularProgress percentage={stats.percentage} />
           </div>
 
-          <div className="flex-1 bg-gradient-to-br from-purple-800 to-[#0a0014] rounded-2xl relative overflow-hidden border border-purple-500/30 shadow-[0_0_20px_rgba(204,255,0,0.1)] flex items-end justify-center min-h-[250px] group">
-            <div className="absolute inset-0 bg-[#ccff00]/10 mix-blend-overlay transition-opacity group-hover:opacity-100 opacity-50"></div>
-            
-            {/* 3D Characters */}
-            <div className="absolute inset-0 flex justify-between items-end px-2 pb-2">
-              <div className="w-[45%] h-[80%] relative">
-                 <Image src="/images/scout_male.png" alt="Male Scout" fill className="object-contain object-bottom drop-shadow-[0_0_15px_rgba(204,255,0,0.4)]" />
-              </div>
-              <div className="w-[45%] h-[80%] relative">
-                 <Image src="/images/scout_female.png" alt="Female Scout" fill className="object-contain object-bottom drop-shadow-[0_0_15px_rgba(204,255,0,0.4)]" />
-              </div>
-            </div>
-
-            <div className="relative z-10 w-full text-center p-4 bg-gradient-to-t from-[#0a0014] via-[#0a0014]/80 to-transparent">
-              <h3 className="text-[#ccff00] font-black text-xl mb-1 drop-shadow-[0_0_8px_rgba(204,255,0,0.8)] tracking-wider">PRAMUKA JABAR</h3>
-              <p className="text-white/90 text-xs font-medium">Jadilah yang terbaik di setiap rintangan!</p>
-            </div>
-          </div>
+          <LiveNavigation />
         </div>
       </div>
 
