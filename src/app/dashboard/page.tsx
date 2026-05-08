@@ -46,7 +46,7 @@ const CircularProgress = ({ percentage }: { percentage: number }) => {
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center flex-col">
-        <span className="text-xl font-black text-purple-900 dark:text-white drop-shadow-[0_0_8px_rgba(204,255,0,0.5)]">
+        <span className="text-xl font-black text-purple-950 dark:text-white drop-shadow-[0_0_8px_rgba(204,255,0,0.5)]">
           {percentage}%
         </span>
       </div>
@@ -107,15 +107,15 @@ export default function Home() {
     <div className="space-y-6 bg-purple-50 dark:bg-[#0a0014] min-h-screen transition-colors p-4 rounded-3xl">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-purple-900 dark:text-white uppercase tracking-tight drop-shadow-[0_0_10px_rgba(204,255,0,0.3)]">
+          <h1 className="text-3xl font-black text-purple-950 dark:text-white uppercase tracking-tight drop-shadow-[0_0_10px_rgba(204,255,0,0.3)]">
             {isAdmin ? "Selamat Datang di Admin" : "Selamat Datang User"} 👋
           </h1>
-          <p className="text-purple-700 dark:text-purple-300 mt-1 font-medium">
+          <p className="text-rose-600 dark:text-purple-300 mt-1 font-medium">
             {isAdmin ? "Panel kontrol sistem manajemen." : "Cek peringkat dan aktivitas belajarmu hari ini!"}
           </p>
         </div>
         {!isAdmin && (
-          <button className="bg-[#ccff00] hover:bg-[#aacc00] text-purple-900 px-6 py-3 rounded-xl shadow-[0_0_15px_rgba(204,255,0,0.5)] transition-all font-bold uppercase tracking-wide">
+          <button className="bg-[#ccff00] hover:bg-[#aacc00] text-purple-950 px-6 py-3 rounded-xl shadow-[0_0_15px_rgba(204,255,0,0.5)] transition-all font-bold uppercase tracking-wide">
             Main Sekarang
           </button>
         )}
@@ -127,7 +127,7 @@ export default function Home() {
         {/* Leaderboard */}
         <div className="md:col-span-2 bg-white/80 dark:bg-[#1a0b2e]/80 backdrop-blur-md p-6 rounded-2xl border border-purple-200 dark:border-purple-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_0_20px_rgba(138,43,226,0.1)]">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-black text-purple-900 dark:text-white uppercase flex items-center gap-2">
+            <h2 className="text-2xl font-black text-purple-950 dark:text-white uppercase flex items-center gap-2">
               <Trophy className="text-[#ccff00]" /> Leaderboard
             </h2>
           </div>
@@ -142,13 +142,13 @@ export default function Home() {
                 <div key={idx} className="flex items-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-100 dark:border-purple-800/50 hover:border-[#ccff00] dark:hover:border-[#ccff00] transition-all duration-300 group hover:shadow-[0_0_15px_rgba(204,255,0,0.2)] hover:-translate-y-1 cursor-default">
                   <div className="font-black text-xl w-8 text-purple-400 dark:text-purple-600 drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]">#{idx + 1}</div>
                   <div className="flex-1 ml-2">
-                    <h3 className="font-bold text-purple-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-[#ccff00] transition-colors">{player.fullName}</h3>
-                    <p className="text-xs text-purple-600 dark:text-purple-400 font-bold">{player.totalScore} Poin</p>
+                    <h3 className="font-bold text-purple-950 dark:text-white group-hover:text-rose-500 dark:group-hover:text-[#ccff00] transition-colors">{player.fullName}</h3>
+                    <p className="text-xs text-rose-500 dark:text-purple-400 font-bold">{player.totalScore} Poin</p>
                   </div>
                   <RankIcon rank={idx + 1} />
                 </div>
               )) : (
-                <div className="col-span-2 text-center py-8 text-purple-500 font-medium">Belum ada pemain yang masuk ke papan peringkat.</div>
+                <div className="col-span-2 text-center py-8 text-pink-600 font-medium">Belum ada pemain yang masuk ke papan peringkat.</div>
               )}
             </div>
           )}
@@ -158,8 +158,8 @@ export default function Home() {
         <div className="flex flex-col gap-6">
           <div className="bg-white/80 dark:bg-[#1a0b2e]/80 backdrop-blur-md p-6 rounded-2xl border border-purple-200 dark:border-purple-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-purple-900 dark:text-white mb-1">Misi Selesai</h3>
-              <p className="text-sm text-purple-600 dark:text-purple-400 mb-2 font-medium">{stats.playersCount} dari {stats.totalUsers} Siswa</p>
+              <h3 className="font-bold text-purple-950 dark:text-white mb-1">Misi Selesai</h3>
+              <p className="text-sm text-rose-500 dark:text-purple-400 mb-2 font-medium">{stats.playersCount} dari {stats.totalUsers} Siswa</p>
             </div>
             <CircularProgress percentage={stats.percentage} />
           </div>
@@ -170,7 +170,7 @@ export default function Home() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-white/80 dark:bg-[#1a0b2e]/80 rounded-2xl border border-purple-200 dark:border-purple-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-6">
-          <h2 className="text-xl font-bold text-purple-900 dark:text-white mb-4 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-purple-950 dark:text-white mb-4 flex items-center gap-2">
             🏆 Top 3 Sultan Tabungan
           </h2>
           <div className="space-y-4">
@@ -178,41 +178,41 @@ export default function Home() {
               <div key={idx} className="flex items-center p-4 border border-purple-100 dark:border-purple-800/50 rounded-xl hover:border-[#ccff00] dark:hover:border-[#ccff00] transition-all duration-300 group bg-purple-50 dark:bg-purple-900/10 hover:shadow-[0_0_15px_rgba(204,255,0,0.2)] hover:-translate-y-1 cursor-default">
                 <div className="font-black text-xl w-8 text-purple-400 dark:text-purple-600 drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]">#{idx + 1}</div>
                 <div className="flex-1 ml-2">
-                  <h4 className="text-md font-bold text-purple-900 dark:text-white group-hover:text-[#ccff00] transition-colors">{item.nama}</h4>
-                  <p className="text-xs text-purple-600 dark:text-purple-400 font-medium">Kelas {item.kelas}</p>
+                  <h4 className="text-md font-bold text-purple-950 dark:text-white group-hover:text-[#ccff00] transition-colors">{item.nama}</h4>
+                  <p className="text-xs text-rose-500 dark:text-purple-400 font-medium">Kelas {item.kelas}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-purple-500 mb-1 font-bold">Total Tabungan</p>
+                  <p className="text-xs text-pink-600 mb-1 font-bold">Total Tabungan</p>
                   <p className="text-md font-black text-[#ccff00]">
                     Rp {item.totalNabung.toLocaleString('id-ID')}
                   </p>
                 </div>
               </div>
             )) : (
-              <div className="text-center py-8 text-purple-500 font-medium">Belum ada data tabungan yang tercatat.</div>
+              <div className="text-center py-8 text-pink-600 font-medium">Belum ada data tabungan yang tercatat.</div>
             )}
           </div>
         </div>
 
         <div className="bg-white/80 dark:bg-[#1a0b2e]/80 rounded-2xl border border-purple-200 dark:border-purple-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-6">
-          <h2 className="text-xl font-bold text-purple-900 dark:text-white mb-4">Agenda Bulan Ini</h2>
+          <h2 className="text-xl font-bold text-purple-950 dark:text-white mb-4">Agenda Bulan Ini</h2>
           <div className="space-y-4 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-purple-300 dark:before:via-purple-800 before:to-transparent">
             {agenda.length > 0 ? agenda.map((item, i) => (
               <div key={i} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                 <div className="flex items-center justify-center w-4 h-4 rounded-full border border-white dark:border-[#0a0014] bg-purple-300 dark:bg-purple-800 group-[.is-active]:bg-purple-500 dark:group-[.is-active]:bg-[#ccff00] group-[.is-active]:shadow-[0_0_10px_rgba(204,255,0,0.8)] shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 transition-all" />
                 <div className="w-[calc(100%-2rem)] md:w-[calc(50%-1.5rem)] p-3 rounded-xl border border-purple-200 dark:border-purple-800/50 shadow-sm ml-4 md:ml-0 bg-white dark:bg-purple-900/20 group-hover:border-purple-400 dark:group-hover:border-[#ccff00]/50 transition-colors">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-sm text-purple-900 dark:text-slate-100">{item.title}</span>
+                    <span className="font-bold text-sm text-purple-950 dark:text-slate-100">{item.title}</span>
                     <div className="flex gap-2 items-center">
-                      <span className="text-[10px] font-bold text-purple-600 dark:text-purple-300">{new Date(item.date).toLocaleDateString()}</span>
-                      <span className="text-[10px] font-bold text-purple-700 dark:text-[#ccff00] bg-purple-100 dark:bg-[#0a0014] px-2 py-0.5 rounded-md">{item.type}</span>
+                      <span className="text-[10px] font-bold text-rose-500 dark:text-purple-300">{new Date(item.date).toLocaleDateString()}</span>
+                      <span className="text-[10px] font-bold text-rose-600 dark:text-[#ccff00] bg-purple-100 dark:bg-[#0a0014] px-2 py-0.5 rounded-md">{item.type}</span>
                     </div>
                   </div>
-                  <div className="text-purple-600 dark:text-purple-400 text-xs font-medium line-clamp-2">{item.description || "Tidak ada deskripsi"}</div>
+                  <div className="text-rose-500 dark:text-purple-400 text-xs font-medium line-clamp-2">{item.description || "Tidak ada deskripsi"}</div>
                 </div>
               </div>
             )) : (
-              <div className="text-center py-8 text-purple-600 dark:text-purple-400 text-sm font-medium relative z-10">
+              <div className="text-center py-8 text-rose-500 dark:text-purple-400 text-sm font-medium relative z-10">
                 Tidak ada agenda untuk bulan ini.<br/>Selamat beristirahat!
               </div>
             )}
