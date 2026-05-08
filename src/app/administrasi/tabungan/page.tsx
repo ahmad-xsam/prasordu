@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Wallet, Edit, Trash2, X, Download } from "lucide-react";
 import * as XLSX from "xlsx-js-style";
+import { useSession } from "next-auth/react";
 
 type Anggota = {
   _id: string;
@@ -20,6 +21,9 @@ type Kehadiran = {
 };
 
 export default function TabunganAnggota() {
+  const { data: session } = useSession();
+  const isAdmin = (session?.user as any)?.role === 'ADMIN';
+
   const [activeSemester, setActiveSemester] = useState<number>(1);
   const [dataKehadiran, setDataKehadiran] = useState<Kehadiran[]>([]);
   const [anggotaList, setAnggotaList] = useState<Anggota[]>([]);
@@ -322,20 +326,24 @@ export default function TabunganAnggota() {
           <p className="text-gray-500 dark:text-slate-400 mt-1">Manajemen keuangan dan pencatatan tabungan rutin.</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button 
-            onClick={exportToExcel}
-            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white border border-green-600 px-4 py-2 rounded-xl shadow-sm transition-colors font-medium"
-          >
-            <Download className="h-5 w-5" />
-            Export Excel
-          </button>
-          <button 
-            onClick={openAddModal}
-            className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl shadow-sm transition-colors font-medium"
-          >
-            <Wallet className="h-5 w-5" />
-            Input Tabungan
-          </button>
+          {isAdmin && (
+            <>
+              <button 
+                onClick={exportToExcel}
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white border border-green-600 px-4 py-2 rounded-xl shadow-sm transition-colors font-medium"
+              >
+                <Download className="h-5 w-5" />
+                Export Excel
+              </button>
+              <button 
+                onClick={openAddModal}
+                className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl shadow-sm transition-colors font-medium"
+              >
+                <Wallet className="h-5 w-5" />
+                Input Tabungan
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -380,7 +388,7 @@ export default function TabunganAnggota() {
                 <th scope="col" className="px-6 py-4">Presensi</th>
                 <th scope="col" className="px-6 py-4 text-right">Jumlah Nabung</th>
                 <th scope="col" className="px-6 py-4 text-right">Total Nabung</th>
-                <th scope="col" className="px-6 py-4 text-center">Aksi</th>
+                {isAdmin && <th scope="col" className="px-6 py-4 text-center">Aksi</th>}
               </tr>
             </thead>
             <tbody>
@@ -393,12 +401,12 @@ export default function TabunganAnggota() {
                     <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-20"></div></td>
                     <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-24 ml-auto"></div></td>
                     <td className="px-6 py-4"><div className="h-4 bg-gray-200 rounded w-28 ml-auto"></div></td>
-                    <td className="px-6 py-4"><div className="h-8 bg-gray-100 rounded w-16 mx-auto"></div></td>
+                    {isAdmin && <td className="px-6 py-4"><div className="h-8 bg-gray-100 rounded w-16 mx-auto"></div></td>}
                   </tr>
                 ))
               ) : dataKehadiran.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={isAdmin ? 7 : 6} className="px-6 py-8 text-center text-gray-500">
                     Belum ada data tabungan untuk Semester {activeSemester}.
                   </td>
                 </tr>
@@ -432,16 +440,18 @@ export default function TabunganAnggota() {
                     <td className="px-6 py-4 text-right font-bold text-gray-900 dark:text-white">
                       {formatRupiah(total)}
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-center gap-3">
-                        <button onClick={() => openEditModal(item)} className="text-amber-500 hover:text-amber-600 transition-colors" title="Edit">
-                          <Edit className="h-5 w-5" />
-                        </button>
-                        <button onClick={() => handleDelete(item._id)} className="text-red-500 hover:text-red-600 transition-colors" title="Hapus">
-                          <Trash2 className="h-5 w-5" />
-                        </button>
-                      </div>
-                    </td>
+                    {isAdmin && (
+                      <td className="px-6 py-4">
+                        <div className="flex items-center justify-center gap-3">
+                          <button onClick={() => openEditModal(item)} className="text-amber-500 hover:text-amber-600 transition-colors" title="Edit">
+                            <Edit className="h-5 w-5" />
+                          </button>
+                          <button onClick={() => handleDelete(item._id)} className="text-red-500 hover:text-red-600 transition-colors" title="Hapus">
+                            <Trash2 className="h-5 w-5" />
+                          </button>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 )})
               )}

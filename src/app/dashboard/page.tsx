@@ -108,17 +108,12 @@ export default function Home() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black text-purple-950 dark:text-white uppercase tracking-tight drop-shadow-[0_0_10px_rgba(244,63,94,0.3)] dark:drop-shadow-[0_0_10px_rgba(204,255,0,0.3)]">
-            {isAdmin ? "Selamat Datang di Admin" : "Selamat Datang User"} 👋
+            {isAdmin ? "Selamat Datang di Admin" : `Selamat Datang ${(session?.user as any)?.username || session?.user?.name || 'User'}`} 👋
           </h1>
           <p className="text-rose-600 dark:text-purple-300 mt-1 font-medium">
             {isAdmin ? "Panel kontrol sistem manajemen." : "Cek peringkat dan aktivitas belajarmu hari ini!"}
           </p>
         </div>
-        {!isAdmin && (
-          <button className="bg-rose-500 dark:bg-[#ccff00] hover:bg-rose-600 dark:hover:bg-[#aacc00] text-white dark:text-purple-950 px-6 py-3 rounded-xl shadow-[0_0_15px_rgba(244,63,94,0.5)] dark:shadow-[0_0_15px_rgba(204,255,0,0.5)] transition-all font-bold uppercase tracking-wide">
-            Main Sekarang
-          </button>
-        )}
       </div>
 
       {/* Hero Stats Section */}

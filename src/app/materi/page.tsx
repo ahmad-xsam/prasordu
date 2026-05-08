@@ -3,8 +3,12 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Lock, Unlock, Star, Plus } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 
 export default function Materi() {
+  const { data: session } = useSession();
+  const isAdmin = (session?.user as any)?.role === 'ADMIN';
+
   const [unlockedBab, setUnlockedBab] = useState<number>(1);
   const [stars, setStars] = useState<number>(0);
 
@@ -39,9 +43,11 @@ export default function Materi() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Materi Pramuka</h1>
           <p className="text-gray-500 mb-4">Pelajari materi dari buku Boyman dan kumpulkan bintang!</p>
-          <Link href="/materi/tambah" className="inline-flex items-center bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors shadow-sm">
-            <Plus className="mr-2" size={18} /> Tambah Materi Baru
-          </Link>
+          {isAdmin && (
+            <Link href="/materi/tambah" className="inline-flex items-center bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors shadow-sm">
+              <Plus className="mr-2" size={18} /> Tambah Materi Baru
+            </Link>
+          )}
         </div>
         <div className="flex items-center gap-2 bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg font-bold">
           <Star className="fill-yellow-500 text-yellow-500" />
