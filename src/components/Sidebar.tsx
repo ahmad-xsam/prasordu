@@ -11,7 +11,8 @@ import {
   Calendar,
   LogOut,
   X,
-  Gamepad2
+  Gamepad2,
+  FileText
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
@@ -156,6 +157,22 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                       pathname === '/admin/history' ? 'text-primary-600' : 'text-gray-400 group-hover:text-primary-600'
                     }`} />
                     <span className="ms-3">Riwayat Misi</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/admin/laporan"
+                    onClick={onClose}
+                    className={`group flex items-center rounded-lg p-3 transition-all ${
+                      pathname === '/admin/laporan' 
+                        ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600' 
+                        : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-900 hover:text-primary-600'
+                    }`}
+                  >
+                    <FileText className={`h-5 w-5 transition-colors ${
+                      pathname === '/admin/laporan' ? 'text-primary-600' : 'text-gray-400 group-hover:text-primary-600'
+                    }`} />
+                    <span className="ms-3">Laporan Dokumentasi</span>
                   </Link>
                 </li>
               </ul>
