@@ -84,3 +84,19 @@ body {
     text-wrap: balance;
   }
 }
+
+@media print {
+  aside, header, nav, .no-print {
+    display: none !important;
+  }
+  body, main {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+  .sm\:ml-64 {
+    margin-left: 0 !important;
+  }
+}

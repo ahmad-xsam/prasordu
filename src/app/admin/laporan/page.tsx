@@ -256,10 +256,10 @@ export default function AdminLaporanPage() {
             </button>
             <button
               onClick={handlePrint}
-              className="inline-flex items-center px-4 py-2.5 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium shadow-md transition-all transform active:scale-95"
+              className="inline-flex items-center px-4 py-2.5 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-md transition-all transform active:scale-95"
             >
               <Printer className="w-4 h-4 mr-2" />
-              Cetak / Export PDF A4
+              CETAK PDF
             </button>
           </div>
         </div>
@@ -601,7 +601,7 @@ export default function AdminLaporanPage() {
 
       {/* Modal Preview Printable Document A4 Landscape */}
       {showPreviewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/70 backdrop-blur-sm p-4 overflow-y-auto">
+        <div className="no-print print:hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/70 backdrop-blur-sm p-4 overflow-y-auto">
           <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl max-w-5xl w-full my-8 overflow-hidden border border-gray-200 dark:border-slate-800 flex flex-col max-h-[90vh]">
             <div className="p-4 border-b border-gray-200 dark:border-slate-800 flex items-center justify-between bg-gray-50 dark:bg-slate-800">
               <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -610,9 +610,9 @@ export default function AdminLaporanPage() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={handlePrint}
-                  className="px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium flex items-center gap-1.5"
+                  className="px-3.5 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold flex items-center gap-1.5 shadow-sm"
                 >
-                  <Printer className="w-4 h-4" /> Cetak Sekarang
+                  <Printer className="w-4 h-4" /> CETAK PDF
                 </button>
                 <button
                   onClick={() => setShowPreviewModal(false)}

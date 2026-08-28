@@ -46,7 +46,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         />
       )}
 
-      <aside className={`fixed left-0 top-0 z-40 h-screen w-64 transition-transform duration-300 ease-in-out bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 ${
+      <aside className={`print:hidden fixed left-0 top-0 z-40 h-screen w-64 transition-transform duration-300 ease-in-out bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 ${
         isOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'
       }`}>
         <div className="flex h-full flex-col overflow-y-auto px-3 py-4">
